@@ -3,1611 +3,183 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cleveland Range — Org + Gap Map</title>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Cleveland Range - Biz Ops</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --red:#C8102E; --dark-red:#9E0C24; --charcoal:#333F48;
-    --white:#FFFFFF; --light:#F4F4F2; --mid:#D0D0CC; --soft:#F9F7F5;
-    --mkt:#8E44AD; --ops:#2A6EBB; --eng:#00796B; --cs:#D4620A; --tech:#1A7A4A;
-    --p-critical:#C8102E; --p-high:#D4620A; --p-medium:#B8860B; --p-found:#2A6EBB;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Poppins',sans-serif;background:var(--soft);color:var(--charcoal);font-size:16px;}
-  .header{background:var(--charcoal);padding:28px 40px 24px;position:relative;}
-  .header::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:4px;background:var(--red);}
-  .hi{max-width:1300px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;}
-  .header h1{font-family:'EB Garamond',serif;font-size:2.1rem;font-weight:500;color:var(--white);line-height:1.2;}
-  .header .sub{font-size:0.8rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.38);margin-top:5px;}
-  .hbadges{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
-  .hbadge{border-radius:4px;padding:6px 14px;font-size:0.82rem;font-weight:600;}
-  .hbadge-red{background:var(--red);color:var(--white);}
-  .hbadge-outline{background:transparent;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.2);}
-  .tab-nav{max-width:1300px;margin:20px auto 0;padding:0 20px;display:flex;gap:4px;border-bottom:2px solid var(--mid);}
-  .tab-btn{padding:10px 22px;font-size:0.85rem;font-weight:500;font-family:'Poppins',sans-serif;border:none;background:none;cursor:pointer;color:#888;border-bottom:3px solid transparent;margin-bottom:-2px;}
-  .tab-btn:hover{color:var(--charcoal);}
-  .tab-btn.active{color:var(--red);border-bottom-color:var(--red);}
-  .tab-panel{display:none;}
-  .tab-panel.active{display:block;}
-  .legend{max-width:1300px;margin:18px auto 0;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
-  .leg-label{font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:#999;margin-right:4px;}
-  .leg{display:flex;align-items:center;gap:5px;font-size:0.82rem;color:var(--charcoal);}
-  .sep{width:1px;height:18px;background:var(--mid);margin:0 8px;}
-  .ptag{display:inline-block;font-size:0.72rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:2px 8px;border-radius:3px;}
-  .p-c{background:#FDE8EC;color:var(--dark-red);}
-  .p-h{background:#FDF0E8;color:#9B4500;}
-  .p-m{background:#FDF8E4;color:#7A5A00;}
-  .p-f{background:#E8F1FC;color:#1A4F8A;}
-  .wrap{max-width:1300px;margin:24px auto 48px;padding:0 20px;}
-  .top{display:flex;justify-content:center;}
-  .you{background:var(--red);color:var(--white);border-radius:8px;padding:18px 52px;text-align:center;box-shadow:0 6px 24px rgba(200,16,46,0.2);}
-  .you .role{font-size:0.75rem;letter-spacing:0.18em;text-transform:uppercase;opacity:0.7;margin-bottom:4px;}
-  .you .name{font-family:'EB Garamond',serif;font-size:1.9rem;font-weight:500;}
-  .you .title{font-size:0.85rem;opacity:0.85;font-weight:300;margin-top:2px;}
-  .you .scope{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap;}
-  .stag{background:rgba(255,255,255,0.15);border-radius:3px;padding:3px 9px;font-size:0.75rem;}
-  .vc{width:2px;background:var(--mid);margin:0 auto;}
-  .vc-s{height:20px;} .vc-m{height:32px;}
-  .branch{display:flex;justify-content:space-around;position:relative;}
-  .branch::before{content:'';position:absolute;top:0;left:16.5%;right:16.5%;height:2px;background:var(--mid);}
-  .stub{display:flex;flex-direction:column;align-items:center;}
-  .tick{width:2px;background:var(--mid);height:18px;}
-  .sup-row{display:flex;justify-content:center;gap:12px;}
-  .sup-card{background:var(--white);border:1.5px solid var(--mid);border-radius:5px;padding:10px 20px;text-align:center;min-width:160px;}
-  .sup-fn{font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:3px;}
-  .sup-nm{font-size:0.95rem;font-weight:600;}
-  .sup-sb{font-size:0.75rem;color:#999;margin-top:2px;}
-  .dept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-  .dept-grid-2{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px;}
-  .dept{background:var(--white);border-radius:8px;border-top:4px solid var(--red);box-shadow:0 2px 10px rgba(0,0,0,0.055);display:flex;flex-direction:column;}
-  .dept-head{padding:14px 16px 10px;border-bottom:1px solid var(--light);}
-  .dept-fn{font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;font-weight:700;margin-bottom:3px;}
-  .dept-top-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
-  .dept-owner{font-family:'EB Garamond',serif;font-size:1.25rem;font-weight:500;color:var(--charcoal);}
-  .dept-sub{font-size:0.78rem;color:#888;margin-top:2px;}
-  .reality-tag{font-size:0.72rem;font-weight:600;padding:3px 9px;border-radius:3px;white-space:nowrap;flex-shrink:0;}
-  .rt-real{background:#E8F6F3;color:#0B6858;}
-  .rt-disc{background:#FDF0E8;color:#9B4500;}
-  .reality-section{padding:12px 16px 10px;border-bottom:1px solid var(--light);}
-  .section-label{font-size:0.7rem;letter-spacing:0.13em;text-transform:uppercase;font-weight:700;color:#aaa;margin-bottom:7px;}
-  .reality-items{display:flex;flex-direction:column;gap:5px;}
-  .ri{display:flex;gap:8px;align-items:flex-start;font-size:0.85rem;color:#555;line-height:1.45;}
-  .ri-dot{width:6px;height:6px;border-radius:50%;background:var(--mid);flex-shrink:0;margin-top:5px;}
-  .gap-lane{padding:12px 16px 14px;background:var(--light);flex:1;border-radius:0 0 8px 8px;}
-  .gap-items{display:flex;flex-direction:column;gap:7px;}
-  .gap-item{background:var(--white);border-radius:5px;border-left:3px solid;cursor:pointer;}
-  .gap-item:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-  .gap-item-top{display:flex;align-items:center;gap:6px;padding:9px 11px 4px;}
-  .gap-name{font-size:0.85rem;font-weight:600;color:var(--charcoal);line-height:1.3;flex:1;}
-  .gap-chev{font-size:0.65rem;color:#bbb;transition:transform 0.2s;flex-shrink:0;}
-  .gap-item.open .gap-chev{transform:rotate(180deg);}
-  .gap-meta-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:0 11px 8px;}
-  .gap-owner-tag{font-size:0.75rem;color:#888;}
-  .gap-owner-tag strong{color:var(--charcoal);font-weight:600;}
-  .phase-tag{font-size:0.7rem;font-weight:600;padding:2px 7px;border-radius:2px;background:#EEEEF0;color:#666;white-space:nowrap;}
-  .gap-desc-panel{display:none;padding:0 11px 10px;font-size:0.78rem;color:#666;line-height:1.6;border-top:1px solid var(--light);padding-top:8px;}
-  .gap-item.open .gap-desc-panel{display:block;}
-  .gap-page{max-width:1300px;margin:28px auto 48px;padding:0 20px;}
-  .gap-insight-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
-  .gap-stat{background:var(--white);border-radius:8px;padding:16px 20px;box-shadow:0 2px 10px rgba(0,0,0,0.055);text-align:center;}
-  .gap-stat-num{font-family:'EB Garamond',serif;font-size:2.2rem;font-weight:500;line-height:1;}
-  .gap-stat-label{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:#999;margin-top:4px;}
-  .gap-section-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;margin-top:28px;}
-  .gap-section-head:first-of-type{margin-top:0;}
-  .gap-section-title{font-family:'EB Garamond',serif;font-size:1.25rem;font-weight:500;}
-  .gap-section-line{flex:1;height:1px;background:var(--mid);}
-  .gap-grid-full{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-  .gap-card-full{background:var(--white);border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.055);overflow:hidden;cursor:pointer;}
-  .gap-card-full:hover{box-shadow:0 4px 16px rgba(0,0,0,0.1);}
-  .gap-card-stripe{height:5px;}
-  .gap-card-summary{padding:14px 16px 12px;}
-  .gap-card-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-  .gap-card-fn{font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:700;color:#aaa;}
-  .gap-card-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
-  .gap-card-title{font-size:0.95rem;font-weight:600;color:var(--charcoal);line-height:1.35;flex:1;}
-  .gap-card-chev{font-size:0.75rem;color:#bbb;transition:transform 0.2s;flex-shrink:0;margin-top:3px;}
-  .gap-card-full.open .gap-card-chev{transform:rotate(180deg);}
-  .gap-card-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-top:8px;}
-  .gap-card-owner{font-size:0.72rem;color:#999;}
-  .gap-card-owner strong{color:var(--charcoal);font-weight:600;}
-  .gap-card-detail{display:none;padding:12px 16px 16px;border-top:1px solid var(--light);}
-  .gap-card-full.open .gap-card-detail{display:block;}
-  .gap-card-desc{font-size:0.82rem;color:#555;line-height:1.65;margin-bottom:10px;}
-  .gap-card-impact{background:var(--light);border-radius:4px;padding:8px 12px;font-size:0.78rem;color:var(--charcoal);line-height:1.5;}
-  .gap-impact-label{font-weight:700;color:var(--red);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;}
-  .qbr-page{max-width:1300px;margin:28px auto 48px;padding:0 20px;}
-  .qbr-framing{background:var(--charcoal);border-radius:10px;padding:24px 32px;margin-bottom:28px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;}
-  .qbr-frame-item{border-left:3px solid var(--red);padding-left:14px;}
-  .qbr-frame-label{font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:5px;}
-  .qbr-frame-val{font-family:'EB Garamond',serif;font-size:1.15rem;color:var(--white);line-height:1.35;}
-  .qbr-frame-sub{font-size:0.75rem;color:rgba(255,255,255,0.45);margin-top:3px;}
-  .qbr-section-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;margin-top:32px;}
-  .qbr-section-head:first-of-type{margin-top:0;}
-  .qbr-section-num{width:28px;height:28px;border-radius:50%;background:var(--red);color:var(--white);font-size:0.8rem;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-  .qbr-section-title{font-family:'EB Garamond',serif;font-size:1.25rem;font-weight:500;}
-  .qbr-section-line{flex:1;height:1px;background:var(--mid);}
-  .qbr-section-time{font-size:0.72rem;font-weight:600;padding:3px 10px;border-radius:3px;background:var(--light);color:#888;white-space:nowrap;}
-  .agenda-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-  .agenda-card{background:var(--white);border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.055);overflow:hidden;}
-  .agenda-card-top{padding:14px 16px 10px;border-bottom:1px solid var(--light);display:flex;gap:10px;align-items:flex-start;}
-  .agenda-num{font-family:'EB Garamond',serif;font-size:1.6rem;font-weight:500;color:var(--mid);line-height:1;flex-shrink:0;width:28px;}
-  .agenda-title{font-size:0.9rem;font-weight:600;color:var(--charcoal);line-height:1.3;}
-  .agenda-time{font-size:0.7rem;color:#aaa;margin-top:2px;}
-  .agenda-body{padding:10px 16px 14px;}
-  .agenda-items{list-style:none;display:flex;flex-direction:column;gap:5px;}
-  .agenda-item{display:flex;gap:8px;font-size:0.78rem;color:#555;line-height:1.45;align-items:flex-start;}
-  .agenda-item::before{content:'→';color:var(--red);flex-shrink:0;font-size:0.72rem;margin-top:2px;}
-  .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-  .kpi-block{background:var(--white);border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.055);overflow:hidden;}
-  .kpi-block-head{padding:12px 16px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--light);}
-  .kpi-block-bar{width:4px;border-radius:2px;height:32px;flex-shrink:0;}
-  .kpi-block-title{font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;}
-  .kpi-block-owner{font-size:0.7rem;color:#aaa;margin-left:auto;}
-  .kpi-table{width:100%;border-collapse:collapse;}
-  .kpi-table th{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:#aaa;font-weight:600;padding:7px 14px;text-align:left;border-bottom:1px solid var(--light);}
-  .kpi-table td{font-size:0.78rem;padding:8px 14px;border-bottom:1px solid var(--light);color:var(--charcoal);vertical-align:top;line-height:1.4;}
-  .kpi-table tr:last-child td{border-bottom:none;}
-  .kpi-table tr:nth-child(even) td{background:var(--light);}
-  .kpi-metric{font-weight:600;}
-  .kpi-target{font-size:0.72rem;color:#888;font-style:italic;}
-  .kpi-why{font-size:0.7rem;color:#aaa;}
-  .rules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-  .rule-card{background:var(--white);border-radius:8px;padding:16px 18px;box-shadow:0 2px 10px rgba(0,0,0,0.055);border-top:3px solid;}
-  .rule-label{font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:700;color:#aaa;margin-bottom:6px;}
-  .rule-val{font-size:0.88rem;font-weight:600;color:var(--charcoal);margin-bottom:5px;}
-  .rule-desc{font-size:0.78rem;color:#777;line-height:1.5;}
-  .addendum-wrap{background:var(--white);border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.055);overflow:hidden;}
-  .addendum-head{background:var(--charcoal);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;}
-  .addendum-head-title{font-size:0.8rem;font-weight:600;color:var(--white);}
-  .addendum-head-sub{font-size:0.72rem;color:rgba(255,255,255,0.45);}
-  .addendum-table{width:100%;border-collapse:collapse;}
-  .addendum-table th{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:#aaa;font-weight:600;padding:10px 16px;text-align:left;border-bottom:1px solid var(--light);}
-  .addendum-table td{font-size:0.8rem;padding:10px 16px;border-bottom:1px solid var(--light);color:var(--charcoal);vertical-align:middle;}
-  .addendum-table tr:last-child td{border-bottom:none;}
-  .addendum-table tr:nth-child(even) td{background:var(--light);}
-  .fn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle;}
-  .phase-summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-  @media(max-width:960px){.dept-grid,.dept-grid-2,.gap-grid-full,.gap-insight-bar,.kpi-grid,.agenda-grid,.rules-grid,.phase-summary-grid,.qbr-framing{grid-template-columns:1fr;}}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Poppins',sans-serif; background:#f4f5f7; color:#333F48; min-height:100vh; }
+
+.hero {
+  background: linear-gradient(135deg, #C8102E 0%, #9E0C24 60%, #333F48 100%);
+  color:#fff; padding:60px 40px 50px; text-align:center;
+  position:relative; overflow:hidden;
+}
+.hero::before {
+  content:''; position:absolute; top:-50%; right:-20%; width:600px; height:600px;
+  background:radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+  border-radius:50%;
+}
+.hero img { height:60px; margin-bottom:20px; }
+.hero h1 { font-family:'EB Garamond',serif; font-size:42px; font-weight:700; margin-bottom:8px; }
+.hero p { font-size:15px; opacity:0.85; font-weight:300; max-width:600px; margin:0 auto; }
+.hero .tagline { font-family:'EB Garamond',serif; font-style:italic; font-size:16px; margin-top:12px; opacity:0.7; }
+
+.container { max-width:1100px; margin:0 auto; padding:40px 24px; }
+
+.section-title {
+  font-family:'EB Garamond',serif; font-size:24px; font-weight:700; color:#333F48;
+  margin-bottom:24px; padding-bottom:8px; border-bottom:2px solid #C8102E;
+  display:inline-block;
+}
+
+.dashboard-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(320px,1fr));
+  gap:24px; margin-bottom:48px;
+}
+
+.dash-card {
+  background:#fff; border-radius:12px; padding:28px; box-shadow:0 2px 12px rgba(0,0,0,0.06);
+  transition:all 0.3s ease; border:1px solid #e5e7eb; position:relative; overflow:hidden;
+  text-decoration:none; color:inherit; display:block;
+}
+.dash-card:hover {
+  transform:translateY(-4px); box-shadow:0 8px 24px rgba(200,16,46,0.12);
+  border-color:#C8102E;
+}
+.dash-card .icon {
+  width:48px; height:48px; border-radius:10px; display:flex; align-items:center;
+  justify-content:center; font-size:22px; margin-bottom:16px;
+}
+.dash-card h3 { font-family:'EB Garamond',serif; font-size:20px; font-weight:700; margin-bottom:6px; color:#333F48; }
+.dash-card p { font-size:13px; color:#888; line-height:1.5; }
+.dash-card .meta { margin-top:12px; font-size:11px; color:#aaa; text-transform:uppercase; letter-spacing:0.5px; }
+.dash-card .arrow {
+  position:absolute; top:28px; right:24px; font-size:20px; color:#ccc;
+  transition:all 0.3s;
+}
+.dash-card:hover .arrow { color:#C8102E; transform:translateX(4px); }
+
+.status-badge {
+  display:inline-block; padding:3px 10px; border-radius:20px;
+  font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;
+}
+.status-live { background:#dcfce7; color:#16a34a; }
+.status-coming { background:#fef3c7; color:#d97706; }
+
+.footer {
+  text-align:center; padding:30px; font-size:12px; color:#999;
+  font-family:'EB Garamond',serif; border-top:1px solid #e5e7eb; margin-top:20px;
+}
+
+.info-section {
+  background:#fff; border-radius:12px; padding:28px; box-shadow:0 2px 12px rgba(0,0,0,0.06);
+  margin-bottom:32px; border:1px solid #e5e7eb;
+}
+.info-section h3 { font-family:'EB Garamond',serif; font-size:18px; margin-bottom:8px; color:#333F48; }
+.info-section p { font-size:13px; color:#666; line-height:1.7; }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="hi">
-    <div>
-      <h1>Business Operations — Org & Gap Map</h1>
-      <div class="sub">Current State · Real Roles · Integrated Gap Analysis</div>
-    </div>
-    <div class="hbadges">
-      <div class="hbadge hbadge-red">$140M Revenue</div>
-      <div class="hbadge hbadge-outline">3-Person Tiger Team</div>
-      <div class="hbadge hbadge-outline">Q1 2026</div>
-    </div>
+<div class="hero">
+  <img src="data:image/png;base64,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" alt="Cleveland Range">
+  <h1>Biz Ops</h1>
+  <p>Centralized dashboards and reporting for Cleveland Range operations, service, and customer intelligence.</p>
+</div>
+
+<div class="container">
+  <span class="section-title">Dashboards</span>
+
+  <div class="dashboard-grid">
+    <a class="dash-card" href="ivr.html">
+      <div class="icon" style="background:#fde8e8;color:#C8102E;">&#128222;</div>
+      <span class="arrow">&#8594;</span>
+      <h3>IVR Call Dashboard</h3>
+      <p>Five9 IVR call analytics for Parts and Service teams. Volume trends, agent performance, geographic distribution, repeat callers, and duration analysis.</p>
+      <div class="meta">
+        <span class="status-badge status-live">Live</span>
+        &#183; March 2026 &#183; 1,178 calls &#183; 5 agents
+      </div>
+    </a>
+
+    <a class="dash-card" href="https://app.powerbi.com/groups/8494de19-df71-4094-a854-a4a994eb1b70/reports/351a87c7-0683-4df0-99f4-2da1b8f9eafe/4b1d3176675c85298997?experience=power-bi" target="_blank">
+      <div class="icon" style="background:#fff3e0;color:#f59e0b;">&#128202;</div>
+      <span class="arrow">&#8594;</span>
+      <h3>Competitive Pricing Analysis</h3>
+      <p>Power BI report with competitive pricing intelligence and market positioning. Best opened in Edge on VPN.</p>
+      <div class="meta">
+        <span class="status-badge status-live">Live</span>
+        &#183; Power BI &#183; VPN + Edge recommended
+      </div>
+    </a>
+
+    <a class="dash-card" href="pricing.html">
+      <div class="icon" style="background:#dcfce7;color:#16a34a;">&#128176;</div>
+      <span class="arrow">&#8594;</span>
+      <h3>Commercial Pricing Tool</h3>
+      <p>PNL pricing model for Cleveland Range product lines. Calculate margins, discounts, and dealer pricing. PIN protected.</p>
+      <div class="meta">
+        <span class="status-badge status-live">Live</span>
+        &#183; PIN Required
+      </div>
+    </a>
+
+    <a class="dash-card" href="territory.html">
+      <div class="icon" style="background:#dbeafe;color:#2563eb;">&#127758;</div>
+      <span class="arrow">&#8594;</span>
+      <h3>Sales Territory Map</h3>
+      <p>Interactive territory map for Cleveland Range sales regions, rep assignments, and coverage areas.</p>
+      <div class="meta">
+        <span class="status-badge status-live">Live</span>
+        &#183; Marketing
+      </div>
+    </a>
+
+    <a class="dash-card" href="mixer.html">
+      <div class="icon" style="background:#fef3c7;color:#d97706;">&#9881;</div>
+      <span class="arrow">&#8594;</span>
+      <h3>Mixer Kettle Configurator</h3>
+      <p>Find the right mixer kettle for your application. Product selector tool for Cleveland Range mixer kettle line.</p>
+      <div class="meta">
+        <span class="status-badge status-live">Live</span>
+        &#183; Marketing
+      </div>
+    </a>
+
+    <!-- Org + Gap Map hidden - internal use only -->
+
+    <a class="dash-card" href="quote.html">
+      <div class="icon" style="background:#dcfce7;color:#16a34a;">&#128196;</div>
+      <span class="arrow">&#8594;</span>
+      <h3>Request a Quote</h3>
+      <p>Quote request form for Cleveland Range products. Streamlined quoting workflow for sales team.</p>
+      <div class="meta">
+        <span class="status-badge status-live">Live</span>
+        &#183; Marketing
+      </div>
+    </a>
+
+    <a class="dash-card" href="ivr.html">
+      <div class="icon" style="background:#dcfce7;color:#16a34a;">&#128172;</div>
+      <span class="arrow">&#8594;</span>
+      <h3>Call Transcription Insights</h3>
+      <p>AI-powered Whisper transcription analysis: call reasons, product lines, components, and utilities. Currently Parts dept only.</p>
+      <div class="meta">
+        <span class="status-badge status-live">Live</span>
+        &#183; Parts (51 calls) &#183; Service pending
+      </div>
+    </a>
+  </div>
+
+  <div class="info-section">
+    <h3>About This Portal</h3>
+    <p>This portal centralizes all Cleveland Range operational dashboards in one place. Dashboards are interactive HTML files powered by Chart.js &#8212; no logins, no software installs, just open and explore. Data is refreshed periodically from Five9 IVR recordings and other operational systems. For questions or access requests, contact Gary Li.</p>
   </div>
 </div>
 
-<div class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('org',this)">Org Structure</button>
-  <button class="tab-btn" onclick="switchTab('gaps',this)">Gap Analysis</button>
-  <button class="tab-btn" onclick="switchTab('qbr',this)">QBR Framework</button>
-  <button class="tab-btn" onclick="switchTab('ai',this)">AI &amp; Automation</button>
-  <button class="tab-btn" onclick="switchTab('maturity',this)">AI Maturity Scale</button>
+<div class="footer">
+  Cleveland Range&#174; &#8212; A Welbilt Brand &#183; Biz Ops &#183; Updated April 2026
 </div>
 
-<!-- ═══ TAB 1 — ORG ═══ -->
-<div id="tab-org" class="tab-panel active">
-<div class="legend">
-  <span class="leg-label">Gap Priority:</span>
-  <div class="leg"><span class="ptag p-c">Critical</span></div>
-  <div class="leg"><span class="ptag p-h">High</span></div>
-  <div class="leg"><span class="ptag p-m">Medium</span></div>
-  <div class="leg"><span class="ptag p-f">Foundation</span></div>
-  <div class="sep"></div>
-  <div class="leg"><span class="reality-tag rt-real" style="font-size:0.72rem;">Full-Time Role</span></div>
-  <div class="leg"><span class="reality-tag rt-disc" style="font-size:0.72rem;">Reports to / Building Out</span></div>
-  <div class="sep"></div>
-  <span style="font-size:0.75rem;color:#999;font-style:italic;">Click any gap to expand</span>
-</div>
-<div class="wrap">
-
-  <div class="top">
-    <div class="you">
-      <div class="role">Head of Business Operations</div>
-      <div class="name">Gary</div>
-      <div class="title">Strategy · Sales (Acting) · Tech Service · Commercial Oversight</div>
-      <div class="scope">
-        <span class="stag">Monthly Pack Addendum</span>
-        <span class="stag">QBR Owner</span>
-        <span class="stag">Sales Acting Lead</span>
-        <span class="stag">Tech Service Lead</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="vc vc-s"></div>
-  <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
-    <div style="background:var(--white);border:1.5px solid var(--mid);border-radius:5px;padding:9px 20px;text-align:center;">
-      <div style="font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;color:#aaa;font-weight:700;margin-bottom:2px;">Support Function</div>
-      <div style="font-size:0.88rem;font-weight:600;color:var(--charcoal);">Finance</div>
-      <div style="font-size:0.7rem;color:#999;">Owned by Gary · AI automation roadmap</div>
-    </div>
-    <div style="background:var(--white);border:1.5px solid var(--mid);border-radius:5px;padding:9px 20px;text-align:center;">
-      <div style="font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;color:#aaa;font-weight:700;margin-bottom:2px;">Support Function</div>
-      <div style="font-size:0.88rem;font-weight:600;color:var(--charcoal);">HR / People Ops</div>
-      <div style="font-size:0.7rem;color:#999;">Owned by Gary · AI automation roadmap</div>
-    </div>
-  </div>
-  <div class="vc vc-m"></div>
-
-  <div class="branch">
-    <div class="stub"><div class="tick"></div></div>
-    <div class="stub"><div class="tick"></div></div>
-    <div class="stub"><div class="tick"></div></div>
-  </div>
-
-  <!-- ROW 1 -->
-  <div class="dept-grid">
-
-    <div class="dept" style="border-top-color:var(--red);">
-      <div class="dept-head">
-        <div class="dept-fn" style="color:var(--red);">Sales</div>
-        <div class="dept-top-row">
-          <div><div class="dept-owner">Gary (Acting)</div><div class="dept-sub">No dedicated sales lead yet</div></div>
-          <span class="reality-tag rt-disc">Temp: Acting</span>
-        </div>
-      </div>
-      <div class="reality-section">
-        <div class="section-label">Current Reality</div>
-        <div class="reality-items">
-          <div class="ri"><div class="ri-dot"></div>Relationship-driven, rep-owned pipeline</div>
-          <div class="ri"><div class="ri-dot"></div>CRM exists but not widely adopted</div>
-          <div class="ri"><div class="ri-dot"></div>Quoting inconsistent — no standard process</div>
-        </div>
-      </div>
-      <div class="gap-lane">
-        <div class="section-label">Gaps / Initiatives</div>
-        <div class="gap-items">
-          <div class="gap-item" style="border-color:var(--p-critical);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">CRM Adoption & Sales Process Formalization</div><span class="ptag p-c">Critical</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Gary</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-            <div class="gap-desc-panel">CRM exists but isn't used. No documented pipeline stages, entry/exit criteria, or rep accountability. Revenue is entirely dependent on individual relationships — not process. If a rep leaves, pipeline leaves with them.</div>
-          </div>
-          <div class="gap-item" style="border-color:var(--p-medium);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">Channel Partner & Distributor Enablement</div><span class="ptag p-m">Medium</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Gary + Gabria</strong></span><span class="phase-tag">Phase 2 · 90–180 days</span></div>
-            <div class="gap-desc-panel">Partners lack structured materials, pricing tools, and co-marketing support. Inconsistent channel messaging, pricing variation, and deal visibility lost when partners go dark.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="dept" style="border-top-color:var(--mkt);">
-      <div class="dept-head">
-        <div class="dept-fn" style="color:var(--mkt);">Marketing</div>
-        <div class="dept-top-row">
-          <div><div class="dept-owner">Gabria</div><div class="dept-sub">Full-time Marketing Lead</div></div>
-          <span class="reality-tag rt-real">Full-Time Role</span>
-        </div>
-      </div>
-      <div class="reality-section">
-        <div class="section-label">Current Reality</div>
-        <div class="reality-items">
-          <div class="ri"><div class="ri-dot"></div>HubSpot in place — building out campaigns</div>
-          <div class="ri"><div class="ri-dot"></div>Social media & content — active, no agents yet</div>
-          <div class="ri"><div class="ri-dot"></div>Brand governance — Cleveland Range guidelines</div>
-        </div>
-      </div>
-      <div class="gap-lane">
-        <div class="section-label">Gaps / Initiatives</div>
-        <div class="gap-items">
-          <div class="gap-item" style="border-color:var(--p-high);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">Demand Generation & Lead Nurture Engine</div><span class="ptag p-h">High</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Gabria</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-            <div class="gap-desc-panel">HubSpot installed but not generating pipeline. No nurture sequences, lead scoring, or campaign attribution. 100% of pipeline comes from rep relationships — zero inbound motion.</div>
-          </div>
-          <div class="gap-item" style="border-color:var(--p-high);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">AI Marketing Agents — Social & Content Graphics</div><span class="ptag p-h">High</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Gabria + Farhana</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-            <div class="gap-desc-panel">Social media and content graphics done manually today. AI agents automate scheduling, creation, and posting — freeing Gabria's capacity for strategic marketing work.</div>
-          </div>
-          <div class="gap-item" style="border-color:var(--p-medium);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">Channel Partner Enablement Materials</div><span class="ptag p-m">Medium</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Gabria + Gary</strong></span><span class="phase-tag">Phase 2 · 90–180 days</span></div>
-            <div class="gap-desc-panel">Partners have no co-marketing materials, pitch decks, or campaign support. Inconsistent brand representation at channel level directly affects win rates.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="dept" style="border-top-color:var(--cs);">
-      <div class="dept-head">
-        <div class="dept-fn" style="color:var(--cs);">Customer Service</div>
-        <div class="dept-top-row">
-          <div><div class="dept-owner">Brian</div><div class="dept-sub">CS Rep · Reports to Farhana</div></div>
-          <span class="reality-tag rt-disc">Reports to Farhana</span>
-        </div>
-      </div>
-      <div class="reality-section">
-        <div class="section-label">Current Reality</div>
-        <div class="reality-items">
-          <div class="ri"><div class="ri-dot"></div>Phone & email — inbound orders & customer issues</div>
-          <div class="ri"><div class="ri-dot"></div>Strong product knowledge — technical first contact</div>
-          <div class="ri"><div class="ri-dot"></div>Farhana sets SLAs, owns metrics & CS process</div>
-        </div>
-      </div>
-      <div class="gap-lane">
-        <div class="section-label">Gaps / Initiatives</div>
-        <div class="gap-items">
-          <div class="gap-item" style="border-color:var(--p-critical);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">Customer Onboarding & Post-Sale Handoff</div><span class="ptag p-c">Critical</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Farhana + Brian</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-            <div class="gap-desc-panel">No structured handoff from sales to service after a deal closes. Customers don't know who to call, timelines slip, experience degrades at the exact moment trust is most fragile.</div>
-          </div>
-          <div class="gap-item" style="border-color:var(--p-high);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">CS Discovery — Map Pain Points Before Building Anything</div><span class="ptag p-h">High</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Brian (led by Farhana)</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-            <div class="gap-desc-panel">Emails sit in individual inboxes with no tracking. Before any IVA or automation: what are the top call drivers, where does Brian's time go, what's repetitive and avoidable? IVA scope depends entirely on discovery findings.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ROW 2 -->
-  <div class="dept-grid-2">
-
-    <div class="dept" style="border-top-color:var(--eng);grid-column:span 2;">
-      <div class="dept-head">
-        <div class="dept-fn" style="color:var(--eng);">Manufacturing Operations · Plant · CS Operations · Cook Chill Systems</div>
-        <div class="dept-top-row">
-          <div><div class="dept-owner">Farhana</div><div class="dept-sub">Manufacturing Ops · Plant & Labour · Cook Chill Configurator & Quoting · CS Lead (Brian reports to her)</div></div>
-          <span class="reality-tag rt-real">Full-Time Role</span>
-        </div>
-      </div>
-      <div class="reality-section">
-        <div class="section-label">Current Reality</div>
-        <div class="reality-items" style="display:grid;grid-template-columns:1fr 1fr;gap:4px 24px;">
-          <div class="ri"><div class="ri-dot"></div>10 yrs engineering background — plant, production, manufacturing systems</div>
-          <div class="ri"><div class="ri-dot"></div>CS lead: Brian reports to her, she owns SLAs & response metrics</div>
-          <div class="ri"><div class="ri-dot"></div>Manufacturing ops: production floor, labour, equipment uptime, throughput</div>
-          <div class="ri"><div class="ri-dot"></div>Cook Chill: owns configurator build + standardized quoting process</div>
-        </div>
-      </div>
-      <div class="gap-lane">
-        <div class="section-label">Gaps / Initiatives</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
-          <div class="gap-item" style="border-color:var(--p-critical);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">Cook Chill Configurator — Build & Rules Logic</div><span class="ptag p-c">Critical</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Farhana</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-            <div class="gap-desc-panel">No configurator means every rep quotes differently. Farhana builds the rules engine and integrates it with the CRM so quotes are consistent, enforceable, and margin-protected.</div>
-          </div>
-          <div class="gap-item" style="border-color:var(--p-critical);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">Cook Chill Standardized Quoting Process</div><span class="ptag p-c">Critical</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Farhana + Gary</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-            <div class="gap-desc-panel">Even with a configurator, reps need a documented quoting process — stages, approval thresholds, margin floors. Without SOPs, the tool gets bypassed. Farhana designs it; Gary signs off.</div>
-          </div>
-          <div class="gap-item" style="border-color:var(--p-critical);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">CS SLA Framework & Response Tracking</div><span class="ptag p-c">Critical</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Farhana</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-            <div class="gap-desc-panel">No SLA targets, no shared inbox, no response time tracking. Farhana owns SLA design, the shared inbox (<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="15667067637c767055767970637079747b7167747b72703b767a78">[email&#160;protected]</a>), the CS tracker, and the breach rate KPI that Gary reports in the QBR.</div>
-          </div>
-          <div class="gap-item" style="border-color:var(--p-high);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">CS Discovery — Identify Pain Points Before IVA</div><span class="ptag p-h">High</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Farhana + Brian</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-            <div class="gap-desc-panel">IVA scope, automation priorities, and SLA targets all depend on discovery. Farhana leads the sprint; Brian provides ground-level data. Building before discovery risks solving the wrong problems entirely.</div>
-          </div>
-          <div class="gap-item" style="border-color:var(--p-high);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">Tech Service IVA — Build to Gary's Spec</div><span class="ptag p-h">High</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Farhana builds · Gary owns</strong></span><span class="phase-tag">Phase 2 · post-CS discovery</span></div>
-            <div class="gap-desc-panel">AI-driven first-response, deflection, and self-service for tech service inbound. Gary sets direction and success metrics; Farhana builds. Scoped only after CS discovery tells us what tier-1 volume actually looks like.</div>
-          </div>
-          <div class="gap-item" style="border-color:var(--p-medium);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">Manufacturing Feedback Loop — Field to Plant</div><span class="ptag p-m">Medium</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Farhana</strong></span><span class="phase-tag">Phase 2 · 90–180 days</span></div>
-            <div class="gap-desc-panel">Field failures and service issues have no structured path back to the plant floor. Recurring product failures aren't fed into manufacturing quality review — so the same defects get built in again. Closing this loop reduces warranty costs and improves yield.</div>
-          </div>
-          <div class="gap-item" style="border-color:var(--p-high);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">Manufacturing Ops Visibility — Production, Labour & Uptime</div><span class="ptag p-h">High</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Farhana</strong></span><span class="phase-tag">Phase 1–2</span></div>
-            <div class="gap-desc-panel">Plant-level metrics — production throughput, labour utilization, equipment uptime, yield rates — need to be visible and structured. Currently ad hoc. Farhana owns this as the manufacturing ops lead; data feeds into Gary's QBR ops story.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="dept" style="border-top-color:var(--tech);">
-      <div class="dept-head">
-        <div class="dept-fn" style="color:var(--tech);">Tech Service · Customer Experience</div>
-        <div class="dept-top-row">
-          <div><div class="dept-owner">Gary</div><div class="dept-sub">Tech Service strategy · CX ownership · Farhana builds systems</div></div>
-          <span class="reality-tag rt-real">Gary Owns</span>
-        </div>
-      </div>
-      <div class="reality-section">
-        <div class="section-label">Current Reality</div>
-        <div class="reality-items">
-          <div class="ri"><div class="ri-dot"></div>No formal tech service metrics tracked yet</div>
-          <div class="ri"><div class="ri-dot"></div>No NPS, CSAT, or post-sale follow-up motion yet</div>
-          <div class="ri"><div class="ri-dot"></div>Gary sets direction; Farhana builds; Brian operates</div>
-        </div>
-      </div>
-      <div class="gap-lane">
-        <div class="section-label">Gaps / Initiatives</div>
-        <div class="gap-items">
-          <div class="gap-item" style="border-color:var(--p-critical);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">Warranty & Service Contract Lifecycle</div><span class="ptag p-c">Critical</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Gary · Gabria triggers (HubSpot)</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-            <div class="gap-desc-panel">Warranty tracking is entirely manual. No renewal alerts, no service contract expiry follow-up, no post-install motion. At $140M in equipment sales the installed base is enormous — this is a massive uncaptured revenue stream. Gary owns strategy; Gabria automates HubSpot triggers.</div>
-          </div>
-          <div class="gap-item" style="border-color:var(--p-high);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">Tech Service Metrics Dashboard</div><span class="ptag p-h">High</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Gary · Farhana builds</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-            <div class="gap-desc-panel">No KPIs tracked for field service — response times, resolution rates, ticket volume. Gary defines what to measure and sets targets; Farhana builds the dashboard. Without this, tech service performance is completely invisible.</div>
-          </div>
-          <div class="gap-item" style="border-color:var(--p-high);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">Customer Health — NPS + CSAT Program</div><span class="ptag p-h">High</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Gary · Gabria executes</strong></span><span class="phase-tag">Phase 2 · 90–180 days</span></div>
-            <div class="gap-desc-panel">No NPS, CSAT, or customer health scoring. No way to identify at-risk accounts before churn, no advocate identification for referrals. Gary owns the program; Gabria runs it through HubSpot post-install and post-service.</div>
-          </div>
-          <div class="gap-item" style="border-color:var(--p-high);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">Finance & HR Automation Workflows</div><span class="ptag p-h">High</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Gary (builds)</strong></span><span class="phase-tag">Phase 2 · 90–180 days</span></div>
-            <div class="gap-desc-panel">AP/AR workflows, financial reporting automation, HR onboarding flows, and people ops efficiency. Gary owns and builds these directly — Finance and HR sit under Gary, so he has full context and no dependency on Farhana's already-heavy workload.</div>
-          </div>
-          <div class="gap-item" style="border-color:var(--p-found);" onclick="toggleGap(this)">
-            <div class="gap-item-top"><div class="gap-name">People Ops Scalability & Role Architecture</div><span class="ptag p-f">Foundation</span><span class="gap-chev">▼</span></div>
-            <div class="gap-meta-row"><span class="gap-owner-tag">Owner: <strong>Gary</strong></span><span class="phase-tag">Phase 3 · 180 days+</span></div>
-            <div class="gap-desc-panel">No documented role ladder, hiring profiles, or onboarding playbook. As the org grows from tiger team to scaled structure, each new hire will be slower and more expensive to integrate without this foundation.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- PHASE SUMMARY -->
-  <div style="margin-top:28px;">
-    <div style="font-size:0.8rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px;">Execution Phases<span style="flex:1;height:1px;background:var(--mid);display:block;"></span></div>
-    <div class="phase-summary-grid">
-      <div style="background:var(--white);border-radius:7px;padding:18px 20px;border-left:4px solid var(--red);box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-        <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.12em;color:#aaa;font-weight:600;margin-bottom:6px;">Phase 1 · 0–90 Days</div>
-        <div style="font-family:'EB Garamond',serif;font-size:1.2rem;color:var(--charcoal);margin-bottom:9px;">Instrument the Engine</div>
-        <div style="font-size:0.85rem;color:#555;line-height:1.7;">Force CRM adoption · Cook Chill configurator + quoting SOPs · CS SLA framework + shared inbox · Tech service metrics · CS discovery sprint · HubSpot demand gen live · Warranty lifecycle</div>
-      </div>
-      <div style="background:var(--white);border-radius:7px;padding:18px 20px;border-left:4px solid var(--cs);box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-        <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.12em;color:#aaa;font-weight:600;margin-bottom:6px;">Phase 2 · 90–180 Days</div>
-        <div style="font-family:'EB Garamond',serif;font-size:1.2rem;color:var(--charcoal);margin-bottom:9px;">Systematize & Automate</div>
-        <div style="font-size:0.85rem;color:#555;line-height:1.7;">Finance + HR automation (Gary builds) · IVA scoped post-discovery · NPS/CSAT live · Channel enablement kit · AI marketing agents · Product feedback loop</div>
-      </div>
-      <div style="background:var(--white);border-radius:7px;padding:18px 20px;border-left:4px solid var(--ops);box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-        <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.12em;color:#aaa;font-weight:600;margin-bottom:6px;">Phase 3 · 180 Days+</div>
-        <div style="font-family:'EB Garamond',serif;font-size:1.2rem;color:var(--charcoal);margin-bottom:9px;">Scale the Org</div>
-        <div style="font-size:0.85rem;color:#555;line-height:1.7;">Hire Sales Lead · Hire Eng Lead · Add CS Rep · Role architecture built · First QBR to president · Welbilt / Ali Group ops story ready</div>
-      </div>
-    </div>
-  </div>
-</div>
-</div><!-- /tab-org -->
-
-<!-- ═══ TAB 2 — GAP ANALYSIS ═══ -->
-<div id="tab-gaps" class="tab-panel">
-<div class="gap-page">
-
-  <div class="gap-insight-bar">
-    <div class="gap-stat"><div class="gap-stat-num" style="color:var(--red);">14</div><div class="gap-stat-label">Total Gaps</div></div>
-    <div class="gap-stat"><div class="gap-stat-num" style="color:var(--red);">5</div><div class="gap-stat-label">Critical — Fix Now</div></div>
-    <div class="gap-stat"><div class="gap-stat-num" style="color:var(--cs);">7</div><div class="gap-stat-label">High — This Quarter</div></div>
-    <div class="gap-stat"><div class="gap-stat-num" style="color:#B8860B;">2</div><div class="gap-stat-label">Medium / Foundation</div></div>
-  </div>
-
-  <div class="gap-section-head">
-    <div style="width:10px;height:10px;border-radius:50%;background:var(--red);flex-shrink:0;"></div>
-    <div class="gap-section-title">Critical — Fix Now</div>
-    <div class="gap-section-line"></div>
-    <span class="ptag p-c">Phase 1 · 0–90 Days</span>
-  </div>
-  <div class="gap-grid-full">
-
-    <div class="gap-card-full" onclick="toggleCard(this)">
-      <div class="gap-card-stripe" style="background:var(--red);"></div>
-      <div class="gap-card-summary">
-        <div class="gap-card-meta"><span class="gap-card-fn">Sales</span><span class="ptag p-c">Critical</span></div>
-        <div class="gap-card-title-row"><div class="gap-card-title">CRM Adoption & Sales Process Formalization</div><span class="gap-card-chev">▼</span></div>
-        <div class="gap-card-footer"><span class="gap-card-owner">Owner: <strong>Gary</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-      </div>
-      <div class="gap-card-detail">
-        <div class="gap-card-desc">CRM exists but isn't used. No documented pipeline stages, entry/exit criteria, or rep accountability. Revenue is entirely dependent on individual relationships — not process. If a rep leaves, pipeline leaves with them.</div>
-        <div class="gap-card-impact"><span class="gap-impact-label">Impact · </span>Deals fall through cracks. Forecasting is impossible. Pipeline has no continuity beyond the individual rep.</div>
-      </div>
-    </div>
-
-    <div class="gap-card-full" onclick="toggleCard(this)">
-      <div class="gap-card-stripe" style="background:var(--red);"></div>
-      <div class="gap-card-summary">
-        <div class="gap-card-meta"><span class="gap-card-fn">Sales / Engineering</span><span class="ptag p-c">Critical</span></div>
-        <div class="gap-card-title-row"><div class="gap-card-title">Cook Chill Configurator + Standardized Quoting Process</div><span class="gap-card-chev">▼</span></div>
-        <div class="gap-card-footer"><span class="gap-card-owner">Owner: <strong>Farhana + Gary</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-      </div>
-      <div class="gap-card-detail">
-        <div class="gap-card-desc">No configurator and no standard quoting process. Every rep quotes differently — wrong specs, missing options, margin erosion with no way to enforce consistency. Farhana builds the rules engine; Gary and Farhana co-own the SOPs.</div>
-        <div class="gap-card-impact"><span class="gap-impact-label">Impact · </span>Margin leakage on every non-standard quote. Re-work costs, customer dissatisfaction at delivery, delayed revenue recognition.</div>
-      </div>
-    </div>
-
-    <div class="gap-card-full" onclick="toggleCard(this)">
-      <div class="gap-card-stripe" style="background:var(--red);"></div>
-      <div class="gap-card-summary">
-        <div class="gap-card-meta"><span class="gap-card-fn">Customer Service</span><span class="ptag p-c">Critical</span></div>
-        <div class="gap-card-title-row"><div class="gap-card-title">CS SLA Framework & Response Tracking</div><span class="gap-card-chev">▼</span></div>
-        <div class="gap-card-footer"><span class="gap-card-owner">Owner: <strong>Farhana</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-      </div>
-      <div class="gap-card-detail">
-        <div class="gap-card-desc">No SLA targets, no shared inbox, no response time tracking — emails sit in individual inboxes and no one knows what's open or overdue. Farhana owns SLA design, the shared inbox (<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4c3f293e3a252f290c2f20293a29202d22283e2d222b29622f2321">[email&#160;protected]</a>), the CS tracker, and the breach rate KPI.</div>
-        <div class="gap-card-impact"><span class="gap-impact-label">Impact · </span>Customers wait with no acknowledgment. Brian has no accountability structure. Issues fall through completely when he's busy or out.</div>
-      </div>
-    </div>
-
-    <div class="gap-card-full" onclick="toggleCard(this)">
-      <div class="gap-card-stripe" style="background:var(--red);"></div>
-      <div class="gap-card-summary">
-        <div class="gap-card-meta"><span class="gap-card-fn">Customer Service</span><span class="ptag p-c">Critical</span></div>
-        <div class="gap-card-title-row"><div class="gap-card-title">Customer Onboarding & Post-Sale Handoff</div><span class="gap-card-chev">▼</span></div>
-        <div class="gap-card-footer"><span class="gap-card-owner">Owner: <strong>Farhana + Brian</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-      </div>
-      <div class="gap-card-detail">
-        <div class="gap-card-desc">No structured handoff from sales to service after a deal closes. Customers don't know who to call, timelines slip, and the experience degrades exactly when trust is most fragile. Avoidable inbound overwhelms Brian.</div>
-        <div class="gap-card-impact"><span class="gap-impact-label">Impact · </span>Poor first impressions at the most critical trust moment. Referral opportunities lost. CS buried in avoidable inbound.</div>
-      </div>
-    </div>
-
-    <div class="gap-card-full" onclick="toggleCard(this)">
-      <div class="gap-card-stripe" style="background:var(--red);"></div>
-      <div class="gap-card-summary">
-        <div class="gap-card-meta"><span class="gap-card-fn">Tech Service / CX</span><span class="ptag p-c">Critical</span></div>
-        <div class="gap-card-title-row"><div class="gap-card-title">Warranty & Service Contract Lifecycle</div><span class="gap-card-chev">▼</span></div>
-        <div class="gap-card-footer"><span class="gap-card-owner">Owner: <strong>Gary · Gabria triggers via HubSpot</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-      </div>
-      <div class="gap-card-detail">
-        <div class="gap-card-desc">Warranty tracking is entirely manual. No renewal alerts, no service contract expiry follow-up, no post-install motion. At $140M in equipment sales, the installed base is enormous — a massive uncaptured revenue stream sitting on the floor. Gary owns strategy; Gabria automates the HubSpot triggers.</div>
-        <div class="gap-card-impact"><span class="gap-impact-label">Impact · </span>Missed service revenue, untracked warranty costs, zero visibility into product failure patterns in the field.</div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="gap-section-head">
-    <div style="width:10px;height:10px;border-radius:50%;background:var(--cs);flex-shrink:0;"></div>
-    <div class="gap-section-title">High — This Quarter</div>
-    <div class="gap-section-line"></div>
-    <span class="ptag p-h">Phase 1–2</span>
-  </div>
-  <div class="gap-grid-full">
-
-    <div class="gap-card-full" onclick="toggleCard(this)">
-      <div class="gap-card-stripe" style="background:var(--cs);"></div>
-      <div class="gap-card-summary">
-        <div class="gap-card-meta"><span class="gap-card-fn">Customer Service</span><span class="ptag p-h">High</span></div>
-        <div class="gap-card-title-row"><div class="gap-card-title">CS Discovery — Map Pain Points Before Building Anything</div><span class="gap-card-chev">▼</span></div>
-        <div class="gap-card-footer"><span class="gap-card-owner">Owner: <strong>Brian (led by Farhana)</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-      </div>
-      <div class="gap-card-detail">
-        <div class="gap-card-desc">Before any IVA or automation: what are the top call drivers, where does Brian's time actually go, what's repetitive and avoidable, and what does "better CS" mean here? IVA scope, automation priorities, and SLA targets all depend on discovery findings.</div>
-        <div class="gap-card-impact"><span class="gap-impact-label">Impact · </span>Building the wrong solution. An IVA that deflects the wrong questions frustrates customers and erodes trust rather than helping.</div>
-      </div>
-    </div>
-
-    <div class="gap-card-full" onclick="toggleCard(this)">
-      <div class="gap-card-stripe" style="background:var(--cs);"></div>
-      <div class="gap-card-summary">
-        <div class="gap-card-meta"><span class="gap-card-fn">Marketing</span><span class="ptag p-h">High</span></div>
-        <div class="gap-card-title-row"><div class="gap-card-title">Demand Generation & Lead Nurture Engine</div><span class="gap-card-chev">▼</span></div>
-        <div class="gap-card-footer"><span class="gap-card-owner">Owner: <strong>Gabria</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-      </div>
-      <div class="gap-card-detail">
-        <div class="gap-card-desc">HubSpot is installed but not generating pipeline. No nurture sequences, no lead scoring, no campaign attribution. 100% of pipeline comes from rep relationships — zero inbound motion to catch what falls through when reps leave.</div>
-        <div class="gap-card-impact"><span class="gap-impact-label">Impact · </span>If a top rep leaves, pipeline walks out with them. No marketing engine to compensate.</div>
-      </div>
-    </div>
-
-    <div class="gap-card-full" onclick="toggleCard(this)">
-      <div class="gap-card-stripe" style="background:var(--cs);"></div>
-      <div class="gap-card-summary">
-        <div class="gap-card-meta"><span class="gap-card-fn">Marketing</span><span class="ptag p-h">High</span></div>
-        <div class="gap-card-title-row"><div class="gap-card-title">AI Marketing Agents — Social & Content Graphics</div><span class="gap-card-chev">▼</span></div>
-        <div class="gap-card-footer"><span class="gap-card-owner">Owner: <strong>Gabria + Farhana</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-      </div>
-      <div class="gap-card-detail">
-        <div class="gap-card-desc">Social media and content graphics are done manually today. AI agents can automate scheduling, creation, and posting — freeing Gabria's capacity for higher-value strategic marketing and CX program work.</div>
-        <div class="gap-card-impact"><span class="gap-impact-label">Impact · </span>Gabria's capacity is constrained by manual execution. Automation multiplies her output without adding headcount.</div>
-      </div>
-    </div>
-
-    <div class="gap-card-full" onclick="toggleCard(this)">
-      <div class="gap-card-stripe" style="background:var(--cs);"></div>
-      <div class="gap-card-summary">
-        <div class="gap-card-meta"><span class="gap-card-fn">Tech Service</span><span class="ptag p-h">High</span></div>
-        <div class="gap-card-title-row"><div class="gap-card-title">Tech Service Metrics Dashboard</div><span class="gap-card-chev">▼</span></div>
-        <div class="gap-card-footer"><span class="gap-card-owner">Owner: <strong>Gary · Farhana builds</strong></span><span class="phase-tag">Phase 1 · 0–90 days</span></div>
-      </div>
-      <div class="gap-card-detail">
-        <div class="gap-card-desc">No KPIs tracked for field service — response times, resolution rates, ticket volume, technician utilization. Gary defines the targets and owns the output; Farhana builds the dashboard infrastructure.</div>
-        <div class="gap-card-impact"><span class="gap-impact-label">Impact · </span>No baseline to improve from. Can't make a data-driven case to the president for tech service investment without it.</div>
-      </div>
-    </div>
-
-    <div class="gap-card-full" onclick="toggleCard(this)">
-      <div class="gap-card-stripe" style="background:var(--cs);"></div>
-      <div class="gap-card-summary">
-        <div class="gap-card-meta"><span class="gap-card-fn">Tech Service</span><span class="ptag p-h">High</span></div>
-        <div class="gap-card-title-row"><div class="gap-card-title">Tech Service IVA — Post-Discovery Build</div><span class="gap-card-chev">▼</span></div>
-        <div class="gap-card-footer"><span class="gap-card-owner">Owner: <strong>Gary (strategy) · Farhana (build)</strong></span><span class="phase-tag">Phase 2 · post-CS discovery</span></div>
-      </div>
-      <div class="gap-card-detail">
-        <div class="gap-card-desc">AI-driven first-response, deflection, and self-service for tech service inbound. Gary owns direction and success metrics; Farhana builds. Scoped only after CS discovery surfaces what tier-1 volume actually looks like — building before then is guesswork.</div>
-        <div class="gap-card-impact"><span class="gap-impact-label">Impact · </span>IVA deflection reduces Brian's reactive load and creates capacity for higher-complexity CS improvements.</div>
-      </div>
-    </div>
-
-    <div class="gap-card-full" onclick="toggleCard(this)">
-      <div class="gap-card-stripe" style="background:var(--cs);"></div>
-      <div class="gap-card-summary">
-        <div class="gap-card-meta"><span class="gap-card-fn">CX / Tech Service</span><span class="ptag p-h">High</span></div>
-        <div class="gap-card-title-row"><div class="gap-card-title">Customer Health — NPS + CSAT Program</div><span class="gap-card-chev">▼</span></div>
-        <div class="gap-card-footer"><span class="gap-card-owner">Owner: <strong>Gary · Gabria executes</strong></span><span class="phase-tag">Phase 2 · 90–180 days</span></div>
-      </div>
-      <div class="gap-card-detail">
-        <div class="gap-card-desc">No NPS, CSAT, or customer health scoring. No way to identify at-risk accounts before they churn, no advocate identification for referrals. Gary owns the program; Gabria runs it through HubSpot post-install and post-service.</div>
-        <div class="gap-card-impact"><span class="gap-impact-label">Impact · </span>Churn happens as a surprise. Product improvements are reactive, not data-driven. Referral pipeline stays completely untapped.</div>
-      </div>
-    </div>
-
-    <div class="gap-card-full" onclick="toggleCard(this)">
-      <div class="gap-card-stripe" style="background:var(--cs);"></div>
-      <div class="gap-card-summary">
-        <div class="gap-card-meta"><span class="gap-card-fn">Finance / HR</span><span class="ptag p-h">High</span></div>
-        <div class="gap-card-title-row"><div class="gap-card-title">Finance & HR Automation Workflows</div><span class="gap-card-chev">▼</span></div>
-        <div class="gap-card-footer"><span class="gap-card-owner">Owner: <strong>Gary (builds)</strong></span><span class="phase-tag">Phase 2 · 90–180 days</span></div>
-      </div>
-      <div class="gap-card-detail">
-        <div class="gap-card-desc">AP/AR workflows, financial reporting automation, HR onboarding flows, and people ops efficiency improvements. Gary owns and builds these directly — Finance and HR sit under Gary, so full context and no dependency on Farhana's already-heavy workload.</div>
-        <div class="gap-card-impact"><span class="gap-impact-label">Impact · </span>Manual finance and HR processes create reporting lag and onboarding friction. Automation frees Gary's time for higher-value strategic work.</div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="gap-section-head">
-    <div style="width:10px;height:10px;border-radius:50%;background:#B8860B;flex-shrink:0;"></div>
-    <div class="gap-section-title">Medium & Foundation</div>
-    <div class="gap-section-line"></div>
-    <span class="ptag p-m">Phase 2–3</span>
-  </div>
-  <div class="gap-grid-full">
-
-    <div class="gap-card-full" onclick="toggleCard(this)">
-      <div class="gap-card-stripe" style="background:#B8860B;"></div>
-      <div class="gap-card-summary">
-        <div class="gap-card-meta"><span class="gap-card-fn">Sales / Marketing</span><span class="ptag p-m">Medium</span></div>
-        <div class="gap-card-title-row"><div class="gap-card-title">Channel Partner & Distributor Enablement</div><span class="gap-card-chev">▼</span></div>
-        <div class="gap-card-footer"><span class="gap-card-owner">Owner: <strong>Gary + Gabria</strong></span><span class="phase-tag">Phase 2 · 90–180 days</span></div>
-      </div>
-      <div class="gap-card-detail">
-        <div class="gap-card-desc">Partners lack structured materials, pricing tools, and co-marketing support. Inconsistent brand representation and pricing variation at channel level. Deal visibility is lost when partners go dark — no portal, no check-in cadence, no shared data.</div>
-        <div class="gap-card-impact"><span class="gap-impact-label">Impact · </span>Revenue left on the table at the channel level — the largest indirect revenue risk for a distributor-heavy sales motion.</div>
-      </div>
-    </div>
-
-    <div class="gap-card-full" onclick="toggleCard(this)">
-      <div class="gap-card-stripe" style="background:var(--p-found);"></div>
-      <div class="gap-card-summary">
-        <div class="gap-card-meta"><span class="gap-card-fn">HR / People Ops</span><span class="ptag p-f">Foundation</span></div>
-        <div class="gap-card-title-row"><div class="gap-card-title">People Ops Scalability & Role Architecture</div><span class="gap-card-chev">▼</span></div>
-        <div class="gap-card-footer"><span class="gap-card-owner">Owner: <strong>Gary</strong></span><span class="phase-tag">Phase 3 · 180 days+</span></div>
-      </div>
-      <div class="gap-card-detail">
-        <div class="gap-card-desc">No documented role ladder, hiring profiles, or onboarding playbook. As the org grows from tiger team to scaled structure, each new hire will be slower and more expensive to integrate without this foundation. The Sales Lead and Eng Lead hires are the first real test of it.</div>
-        <div class="gap-card-impact"><span class="gap-impact-label">Impact · </span>Talent acquisition delays, inconsistent onboarding quality, and org confusion as headcount grows beyond the current 3-person team.</div>
-      </div>
-    </div>
-
-  </div>
-</div>
-</div><!-- /tab-gaps -->
-
-<!-- ═══ TAB 3 — QBR ═══ -->
-<div id="tab-qbr" class="tab-panel">
-<div class="qbr-page">
-
-  <div class="qbr-framing">
-    <div class="qbr-frame-item">
-      <div class="qbr-frame-label">What this is</div>
-      <div class="qbr-frame-val">Gary's strategic ops story — not a finance review</div>
-      <div class="qbr-frame-sub">Finance owns the P&L. Gary owns the windshield.</div>
-    </div>
-    <div class="qbr-frame-item">
-      <div class="qbr-frame-label">Cadence & format</div>
-      <div class="qbr-frame-val">Quarterly · 60 min · Slide deck</div>
-      <div class="qbr-frame-sub">First QBR at close of Q2 2026 · Gary presents, president decides</div>
-    </div>
-    <div class="qbr-frame-item">
-      <div class="qbr-frame-label">Monthly addendum</div>
-      <div class="qbr-frame-val">One page attached to finance pack</div>
-      <div class="qbr-frame-sub">Ops metrics only · No meetings added · 1st of each month</div>
-    </div>
-  </div>
-
-  <div class="qbr-section-head">
-    <div class="qbr-section-num">1</div>
-    <div class="qbr-section-title">QBR Agenda — 60 Minutes</div>
-    <div class="qbr-section-line"></div>
-    <span class="qbr-section-time">60 min total</span>
-  </div>
-  <div class="agenda-grid">
-    <div class="agenda-card">
-      <div class="agenda-card-top"><div class="agenda-num">01</div><div><div class="agenda-title">Quarter in Review</div><div class="agenda-time">10 min · Gary presents</div></div></div>
-      <div class="agenda-body"><ul class="agenda-items">
-        <li class="agenda-item">Scorecard vs. prior quarter targets — what moved, what didn't</li>
-        <li class="agenda-item">One headline per function: Sales, Marketing, CS, Ops, Tech Service</li>
-        <li class="agenda-item">Revenue loop health — where did we leak, where did we win?</li>
-      </ul></div>
-    </div>
-    <div class="agenda-card">
-      <div class="agenda-card-top"><div class="agenda-num">02</div><div><div class="agenda-title">Initiative Progress</div><div class="agenda-time">15 min · Gary presents</div></div></div>
-      <div class="agenda-body"><ul class="agenda-items">
-        <li class="agenda-item">Phase 1 milestones — CRM, Configurator, CS SLAs, Warranty Lifecycle</li>
-        <li class="agenda-item">What launched, what's delayed, what changed in scope</li>
-        <li class="agenda-item">ROI realized — hours saved, margin protected, revenue captured</li>
-      </ul></div>
-    </div>
-    <div class="agenda-card">
-      <div class="agenda-card-top"><div class="agenda-num">03</div><div><div class="agenda-title">Customer & Pipeline Health</div><div class="agenda-time">10 min · Gary presents</div></div></div>
-      <div class="agenda-body"><ul class="agenda-items">
-        <li class="agenda-item">Pipeline coverage vs. 3× quota — CRM data</li>
-        <li class="agenda-item">NPS / CSAT trend once live — churn risks flagged</li>
-        <li class="agenda-item">Warranty renewal rate — service revenue captured vs. missed</li>
-        <li class="agenda-item">Top 3 at-risk accounts and action plan</li>
-      </ul></div>
-    </div>
-    <div class="agenda-card">
-      <div class="agenda-card-top"><div class="agenda-num">04</div><div><div class="agenda-title">Team & Org Update</div><div class="agenda-time">5 min · Gary presents</div></div></div>
-      <div class="agenda-body"><ul class="agenda-items">
-        <li class="agenda-item">Leadership pipeline — Gabria, Brian, Farhana milestones</li>
-        <li class="agenda-item">Capacity flags — anyone overloaded, scope creep building</li>
-        <li class="agenda-item">Phase 2 hiring triggers — are we at the threshold?</li>
-      </ul></div>
-    </div>
-    <div class="agenda-card">
-      <div class="agenda-card-top"><div class="agenda-num">05</div><div><div class="agenda-title">Next Quarter Plan</div><div class="agenda-time">10 min · Gary presents</div></div></div>
-      <div class="agenda-body"><ul class="agenda-items">
-        <li class="agenda-item">Top 3 priorities for next quarter — why these, why now</li>
-        <li class="agenda-item">Risks and dependencies that could slow us down</li>
-        <li class="agenda-item">Leading indicators to watch this quarter</li>
-      </ul></div>
-    </div>
-    <div class="agenda-card" style="border-top:3px solid var(--red);">
-      <div class="agenda-card-top"><div class="agenda-num" style="color:var(--red);">06</div><div><div class="agenda-title">The Ask</div><div class="agenda-time">10 min · Discussion</div></div></div>
-      <div class="agenda-body"><ul class="agenda-items">
-        <li class="agenda-item">Budget or resource requests — specific, justified by data</li>
-        <li class="agenda-item">Hiring approvals — trigger criteria met, role defined</li>
-        <li class="agenda-item">Decisions needed from president — escalations, blockers</li>
-        <li class="agenda-item">Strategic alignment — anything shifting at Welbilt / Ali Group?</li>
-      </ul></div>
-    </div>
-  </div>
-
-  <div class="qbr-section-head">
-    <div class="qbr-section-num">2</div>
-    <div class="qbr-section-title">KPI Scorecard — Operational Metrics Only</div>
-    <div class="qbr-section-line"></div>
-    <span class="qbr-section-time">No P&L · No balance sheet</span>
-  </div>
-  <div class="kpi-grid">
-
-    <div class="kpi-block">
-      <div class="kpi-block-head"><div class="kpi-block-bar" style="background:var(--red);"></div><div class="kpi-block-title" style="color:var(--red);">Sales & Pipeline</div><div class="kpi-block-owner">Gary</div></div>
-      <table class="kpi-table"><thead><tr><th>Metric</th><th>Target</th><th>Why it matters</th></tr></thead><tbody>
-        <tr><td><div class="kpi-metric">CRM Pipeline Coverage</div></td><td><div class="kpi-target">3× quota</div></td><td><div class="kpi-why">Are we building enough future revenue?</div></td></tr>
-        <tr><td><div class="kpi-metric">Quote Accuracy Rate</div></td><td><div class="kpi-target">≥95%</div></td><td><div class="kpi-why">Every bad quote erodes margin</div></td></tr>
-        <tr><td><div class="kpi-metric">Quote-to-Close Cycle</div></td><td><div class="kpi-target">≤X days</div></td><td><div class="kpi-why">How fast does pipeline convert?</div></td></tr>
-        <tr><td><div class="kpi-metric">CRM Adoption Rate</div></td><td><div class="kpi-target">100% deals logged</div></td><td><div class="kpi-why">No logging = no forecasting</div></td></tr>
-      </tbody></table>
-    </div>
-
-    <div class="kpi-block">
-      <div class="kpi-block-head"><div class="kpi-block-bar" style="background:var(--mkt);"></div><div class="kpi-block-title" style="color:var(--mkt);">Marketing</div><div class="kpi-block-owner">Gabria</div></div>
-      <table class="kpi-table"><thead><tr><th>Metric</th><th>Target</th><th>Why it matters</th></tr></thead><tbody>
-        <tr><td><div class="kpi-metric">Lead-to-Opportunity Rate</div></td><td><div class="kpi-target">≥X%</div></td><td><div class="kpi-why">Is HubSpot generating real pipeline?</div></td></tr>
-        <tr><td><div class="kpi-metric">Campaign Attribution</div></td><td><div class="kpi-target">% pipeline sourced</div></td><td><div class="kpi-why">Which activities drive revenue?</div></td></tr>
-        <tr><td><div class="kpi-metric">AI Agent Output</div></td><td><div class="kpi-target">Posts/mo automated</div></td><td><div class="kpi-why">Capacity freed by automation</div></td></tr>
-      </tbody></table>
-    </div>
-
-    <div class="kpi-block">
-      <div class="kpi-block-head"><div class="kpi-block-bar" style="background:var(--cs);"></div><div class="kpi-block-title" style="color:var(--cs);">Customer Service</div><div class="kpi-block-owner">Farhana (Brian executes)</div></div>
-      <table class="kpi-table"><thead><tr><th>Metric</th><th>Target</th><th>Why it matters</th></tr></thead><tbody>
-        <tr><td><div class="kpi-metric">First Response Time</div></td><td><div class="kpi-target">Complaint 2hr · Tech 4hr · Order 8hr</div></td><td><div class="kpi-why">Did the customer hear back fast enough?</div></td></tr>
-        <tr><td><div class="kpi-metric">Missed Response Rate</div></td><td><div class="kpi-target">&lt;10%</div></td><td><div class="kpi-why">How often are we dropping the ball?</div></td></tr>
-        <tr><td><div class="kpi-metric">Ticket Resolution Time</div></td><td><div class="kpi-target">≤X hrs avg</div></td><td><div class="kpi-why">How quickly are issues fully resolved?</div></td></tr>
-        <tr><td><div class="kpi-metric">Reopened Rate</div></td><td><div class="kpi-target">&lt;15%</div></td><td><div class="kpi-why">Did we actually fix it the first time?</div></td></tr>
-      </tbody></table>
-    </div>
-
-    <div class="kpi-block">
-      <div class="kpi-block-head"><div class="kpi-block-bar" style="background:var(--tech);"></div><div class="kpi-block-title" style="color:var(--tech);">Tech Service & CX</div><div class="kpi-block-owner">Gary</div></div>
-      <table class="kpi-table"><thead><tr><th>Metric</th><th>Target</th><th>Why it matters</th></tr></thead><tbody>
-        <tr><td><div class="kpi-metric">Warranty Renewal Rate</div></td><td><div class="kpi-target">≥90%</div></td><td><div class="kpi-why">Captured service revenue vs. walked out door</div></td></tr>
-        <tr><td><div class="kpi-metric">IVA Deflection Rate</div></td><td><div class="kpi-target">&gt;40% → 60%</div></td><td><div class="kpi-why">AI handling tier-1 before it hits Brian</div></td></tr>
-        <tr><td><div class="kpi-metric">NPS Score</div></td><td><div class="kpi-target">≥50 target</div></td><td><div class="kpi-why">Would customers refer Cleveland Range?</div></td></tr>
-        <tr><td><div class="kpi-metric">CSAT Post-Install</div></td><td><div class="kpi-target">≥4.2 / 5</div></td><td><div class="kpi-why">First impression after every delivery</div></td></tr>
-        <tr><td><div class="kpi-metric">Service Contract Attach Rate</div></td><td><div class="kpi-target">≥X% of installs</div></td><td><div class="kpi-why">Post-install revenue per deal</div></td></tr>
-      </tbody></table>
-    </div>
-
-    <div class="kpi-block">
-      <div class="kpi-block-head"><div class="kpi-block-bar" style="background:var(--eng);"></div><div class="kpi-block-title" style="color:var(--eng);">Manufacturing Ops</div><div class="kpi-block-owner">Farhana</div></div>
-      <table class="kpi-table"><thead><tr><th>Metric</th><th>Target</th><th>Why it matters</th></tr></thead><tbody>
-        <tr><td><div class="kpi-metric">Productivity</div></td><td><div class="kpi-target">vs. plan</div></td><td><div class="kpi-why">Is the plant hitting output targets?</div></td></tr>
-        <tr><td><div class="kpi-metric">Equipment Uptime</div></td><td><div class="kpi-target">≥X%</div></td><td><div class="kpi-why">Unplanned downtime = delayed shipments</div></td></tr>
-        <tr><td><div class="kpi-metric">Quote-to-Ship Cycle</div></td><td><div class="kpi-target">≤X days</div></td><td><div class="kpi-why">Confirmed order to delivery — full commercial cycle</div></td></tr>
-        <tr><td><div class="kpi-metric">Configurator Utilization</div></td><td><div class="kpi-target">≥90% of quotes</div></td><td><div class="kpi-why">Are reps using it or going rogue?</div></td></tr>
-        <tr><td><div class="kpi-metric">Initiative Milestones On-Track</div></td><td><div class="kpi-target">% on plan</div></td><td><div class="kpi-why">Phase builds progressing on schedule?</div></td></tr>
-      </tbody></table>
-    </div>
-
-    <div class="kpi-block">
-      <div class="kpi-block-head"><div class="kpi-block-bar" style="background:#1A5276;"></div><div class="kpi-block-title" style="color:#1A5276;">NPI / Engineering</div><div class="kpi-block-owner">Farhana</div></div>
-      <table class="kpi-table"><thead><tr><th>Metric</th><th>Target</th><th>Why it matters</th></tr></thead><tbody>
-        <tr><td><div class="kpi-metric">NPI Milestone Adherence</div></td><td><div class="kpi-target">≥X% gates on time</div></td><td><div class="kpi-why">Design freeze, prototype, pilot — hitting them?</div></td></tr>
-        <tr><td><div class="kpi-metric">NPI Cycle Time</div></td><td><div class="kpi-target">≤X weeks</div></td><td><div class="kpi-why">Concept to production-ready</div></td></tr>
-        <tr><td><div class="kpi-metric">NPI Revenue vs. Plan</div></td><td><div class="kpi-target">$ vs. target</div></td><td><div class="kpi-why">Did the launch pay off commercially?</div></td></tr>
-        <tr><td><div class="kpi-metric">NPI Cost vs. Budget</div></td><td><div class="kpi-target">≤budget</div></td><td><div class="kpi-why">Did development come in on cost?</div></td></tr>
-        <tr><td><div class="kpi-metric">ECOs Post-Launch</div></td><td><div class="kpi-target">≤X per NPI</div></td><td><div class="kpi-why">Too many = product released before it was ready</div></td></tr>
-        <tr><td><div class="kpi-metric">Warranty Cost per NPI</div></td><td><div class="kpi-target">$ trend</div></td><td><div class="kpi-why">Are new products driving disproportionate claims?</div></td></tr>
-        <tr><td><div class="kpi-metric">Active NPI Count</div></td><td><div class="kpi-target">vs. capacity</div></td><td><div class="kpi-why">Are we overloading the pipeline?</div></td></tr>
-      </tbody></table>
-    </div>
-
-    <div class="kpi-block">
-      <div class="kpi-block-head"><div class="kpi-block-bar" style="background:var(--charcoal);"></div><div class="kpi-block-title" style="color:var(--charcoal);">Leadership Pipeline</div><div class="kpi-block-owner">Gary</div></div>
-      <table class="kpi-table"><thead><tr><th>Person</th><th>Current milestone</th><th>Track</th></tr></thead><tbody>
-        <tr><td><div class="kpi-metric">Gabria</div></td><td><div class="kpi-target">HubSpot + NPS/CSAT live</div></td><td><div class="kpi-why">VP Customer Experience</div></td></tr>
-        <tr><td><div class="kpi-metric">Brian</div></td><td><div class="kpi-target">CS discovery complete</div></td><td><div class="kpi-why">Head of Service Operations</div></td></tr>
-        <tr><td><div class="kpi-metric">Farhana</div></td><td><div class="kpi-target">Configurator + CS framework live</div></td><td><div class="kpi-why">VP Operations / COO track</div></td></tr>
-        <tr><td><div class="kpi-metric">Phase 2 hires</div></td><td><div class="kpi-target">Triggers met?</div></td><td><div class="kpi-why">Sales Lead + Eng Lead</div></td></tr>
-      </tbody></table>
-    </div>
-
-  </div>
-
-  <div class="qbr-section-head">
-    <div class="qbr-section-num">3</div>
-    <div class="qbr-section-title">Monthly Pack Addendum</div>
-    <div class="qbr-section-line"></div>
-    <span class="qbr-section-time">Attached to finance pack · 1st of month · No meeting added</span>
-  </div>
-  <div class="addendum-wrap">
-    <div class="addendum-head">
-      <div class="addendum-head-title">OPERATIONS ADDENDUM — Monthly · Cleveland Range · Business Operations</div>
-      <div class="addendum-head-sub">One page · Alongside finance pack · Ops layer only</div>
-    </div>
-    <table class="addendum-table">
-      <thead><tr><th>Function</th><th>Metric</th><th>Target</th><th>Actual MTD</th><th>Owner</th></tr></thead>
-      <tbody>
-        <tr><td><span class="fn-dot" style="background:var(--red);"></span>Sales</td><td>Pipeline Coverage</td><td>3× quota</td><td style="color:#aaa;font-style:italic;">[Live]</td><td>Gary</td></tr>
-        <tr><td><span class="fn-dot" style="background:var(--red);"></span>Sales</td><td>Quote Accuracy Rate</td><td>≥95%</td><td style="color:#aaa;font-style:italic;">[Live]</td><td>Farhana</td></tr>
-        <tr><td><span class="fn-dot" style="background:var(--mkt);"></span>Marketing</td><td>Lead-to-Opportunity Rate</td><td>≥X%</td><td style="color:#aaa;font-style:italic;">[Live]</td><td>Gabria</td></tr>
-        <tr><td><span class="fn-dot" style="background:var(--cs);"></span>CS</td><td>Missed Response Rate</td><td>&lt;10%</td><td style="color:#aaa;font-style:italic;">[Live]</td><td>Farhana</td></tr>
-        <tr><td><span class="fn-dot" style="background:var(--cs);"></span>CS</td><td>First Response Time (avg)</td><td>Per type</td><td style="color:#aaa;font-style:italic;">[Live]</td><td>Farhana</td></tr>
-        <tr><td><span class="fn-dot" style="background:var(--tech);"></span>Tech / CX</td><td>Warranty Renewal Rate</td><td>≥90%</td><td style="color:#aaa;font-style:italic;">[Live]</td><td>Gary</td></tr>
-        <tr><td><span class="fn-dot" style="background:var(--tech);"></span>Tech / CX</td><td>IVA Deflection Rate</td><td>&gt;40%</td><td style="color:#aaa;font-style:italic;">[Live]</td><td>Gary</td></tr>
-        <tr><td><span class="fn-dot" style="background:var(--eng);"></span>Mfg Ops</td><td>Productivity</td><td>vs. plan</td><td style="color:#aaa;font-style:italic;">[Live]</td><td>Farhana</td></tr>
-        <tr><td><span class="fn-dot" style="background:var(--eng);"></span>Mfg Ops</td><td>Equipment Uptime</td><td>≥X%</td><td style="color:#aaa;font-style:italic;">[Live]</td><td>Farhana</td></tr>
-        <tr><td><span class="fn-dot" style="background:var(--eng);"></span>Mfg Ops</td><td>Quote-to-Ship Cycle</td><td>≤X days</td><td style="color:#aaa;font-style:italic;">[Live]</td><td>Farhana</td></tr>
-        <tr><td><span class="fn-dot" style="background:#1A5276;"></span>NPI</td><td>NPI Milestone Adherence</td><td>≥X% on time</td><td style="color:#aaa;font-style:italic;">[Live]</td><td>Farhana</td></tr>
-        <tr><td><span class="fn-dot" style="background:#1A5276;"></span>NPI</td><td>Active NPI Count vs. Capacity</td><td>vs. plan</td><td style="color:#aaa;font-style:italic;">[Live]</td><td>Farhana</td></tr>
-        <tr><td style="font-weight:600;color:var(--red);" colspan="5">FLAGS THIS MONTH — Items requiring president decision or awareness</td></tr>
-        <tr><td colspan="5" style="color:#bbb;font-style:italic;">1. _________________________________ &nbsp;&nbsp;&nbsp;&nbsp; 2. _________________________________</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="qbr-section-head">
-    <div class="qbr-section-num">4</div>
-    <div class="qbr-section-title">Rules of Engagement</div>
-    <div class="qbr-section-line"></div>
-  </div>
-  <div class="rules-grid">
-    <div class="rule-card" style="border-top-color:var(--red);">
-      <div class="rule-label">What belongs in QBR</div>
-      <div class="rule-val">Strategic ops story</div>
-      <div class="rule-desc">Initiative ROI, pipeline health, customer metrics, org development, hiring asks. Forward-looking. Gary sets the narrative.</div>
-    </div>
-    <div class="rule-card" style="border-top-color:#888;">
-      <div class="rule-label">What doesn't belong</div>
-      <div class="rule-val">Hard finance & P&L</div>
-      <div class="rule-desc">Revenue actuals, gross margin, balance sheet, SG&A — that's the finance team's pack. Reference it, don't own it. Never duplicate it.</div>
-    </div>
-    <div class="rule-card" style="border-top-color:var(--eng);">
-      <div class="rule-label">How to frame the ask</div>
-      <div class="rule-val">Data first, ask second</div>
-      <div class="rule-desc">Every budget or headcount request must be preceded by a metric that justifies it. "CRM coverage is 1.8× — we need a Sales Lead to fix that" lands better than just asking.</div>
-    </div>
-    <div class="rule-card" style="border-top-color:var(--mkt);">
-      <div class="rule-label">Tone with the president</div>
-      <div class="rule-val">Ops partner, not reporter</div>
-      <div class="rule-desc">Don't just present numbers — bring a point of view. A finance background respects directness and conviction over slides full of data without a recommendation.</div>
-    </div>
-    <div class="rule-card" style="border-top-color:var(--cs);">
-      <div class="rule-label">Targets & baselines</div>
-      <div class="rule-val">Set in Month 1, then trend</div>
-      <div class="rule-desc">First QBR establishes the baseline. Variance trends matter more than point-in-time numbers. Direction of travel is the story — are things getting better?</div>
-    </div>
-    <div class="rule-card" style="border-top-color:var(--charcoal);">
-      <div class="rule-label">Welbilt / Ali Group readiness</div>
-      <div class="rule-val">Build the story now</div>
-      <div class="rule-desc">Every QBR is practice for the parent org. By Q3–Q4 Gary will have clean data showing the operational transformation he's led. That's the story that matters upward.</div>
-    </div>
-  </div>
-
-</div>
-</div><!-- /tab-qbr -->
-
-<!-- TAB 4 AI & AUTOMATION -->
-<div id="tab-ai" class="tab-panel">
-<style>
-  .ai-page{max-width:1300px;margin:28px auto 48px;padding:0 20px;}
-  .ai-banner{background:var(--charcoal);border-radius:10px;padding:24px 32px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
-  .ai-banner-left h2{font-family:'EB Garamond',serif;font-size:1.5rem;color:var(--white);margin-bottom:4px;}
-  .ai-banner-left p{font-size:0.82rem;color:rgba(255,255,255,0.45);max-width:560px;line-height:1.6;}
-  .ai-banner-stats{display:flex;gap:24px;flex-shrink:0;}
-  .ai-bstat{text-align:center;}
-  .ai-bstat-num{font-family:'EB Garamond',serif;font-size:2rem;color:var(--red);line-height:1;}
-  .ai-bstat-label{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.35);margin-top:3px;}
-  .ai-sh{display:flex;align-items:center;gap:12px;margin-bottom:16px;margin-top:28px;}
-  .ai-sh:first-of-type{margin-top:0;}
-  .ai-sh-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-  .ai-sh-title{font-family:'EB Garamond',serif;font-size:1.2rem;font-weight:500;}
-  .ai-sh-line{flex:1;height:1px;background:var(--mid);}
-  .ai-sh-owner{font-size:0.72rem;color:#aaa;}
-  .ai-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
-  .ai-card{background:var(--white);border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.055);overflow:hidden;}
-  .ai-card-accent{height:5px;}
-  .ai-card-body{padding:16px 18px 18px;}
-  .ai-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;}
-  .ai-card-fn{font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:700;color:#aaa;margin-bottom:4px;}
-  .ai-card-title{font-family:'EB Garamond',serif;font-size:1.05rem;font-weight:500;color:var(--charcoal);line-height:1.3;}
-  .ai-card-owner-lbl{font-size:0.72rem;color:#aaa;white-space:nowrap;flex-shrink:0;margin-top:2px;}
-  .ai-bva{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;}
-  .ai-bva-col{border-radius:5px;padding:9px 12px;}
-  .ai-bva-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;font-weight:700;margin-bottom:4px;}
-  .ai-bva-before{background:#FDE8EC;}.ai-bva-before .ai-bva-label{color:var(--dark-red);}
-  .ai-bva-after{background:#EAF3DE;}.ai-bva-after .ai-bva-label{color:#27500A;}
-  .ai-bva-text{font-size:0.78rem;line-height:1.5;color:var(--charcoal);}
-  .ai-card-gain{background:var(--light);border-radius:4px;padding:8px 12px;font-size:0.78rem;color:var(--charcoal);line-height:1.5;margin-top:8px;}
-  .ai-gain-label{font-weight:700;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--eng);margin-right:4px;}
-  .ai-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;flex-wrap:wrap;gap:6px;}
-  .ai-ptag{font-size:0.7rem;font-weight:600;padding:2px 8px;border-radius:3px;background:#EEEEF0;color:#666;}
-  .ai-stag{font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:3px;}
-  .ai-st-planned{background:#FDF0E8;color:#9B4500;}
-  .ai-st-building{background:#E8F1FC;color:#1A4F8A;}
-  .ai-st-postdisc{background:#F0F0F0;color:#666;}
-  .ai-principles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;}
-  .ai-principle{background:var(--white);border-radius:8px;padding:16px 18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border-top:3px solid var(--eng);}
-  .ai-principle-num{font-family:'EB Garamond',serif;font-size:1.5rem;color:var(--mid);margin-bottom:4px;}
-  .ai-principle-title{font-size:0.88rem;font-weight:600;color:var(--charcoal);margin-bottom:5px;}
-  .ai-principle-desc{font-size:0.78rem;color:#777;line-height:1.55;}
-</style>
-<div class="ai-page">
-
-  <div class="ai-banner">
-    <div class="ai-banner-left">
-      <h2>AI &amp; Automation — Productivity Layer</h2>
-      <p>AI isn't a department here — it's a capability thread running through every function. Each initiative below replaces manual effort with intelligent automation, freeing the team to do higher-value work without adding headcount.</p>
-    </div>
-    <div class="ai-banner-stats">
-      <div class="ai-bstat"><div class="ai-bstat-num">5</div><div class="ai-bstat-label">AI Initiatives</div></div>
-      <div class="ai-bstat"><div class="ai-bstat-num">4</div><div class="ai-bstat-label">Functions Impacted</div></div>
-      <div class="ai-bstat"><div class="ai-bstat-num">0</div><div class="ai-bstat-label">New Hires Needed</div></div>
-    </div>
-  </div>
-
-  <!-- MARKETING -->
-  <div class="ai-sh">
-    <div class="ai-sh-dot" style="background:var(--mkt);"></div>
-    <div class="ai-sh-title">Marketing</div>
-    <div class="ai-sh-line"></div>
-    <span class="ai-sh-owner">Gabria + Farhana</span>
-  </div>
-  <div class="ai-grid">
-    <div class="ai-card">
-      <div class="ai-card-accent" style="background:var(--mkt);"></div>
-      <div class="ai-card-body">
-        <div class="ai-card-top">
-          <div><div class="ai-card-fn">Marketing · Content</div><div class="ai-card-title">AI Marketing Agents — Social &amp; Content Graphics</div></div>
-          <div class="ai-card-owner-lbl">Gabria + Farhana</div>
-        </div>
-        <div class="ai-bva">
-          <div class="ai-bva-col ai-bva-before"><div class="ai-bva-label">Before</div><div class="ai-bva-text">Gabria manually creates posts, graphics, and schedules content. Hours of execution work per week with no scale.</div></div>
-          <div class="ai-bva-col ai-bva-after"><div class="ai-bva-label">After</div><div class="ai-bva-text">AI agents draft, design, and schedule. Gabria reviews and approves. Execution time drops from hours to minutes.</div></div>
-        </div>
-        <div class="ai-card-gain"><span class="ai-gain-label">Productivity gain &middot; </span>Gabria's capacity shifts from content execution to demand gen and CX strategy. Same headcount, significantly more output.</div>
-        <div class="ai-card-footer"><span class="ai-ptag">Phase 1 · 0–90 days</span><span class="ai-stag ai-st-building">In Build</span></div>
-      </div>
-    </div>
-    <div class="ai-card">
-      <div class="ai-card-accent" style="background:var(--mkt);"></div>
-      <div class="ai-card-body">
-        <div class="ai-card-top">
-          <div><div class="ai-card-fn">Marketing · CX</div><div class="ai-card-title">HubSpot Automated Nurture &amp; Warranty Triggers</div></div>
-          <div class="ai-card-owner-lbl">Gabria</div>
-        </div>
-        <div class="ai-bva">
-          <div class="ai-bva-col ai-bva-before"><div class="ai-bva-label">Before</div><div class="ai-bva-text">No follow-up sequences. Warranty renewals tracked manually. Post-install outreach depends on someone remembering to reach out.</div></div>
-          <div class="ai-bva-col ai-bva-after"><div class="ai-bva-label">After</div><div class="ai-bva-text">HubSpot workflows fire automatically on install date, warranty expiry, and service intervals. Renewals and upsells triggered without manual initiation.</div></div>
-        </div>
-        <div class="ai-card-gain"><span class="ai-gain-label">Productivity gain &middot; </span>Warranty revenue captured passively. Service contract attach rate increases with zero additional CS or sales effort.</div>
-        <div class="ai-card-footer"><span class="ai-ptag">Phase 1 · 0–90 days</span><span class="ai-stag ai-st-planned">Planned</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TECH SERVICE / CS -->
-  <div class="ai-sh">
-    <div class="ai-sh-dot" style="background:var(--tech);"></div>
-    <div class="ai-sh-title">Tech Service &amp; Customer Service</div>
-    <div class="ai-sh-line"></div>
-    <span class="ai-sh-owner">Gary (strategy) · Farhana (build) · Brian (operates)</span>
-  </div>
-  <div class="ai-grid">
-    <div class="ai-card">
-      <div class="ai-card-accent" style="background:var(--tech);"></div>
-      <div class="ai-card-body">
-        <div class="ai-card-top">
-          <div><div class="ai-card-fn">Tech Service · CS</div><div class="ai-card-title">Intelligent Virtual Agent (IVA) — Tier-1 Deflection</div></div>
-          <div class="ai-card-owner-lbl">Gary + Farhana</div>
-        </div>
-        <div class="ai-bva">
-          <div class="ai-bva-col ai-bva-before"><div class="ai-bva-label">Before</div><div class="ai-bva-text">20,000 min/month · 5,000 calls · 25% drop rate = 1,250 calls that never connect. Every inbound hits Brian directly regardless of complexity.</div></div>
-          <div class="ai-bva-col ai-bva-after"><div class="ai-bva-label">After</div><div class="ai-bva-text">IVA captures dropped calls instantly + handles order status, FAQs, basic troubleshooting. Routes complex issues to Brian with context. Target: 6,000 min/month deflected.</div></div>
-        </div>
-        <div class="ai-card-gain"><span class="ai-gain-label">Productivity gain &middot; </span>6,000 min/month @ $35/hr = ~$3,500/mo recovered capacity. The 1,250 dropped calls alone justify the IVA — every one is a missed customer interaction today.</div>
-        <div class="ai-card-footer"><span class="ai-ptag">Phase 2 · post-CS discovery</span><span class="ai-stag ai-st-postdisc">Post-Discovery</span></div>
-      </div>
-    </div>
-    <div class="ai-card">
-      <div class="ai-card-accent" style="background:var(--cs);"></div>
-      <div class="ai-card-body">
-        <div class="ai-card-top">
-          <div><div class="ai-card-fn">Customer Service</div><div class="ai-card-title">AI-Assisted CS Triage &amp; Response Drafting</div></div>
-          <div class="ai-card-owner-lbl">Farhana + Brian</div>
-        </div>
-        <div class="ai-bva">
-          <div class="ai-bva-col ai-bva-before"><div class="ai-bva-label">Before</div><div class="ai-bva-text">Brian reads every email from scratch, recalls context manually, drafts full responses himself. High cognitive load on a single person with no backup.</div></div>
-          <div class="ai-bva-col ai-bva-after"><div class="ai-bva-label">After</div><div class="ai-bva-text">AI categorizes inbound, surfaces relevant ticket history, and drafts a response. Brian reviews, edits, and sends. First response time drops significantly.</div></div>
-        </div>
-        <div class="ai-card-gain"><span class="ai-gain-label">Productivity gain &middot; </span>Faster response times improve SLA compliance immediately. Brian handles higher volume. Discovery findings train the AI on Cleveland Range-specific language and issues.</div>
-        <div class="ai-card-footer"><span class="ai-ptag">Phase 2 · post-CS discovery</span><span class="ai-stag ai-st-postdisc">Post-Discovery</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ENGINEERING + REPORTING -->
-  <div class="ai-sh">
-    <div class="ai-sh-dot" style="background:var(--eng);"></div>
-    <div class="ai-sh-title">Manufacturing Operations &amp; Engineering</div>
-    <div class="ai-sh-line"></div>
-    <span class="ai-sh-owner">Farhana (manufacturing ops + configurator) · Gary (reporting)</span>
-  </div>
-  <div class="ai-grid">
-    <div class="ai-card">
-      <div class="ai-card-accent" style="background:var(--eng);"></div>
-      <div class="ai-card-body">
-        <div class="ai-card-top">
-          <div><div class="ai-card-fn">Engineering · Sales</div><div class="ai-card-title">Cook Chill Configurator &amp; Automated Quoting Logic</div></div>
-          <div class="ai-card-owner-lbl">Farhana</div>
-        </div>
-        <div class="ai-bva">
-          <div class="ai-bva-col ai-bva-before"><div class="ai-bva-label">Before</div><div class="ai-bva-text">Reps build quotes manually from memory. Wrong specs selected, margin floors bypassed, no rules enforcement. Every quote is a one-off with no consistency.</div></div>
-          <div class="ai-bva-col ai-bva-after"><div class="ai-bva-label">After</div><div class="ai-bva-text">Configurator logic validates selections in real time, flags incompatible specs, enforces margin floors, and auto-generates a clean quote document. Human error removed from the quoting path.</div></div>
-        </div>
-        <div class="ai-card-gain"><span class="ai-gain-label">Productivity gain &middot; </span>Quote creation drops from 30–60 min to under 10. Quote accuracy hits ≥95% target. Margin leakage sealed at the source. Frees reps to spend time selling, not configuring.</div>
-        <div class="ai-card-footer"><span class="ai-ptag">Phase 1 · 0–90 days</span><span class="ai-stag ai-st-building">In Build</span></div>
-      </div>
-    </div>
-    <div class="ai-card">
-      <div class="ai-card-accent" style="background:var(--red);"></div>
-      <div class="ai-card-body">
-        <div class="ai-card-top">
-          <div><div class="ai-card-fn">Reporting · Leadership</div><div class="ai-card-title">AI-Assisted Ops Dashboard &amp; Monthly Addendum</div></div>
-          <div class="ai-card-owner-lbl">Gary</div>
-        </div>
-        <div class="ai-bva">
-          <div class="ai-bva-col ai-bva-before"><div class="ai-bva-label">Before</div><div class="ai-bva-text">Leadership reporting is manual — pulling numbers from different systems, building slides, writing commentary. Takes hours each month with high error risk.</div></div>
-          <div class="ai-bva-col ai-bva-after"><div class="ai-bva-label">After</div><div class="ai-bva-text">Dashboard auto-populates from live data. AI generates variance commentary and flags anomalies. Gary reviews and adds context. Monthly addendum takes 15 minutes, not 3 hours.</div></div>
-        </div>
-        <div class="ai-card-gain"><span class="ai-gain-label">Productivity gain &middot; </span>Gary's reporting time drops from hours to minutes. President gets a consistent, real-time ops view every month without manual assembly.</div>
-        <div class="ai-card-footer"><span class="ai-ptag">Phase 1 · 0–90 days</span><span class="ai-stag ai-st-building">In Build</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PRINCIPLES -->
-  <div class="ai-sh">
-    <div class="ai-sh-dot" style="background:var(--charcoal);"></div>
-    <div class="ai-sh-title">How We Use AI — Three Principles</div>
-    <div class="ai-sh-line"></div>
-  </div>
-  <div class="ai-principles">
-    <div class="ai-principle">
-      <div class="ai-principle-num">01</div>
-      <div class="ai-principle-title">AI amplifies people, doesn't replace them</div>
-      <div class="ai-principle-desc">Every AI initiative here frees a team member to do higher-value work — it doesn't eliminate their role. Gabria approves what AI drafts. Brian handles what the IVA can't. Gary interprets what the dashboard surfaces.</div>
-    </div>
-    <div class="ai-principle">
-      <div class="ai-principle-num">02</div>
-      <div class="ai-principle-title">Discover before you automate</div>
-      <div class="ai-principle-desc">The IVA and CS triage tools are deliberately scoped after the CS discovery sprint. Automating a broken process makes a broken process faster — not better. Discovery first, build second, always.</div>
-    </div>
-    <div class="ai-principle">
-      <div class="ai-principle-num">03</div>
-      <div class="ai-principle-title">Measure the productivity gain</div>
-      <div class="ai-principle-desc">Every AI initiative has a measurable outcome: deflection rate, quote accuracy, response time, reporting hours saved. These are QBR metrics. If we can't measure the gain, we can't justify the build to the president.</div>
-    </div>
-  </div>
-
-</div>
-</div>
-
-
-<!-- TAB 5: AI MATURITY SCALE -->
-<div id="tab-maturity" class="tab-panel">
-<div style="background:#0E1117;min-height:100vh;padding-bottom:48px;">
-<style>
-  
-  *{margin:0;padding:0;box-sizing:border-box;}
-
-  /* HEADER */
-  .header h1 span{color:var(--red);}
-
-  /* SCALE LEGEND */
-  .scale-legend{max-width:1300px;margin:28px auto 0;padding:0 48px;display:flex;align-items:center;gap:0;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.06);overflow:hidden;}
-  .scale-step{flex:1;padding:14px 0;text-align:center;border-right:1px solid rgba(255,255,255,0.06);position:relative;}
-  .scale-step:last-child{border-right:none;}
-  .scale-step-num{font-family:'EB Garamond',serif;font-size:1.6rem;font-weight:500;line-height:1;}
-  .scale-step-label{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:3px;}
-
-  /* MAIN CHART AREA */
-  .chart-area{max-width:1300px;margin:32px auto;padding:0 48px;}
-
-  /* CHART HEADER ROW */
-  .chart-header{display:grid;grid-template-columns:180px repeat(6,1fr);gap:0;margin-bottom:0;border-bottom:1px solid rgba(255,255,255,0.07);padding-bottom:10px;}
-  .ch-fn{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.25);}
-  .ch-num{font-size:0.7rem;font-weight:600;color:rgba(255,255,255,0.2);text-align:center;}
-
-  /* FUNCTION ROW */
-  .fn-row{display:grid;grid-template-columns:180px repeat(6,1fr);gap:0;align-items:center;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;transition:background 0.15s;}
-  .fn-row:hover{background:rgba(255,255,255,0.02);}
-  .fn-row.active{background:rgba(255,255,255,0.03);}
-  .fn-info{}
-  .fn-name{font-size:0.88rem;font-weight:600;margin-bottom:2px;}
-  .fn-owner{font-size:0.65rem;color:rgba(255,255,255,0.35);}
-  .fn-cell{position:relative;height:44px;display:flex;align-items:center;padding:0 6px;}
-
-  /* BARS */
-  .bar-track{position:absolute;inset:10px 6px;background:rgba(255,255,255,0.04);border-radius:3px;}
-  .bar-current{position:absolute;top:10px;bottom:10px;left:6px;border-radius:3px;transition:width 1s cubic-bezier(0.4,0,0.2,1);}
-  .bar-future{position:absolute;top:10px;bottom:10px;left:6px;border-radius:3px;opacity:0.25;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);}
-  .bar-label{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:0.65rem;font-weight:700;color:rgba(255,255,255,0.5);z-index:2;}
-
-  /* DOT MARKERS */
-  .dot-current{position:absolute;width:12px;height:12px;border-radius:50%;border:2px solid var(--white);top:50%;transform:translate(-50%,-50%);z-index:3;transition:left 1s cubic-bezier(0.4,0,0.2,1);}
-  .dot-future{position:absolute;width:8px;height:8px;border-radius:50%;top:50%;transform:translate(-50%,-50%);z-index:3;opacity:0.6;transition:left 1.2s cubic-bezier(0.4,0,0.2,1);}
-
-  /* CURRENT SCORE BADGE */
-  .score-badge{font-family:'EB Garamond',serif;font-size:1.1rem;font-weight:500;position:absolute;z-index:4;top:50%;transform:translate(-50%,-50%);background:var(--charcoal);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border:2px solid;transition:left 1s cubic-bezier(0.4,0,0.2,1);color:var(--white);}
-
-  /* LEGEND */
-  .vis-legend{display:flex;gap:20px;align-items:center;margin-bottom:24px;flex-wrap:wrap;}
-  .vl-item{display:flex;align-items:center;gap:7px;font-size:0.75rem;color:rgba(255,255,255,0.5);}
-  .vl-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
-  .vl-bar{width:24px;height:8px;border-radius:2px;flex-shrink:0;}
-
-  /* DETAIL PANEL */
-  .detail-panel{max-width:1300px;margin:0 auto 48px;padding:0 48px;}
-  .detail-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:28px 32px;display:none;}
-  .detail-card.show{display:block;animation:fadeIn 0.25s ease;}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-  .dc-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
-  .dc-title-area{}
-  .dc-fn-label{font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:4px;}
-  .dc-title{font-family:'EB Garamond',serif;font-size:1.5rem;font-weight:500;}
-  .dc-scores{display:flex;gap:20px;align-items:center;}
-  .dc-score{text-align:center;}
-  .dc-score-num{font-family:'EB Garamond',serif;font-size:2rem;line-height:1;}
-  .dc-score-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.3);margin-top:2px;}
-  .dc-score-arrow{font-size:1.2rem;color:rgba(255,255,255,0.2);margin:0 4px;}
-  .dc-highlight{background:rgba(200,16,46,0.12);border:1px solid rgba(200,16,46,0.25);border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);line-height:1.6;}
-  .dc-highlight strong{color:var(--red);}
-  .phases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-  .phase-card{border-radius:7px;padding:14px 16px;border:1px solid;}
-  .phase-card-num{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.14em;font-weight:700;margin-bottom:5px;opacity:0.6;}
-  .phase-card-title{font-size:0.88rem;font-weight:600;margin-bottom:8px;}
-  .phase-card-score{font-family:'EB Garamond',serif;font-size:1.1rem;margin-bottom:8px;opacity:0.7;}
-  .phase-items{list-style:none;display:flex;flex-direction:column;gap:5px;}
-  .phase-item{font-size:0.75rem;color:rgba(255,255,255,0.55);line-height:1.45;display:flex;gap:7px;align-items:flex-start;}
-  .phase-item::before{content:'→';opacity:0.4;flex-shrink:0;margin-top:1px;}
-  .phase-card.p1{background:rgba(200,16,46,0.08);border-color:rgba(200,16,46,0.2);}
-  .phase-card.p2{background:rgba(212,98,10,0.08);border-color:rgba(212,98,10,0.2);}
-  .phase-card.p3{background:rgba(42,110,187,0.08);border-color:rgba(42,110,187,0.2);}
-
-  /* CALL-OUT STAT (Tech Service) */
-  .stat-callout{background:rgba(26,122,74,0.12);border:1px solid rgba(26,122,74,0.3);border-radius:6px;padding:14px 18px;margin-bottom:20px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
-  .stat-callout-num{font-family:'EB Garamond',serif;font-size:2rem;color:#4ade80;line-height:1;}
-  .stat-callout-label{font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:2px;}
-  .stat-callout-desc{font-size:0.82rem;color:rgba(255,255,255,0.6);line-height:1.6;flex:1;}
-
-  @media(max-width:900px){
-    .chart-header,.fn-row{grid-template-columns:130px repeat(6,1fr);}
-    .phases-grid{grid-template-columns:1fr;}
-    .chart-area,.detail-panel{padding:0 20px;}
-    .scale-legend{padding:0 20px;}
-  }
-
-</style>
-<div style="max-width:1300px;margin:28px auto 0;padding:0 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-  <div>
-    <div style="font-family:'EB Garamond',serif;font-size:1.8rem;font-weight:500;color:var(--charcoal);">AI Maturity Scale</div>
-    <div style="font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:#999;margin-top:4px;">Current State · Future State · Phased Roadmap by Function</div>
-  </div>
-  <div style="display:flex;gap:8px;">
-    <div class="hbadge hbadge-red">Cleveland Range</div>
-    <div class="hbadge-outline">0 = None · 5 = Autonomous</div>
-  </div>
-</div>
-
-
-<!-- SCALE LEGEND -->
-<div class="scale-legend" style="margin-top:24px;">
-  <div class="scale-step">
-    <div class="scale-step-num" style="color:rgba(255,255,255,0.3);">0</div>
-    <div class="scale-step-label">None</div>
-  </div>
-  <div class="scale-step">
-    <div class="scale-step-num" style="color:#888;">1</div>
-    <div class="scale-step-label">Assisted</div>
-  </div>
-  <div class="scale-step">
-    <div class="scale-step-num" style="color:#aaa;">2</div>
-    <div class="scale-step-label">Augmented</div>
-  </div>
-  <div class="scale-step">
-    <div class="scale-step-num" style="color:var(--cs);">3</div>
-    <div class="scale-step-label">Automated</div>
-  </div>
-  <div class="scale-step">
-    <div class="scale-step-num" style="color:var(--ops);">4</div>
-    <div class="scale-step-label">Intelligent</div>
-  </div>
-  <div class="scale-step">
-    <div class="scale-step-num" style="color:#4ade80;">5</div>
-    <div class="scale-step-label">Autonomous</div>
-  </div>
-</div>
-
-<!-- CHART -->
-<div class="chart-area">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
-    <div class="vis-legend">
-      <div class="vl-item"><div class="vl-dot" style="background:var(--white);border:2px solid var(--white);"></div>Current State</div>
-      <div class="vl-item"><div class="vl-dot" style="background:rgba(255,255,255,0.4);"></div>Future State (Achievable)</div>
-      <div class="vl-item" style="font-size:0.72rem;color:rgba(255,255,255,0.3);font-style:italic;">Click any row to expand roadmap</div>
-    </div>
-  </div>
-
-  <div class="chart-header">
-    <div class="ch-fn">Function</div>
-    <div class="ch-num">0</div>
-    <div class="ch-num">1</div>
-    <div class="ch-num">2</div>
-    <div class="ch-num">3</div>
-    <div class="ch-num">4</div>
-    <div class="ch-num">5</div>
-  </div>
-
-  <!-- Rows rendered by JS -->
-  <div id="chart-rows"></div>
-</div>
-
-<!-- DETAIL PANEL -->
-<div class="detail-panel">
-  <div id="detail-card" class="detail-card"></div>
-</div>
-
-<script>
-const FUNCTIONS = [
-  {
-    id: 'tech',
-    name: 'Tech Service',
-    owner: 'Gary (strategy) · Farhana (build)',
-    color: '#1A7A4A',
-    current: 0.5,
-    future: 4.2,
-    highlight: '<strong>20,000 minutes/month · 5,000 calls · 25% drop rate.</strong> 1,250 calls never connect — IVA captures those immediately. 6,000 minutes identified as deflectable via self-service. Highest-ROI AI initiative in the org, already justified by the numbers.',
-    stat: { num: '6,000', label: 'Minutes/mo deflectable via IVA', desc: '20,000 total minutes/month across 5,000 calls. 25% drop rate means ~1,250 calls never connect — IVA captures those first. Deflecting 6,000 minutes (~30% of total volume) at an avg $35/hr fully-loaded CS cost = ~$3,500/mo in recovered capacity. Drop rate fix alone justifies the build.' },
-    phases: [
-      {
-        label: 'Phase 1 · Now', score: '0.5 → 2', title: 'IVA Foundation',
-        items: ['Deploy IVA — first priority: capture the 1,250 dropped calls/month that never connect today', 'Central inbox (service@clevelandrange.com) as single inbound channel', 'IVA handles order status, FAQs, basic troubleshooting — 6,000 min/month target', 'AI-assisted ticket triage — auto-categorize and route to Brian', 'Tech service metrics dashboard — 20,000 min/month baseline established']
-      },
-      {
-        label: 'Phase 2 · 90–180 days', score: '2 → 3.5', title: 'Intelligent Routing',
-        items: ['IVA learns from resolved tickets — improves deflection to 60%+', 'AI drafts first-response for Brian to review and send', 'Predictive escalation — flag tickets likely to escalate before they do', 'Warranty expiry alerts automated — no manual tracking', 'Integration with CRM — service history visible during sales calls']
-      },
-      {
-        label: 'Phase 3 · Future State', score: '3.5 → 4.2', title: 'Proactive Intelligence',
-        items: ['Predictive service scheduling — AI identifies equipment likely to fail based on usage patterns', 'Automated parts pre-ordering triggered by service signals', 'Customer health scoring fed by service interaction data', 'IVA handles full service contract renewals end-to-end', 'Real-time field technician dispatch optimization']
-      }
-    ]
-  },
-  {
-    id: 'sales',
-    name: 'Sales',
-    owner: 'Gary (Acting Lead)',
-    color: '#C8102E',
-    current: 0.5,
-    future: 3.5,
-    highlight: 'CRM is installed but barely used — effectively <strong>Level 0</strong>. The configurator takes this to Level 2 immediately. Full AI sales intelligence is achievable within 12–18 months.',
-    stat: null,
-    phases: [
-      {
-        label: 'Phase 1 · Now', score: '0.5 → 2', title: 'Augmented Quoting',
-        items: ['Cook Chill configurator — AI validates specs, enforces margin floors, auto-generates quote doc', 'CRM mandate — all deals logged, pipeline data becomes reliable', 'AI-assisted deal scoring — probability of close based on historical patterns', 'Automated follow-up sequences for open quotes past X days', 'Quote accuracy hits ≥95% target']
-      },
-      {
-        label: 'Phase 2 · 90–180 days', score: '2 → 3', title: 'Pipeline Intelligence',
-        items: ['AI pipeline forecasting — predict close dates and revenue from CRM signals', 'Win/loss analysis — AI identifies patterns in won vs. lost deals', 'Rep performance coaching — AI surfaces best practices from top performers', 'Automated competitive intelligence — track market signals relevant to active deals', 'Channel partner activity monitoring — flag dormant partners']
-      },
-      {
-        label: 'Phase 3 · Future State', score: '3 → 3.5', title: 'Intelligent Sales Ops',
-        items: ['AI-generated territory and account prioritization', 'Automated proposal generation from CRM data + configurator output', 'Real-time margin optimization suggestions during live quoting', 'Voice-to-CRM logging — call notes auto-summarized and synced', 'Predictive upsell recommendations based on install base + usage']
-      }
-    ]
-  },
-  {
-    id: 'marketing',
-    name: 'Marketing',
-    owner: 'Gabria',
-    color: '#8E44AD',
-    current: 1,
-    future: 4,
-    highlight: 'Marketing is the function where AI can move fastest. <strong>Gabria is already doing creative work</strong> — AI agents multiply her output without changing what she does. Highest velocity potential in the org.',
-    stat: null,
-    phases: [
-      {
-        label: 'Phase 1 · Now', score: '1 → 2.5', title: 'Automated Content Engine',
-        items: ['AI agents — draft social posts, generate graphics, schedule across platforms', 'HubSpot AI — lead scoring, automated nurture sequences, campaign attribution', 'AI copywriting assistance — email campaigns, product descriptions, case studies', 'Automated A/B testing — AI tests subject lines, CTAs, and send times', 'Content repurposing — one asset auto-adapted to 5+ formats']
-      },
-      {
-        label: 'Phase 2 · 90–180 days', score: '2.5 → 3.5', title: 'Demand Intelligence',
-        items: ['Predictive lead scoring — AI ranks leads by purchase intent signals', 'Dynamic content personalization — website + email content adapts to visitor profile', 'AI-generated campaign briefs from performance data', 'Competitive monitoring — AI tracks competitor activity, pricing, messaging', 'Automated ROI reporting — campaign performance attributed to revenue']
-      },
-      {
-        label: 'Phase 3 · Future State', score: '3.5 → 4', title: 'Autonomous Demand Gen',
-        items: ['AI plans and executes full campaign cycles with Gabria as strategic reviewer', 'Predictive market segmentation — AI identifies untapped segments in food service vertical', 'Automated analyst-grade market reports for QBR input', 'Generative product imagery for Cook Chill line — no photoshoot needed', 'AI-driven ABM (account-based marketing) targeting high-value accounts automatically']
-      }
-    ]
-  },
-  {
-    id: 'cs',
-    name: 'Customer Service',
-    owner: 'Farhana (lead) · Brian (executes)',
-    color: '#D4620A',
-    current: 0,
-    future: 3,
-    highlight: 'Currently <strong>Level 0</strong> — fully manual, no tooling, no tracking. The CS discovery sprint is the prerequisite for everything here. Don\'t automate before you understand what\'s broken.',
-    stat: null,
-    phases: [
-      {
-        label: 'Phase 1 · Post-Discovery', score: '0 → 1.5', title: 'Structured & Tracked',
-        items: ['Shared inbox + ticketing system — make the invisible visible', 'AI auto-categorizes inbound by type, urgency, and customer tier', 'SLA monitoring — automated alerts when tickets approach breach', 'Response templates — AI suggests best response from resolved ticket history', 'CSAT survey automation — triggered after every ticket close']
-      },
-      {
-        label: 'Phase 2 · 90–180 days', score: '1.5 → 2.5', title: 'AI-Assisted Responses',
-        items: ['AI drafts full responses — Brian reviews, edits, sends (30 sec vs. 5 min)', 'Sentiment analysis — flag frustrated customers before escalation happens', 'Knowledge base auto-generation — AI builds FAQ from resolved tickets', 'Warranty and order status fully self-service via IVA', 'Churn risk flagging — CS signals fed to CX health score']
-      },
-      {
-        label: 'Phase 3 · Future State', score: '2.5 → 3', title: 'Proactive CS',
-        items: ['Proactive outreach — AI identifies customers likely to have issues before they call', 'Full warranty lifecycle managed autonomously — renewals, alerts, scheduling', 'Customer effort score (CES) tracking — measure ease of doing business', 'AI-generated monthly CS health report for QBR', 'Closed feedback loop — CS signals automatically inform product and engineering']
-      }
-    ]
-  },
-  {
-    id: 'ops',
-    name: 'Supply Chain & Order Ops',
-    owner: 'Farhana',
-    color: '#2A6EBB',
-    current: 1,
-    future: 3.5,
-    highlight: 'Order-to-cash, supplier management, demand forecasting, and inventory — the commercial operations layer that connects sales to the plant. <strong>Farhana owns this end-to-end</strong> alongside manufacturing.',
-    stat: null,
-    phases: [
-      {
-        label: 'Phase 1 · Now', score: '1 → 2', title: 'Order Flow Automation',
-        items: ['Order-to-cash workflow automation — reduce manual touchpoints between stages', 'Cook Chill order process SOPs — standardized quoting to production handoff', 'Anomaly detection — AI flags when an order deviates from expected fulfilment pattern', 'Supplier delivery tracking — automated status updates and exception alerts', 'Process documentation AI — auto-generate SOPs from workflow recordings']
-      },
-      {
-        label: 'Phase 2 · 90–180 days', score: '2 → 3', title: 'Demand & Supply Intelligence',
-        items: ['Demand forecasting — AI predicts Cook Chill order volume by month/quarter', 'Inventory signal automation — flag when parts/components need reordering', 'Capacity planning — AI models plant production load vs. incoming order pipeline', 'Vendor performance scoring — automated tracking of supplier reliability and lead times', 'AI-assisted contract review — flag non-standard terms in supplier agreements']
-      },
-      {
-        label: 'Phase 3 · Future State', score: '3 → 3.5', title: 'Adaptive Supply Chain',
-        items: ['Dynamic reorder point optimization — AI adjusts inventory thresholds based on demand signals', 'Predictive lead time modeling — forecast delivery windows before orders are placed', 'Automated regulatory compliance monitoring for food service equipment standards', 'Cross-functional dependency mapping — AI surfaces supply chain blockers before they hit production', 'Real-time margin impact visibility — cost changes from suppliers reflected in live quote pricing']
-      }
-    ]
-  },
-  {
-    id: 'eng',
-    name: 'Manufacturing Ops',
-    owner: 'Farhana',
-    color: '#00796B',
-    current: 1,
-    future: 3.8,
-    highlight: 'The configurator is already in build — that\'s the <strong>anchor initiative</strong>. Manufacturing AI has the highest leverage because every improvement compounds through every unit produced and every product shipped.',
-    stat: null,
-    phases: [
-      {
-        label: 'Phase 1 · Now', score: '1 → 2.5', title: 'Configurator + Production Visibility',
-        items: ['Cook Chill configurator — rules engine validates specs, blocks incompatible selections', 'Margin floor enforcement — AI flags quotes below threshold before submission', 'Auto-generated quote + BOM (Bill of Materials) from configurator output', 'Production throughput dashboard — output vs. plan, labour utilization, equipment uptime', 'Integration with CRM — quote and order data syncs to deal record automatically']
-      },
-      {
-        label: 'Phase 2 · 90–180 days', score: '2.5 → 3.2', title: 'Plant Intelligence',
-        items: ['Predictive maintenance — AI flags equipment likely to fail before downtime occurs', 'Field failure feedback loop — service and CS data routed back to plant quality review', 'AI clusters field failures by model, production batch, install date — identifies root cause faster', 'Labour scheduling optimization — AI models production load vs. team capacity', 'Warranty cost forecasting — predict spend by product line from manufacturing signals']
-      },
-      {
-        label: 'Phase 3 · Future State', score: '3.2 → 3.8', title: 'Intelligent Manufacturing',
-        items: ['Digital twin capability — model equipment performance before physical build', 'AI-assisted quality control — computer vision or sensor-based defect detection on line', 'Automated compliance checking — flag configurations that may violate food safety standards', 'Predictive yield optimization — AI identifies production settings that maximize output quality', 'Predictive product lifecycle management — identify when models need engineering refresh']
-      }
-    ]
-  }
-];
-
-const SCALE_COLORS = {
-  0: 'rgba(255,255,255,0.15)',
-  1: 'rgba(255,255,255,0.3)',
-  2: '#D4620A',
-  3: '#2A6EBB',
-  4: '#8E44AD',
-  5: '#4ade80'
-};
-
-function scoreColor(score) {
-  if (score < 1) return SCALE_COLORS[0];
-  if (score < 2) return SCALE_COLORS[1];
-  if (score < 3) return SCALE_COLORS[2];
-  if (score < 4) return SCALE_COLORS[3];
-  if (score < 5) return SCALE_COLORS[4];
-  return SCALE_COLORS[5];
-}
-
-function pct(score) { return (score / 5 * 100) + '%'; }
-
-let activeId = null;
-
-function renderRows() {
-  const container = document.getElementById('chart-rows');
-  container.innerHTML = FUNCTIONS.map(fn => {
-    const cColor = fn.color;
-    const fColor = fn.color;
-    return `
-    <div class="fn-row" id="row-${fn.id}" onclick="toggleDetail('${fn.id}')">
-      <div class="fn-info">
-        <div class="fn-name" style="color:${fn.color};">${fn.name}</div>
-        <div class="fn-owner">${fn.owner.split('·')[0].trim()}</div>
-      </div>
-      ${[0,1,2,3,4,5].map(col => `
-        <div class="fn-cell" id="cell-${fn.id}-${col}">
-          <div class="bar-track"></div>
-          ${col === 0 ? `
-            <div class="bar-future" id="bfuture-${fn.id}" style="background:${fColor};width:0%;"></div>
-            <div class="bar-current" id="bcurrent-${fn.id}" style="background:${cColor};width:0%;"></div>
-            <div class="score-badge" id="badge-${fn.id}" style="border-color:${cColor};color:${cColor};left:0%;">${fn.current}</div>
-          ` : ''}
-        </div>
-      `).join('')}
-    </div>`;
-  }).join('');
-
-  setTimeout(() => {
-    FUNCTIONS.forEach(fn => {
-      const bCurrent = document.getElementById('bcurrent-' + fn.id);
-      const bFuture = document.getElementById('bfuture-' + fn.id);
-      const badge = document.getElementById('badge-' + fn.id);
-      if (bCurrent) bCurrent.style.width = pct(fn.current);
-      if (bFuture) bFuture.style.width = pct(fn.future);
-      if (badge) badge.style.left = 'calc(' + pct(fn.current) + ' - 13px)';
-    });
-  }, 100);
-}
-
-function toggleDetail(id) {
-  const fn = FUNCTIONS.find(f => f.id === id);
-  const card = document.getElementById('detail-card');
-  const row = document.getElementById('row-' + id);
-
-  if (activeId === id) {
-    card.classList.remove('show');
-    row.classList.remove('active');
-    activeId = null;
-    return;
-  }
-
-  document.querySelectorAll('.fn-row').forEach(r => r.classList.remove('active'));
-  row.classList.add('active');
-  activeId = id;
-
-  const statHtml = fn.stat ? `
-    <div class="stat-callout">
-      <div><div class="stat-callout-num">${fn.stat.num}</div><div class="stat-callout-label">${fn.stat.label}</div></div>
-      <div class="stat-callout-desc">${fn.stat.desc}</div>
-    </div>` : '';
-
-  const phaseClasses = ['p1','p2','p3'];
-  const phasesHtml = fn.phases.map((p,i) => `
-    <div class="phase-card ${phaseClasses[i]}">
-      <div class="phase-card-num">${p.label}</div>
-      <div class="phase-card-title">${p.title}</div>
-      <div class="phase-card-score">Level ${p.score}</div>
-      <ul class="phase-items">
-        ${p.items.map(item => `<li class="phase-item">${item}</li>`).join('')}
-      </ul>
-    </div>`).join('');
-
-  card.innerHTML = `
-    <div class="dc-header">
-      <div class="dc-title-area">
-        <div class="dc-fn-label">AI Maturity Roadmap</div>
-        <div class="dc-title" style="color:${fn.color};">${fn.name}</div>
-      </div>
-      <div class="dc-scores">
-        <div class="dc-score">
-          <div class="dc-score-num" style="color:rgba(255,255,255,0.4);">${fn.current}</div>
-          <div class="dc-score-label">Today</div>
-        </div>
-        <div class="dc-score-arrow">→</div>
-        <div class="dc-score">
-          <div class="dc-score-num" style="color:${fn.color};">${fn.future}</div>
-          <div class="dc-score-label">Future</div>
-        </div>
-      </div>
-    </div>
-    <div class="dc-highlight">${fn.highlight}</div>
-    ${statHtml}
-    <div class="phases-grid">${phasesHtml}</div>
-  `;
-
-  card.classList.add('show');
-  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-
-// Maturity tab renders on first open, not on page load
-</script>
-</div><!-- /dark-wrapper -->
-</div><!-- /tab-maturity -->
-
-<script>
-function switchTab(name,btn){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('tab-'+name).classList.add('active');
-  if(name==='maturity' && !window._maturityRendered){
-    window._maturityRendered=true;
-    renderRows();
-    setTimeout(()=>toggleDetail('tech'),400);
-  }
-}
-function toggleGap(el){el.classList.toggle('open');}
-function toggleCard(el){el.classList.toggle('open');}
-</script>
 </body>
 </html>

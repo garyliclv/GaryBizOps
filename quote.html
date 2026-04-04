@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request a Quote — Cleveland Range</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#C8102E;--dark-red:#9E0C24;--charcoal:#333F48;
+  --off-white:#F7F4EF;--white:#fff;--border:#E2E0DC;
+  --text:#1C1C1C;--muted:#7A7A7A;--light-bg:#F0EDE8;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins',sans-serif;background:var(--off-white);color:var(--text);min-height:100vh}
+
+/* ── HERO ── */
+.hero{background:var(--charcoal);padding:52px 24px 80px;text-align:center;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:var(--off-white);clip-path:ellipse(60% 100% at 50% 100%)}
+.hero-logo{height:46px;width:auto;display:block;margin:0 auto 32px;position:relative;z-index:1}
+.hero-eyebrow{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:14px;position:relative;z-index:1}
+.hero-title{font-family:'EB Garamond',serif;font-size:48px;font-weight:400;color:#fff;line-height:1.1;margin-bottom:16px;position:relative;z-index:1}
+.hero-title em{font-style:italic;color:#e8a0aa}
+.hero-sub{font-size:13px;color:rgba(255,255,255,.5);max-width:500px;margin:0 auto 20px;line-height:1.8;position:relative;z-index:1}
+.no-direct{display:inline-flex;align-items:center;gap:8px;background:rgba(200,16,46,.15);border:1px solid rgba(200,16,46,.3);border-radius:20px;padding:6px 16px;font-size:11px;color:rgba(255,255,255,.7);position:relative;z-index:1;margin-top:4px}
+.no-direct span{color:var(--red);font-weight:600}
+
+/* ── WRAPPER ── */
+.wrap{max-width:960px;margin:0 auto;padding:0 20px 80px}
+
+/* ── PRODUCT SCROLL ── */
+.section{margin-bottom:40px}
+.section-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;padding-bottom:10px;border-bottom:1.5px solid var(--border)}
+.section-title{font-family:'EB Garamond',serif;font-size:22px;font-weight:600;color:var(--charcoal)}
+.section-sub{font-size:11px;color:var(--muted);font-style:italic}
+
+/* Product line tabs */
+
+
+/* ── MIXER CONFIGURATOR IFRAME PANEL ── */
+/* Form hide transition */
+.form-section-wrap{transition:opacity .3s, max-height .4s;overflow:hidden}
+.form-section-wrap.hidden{opacity:0;max-height:0;pointer-events:none}
+.form-section-wrap.visible{opacity:1;max-height:4000px}
+/* Mixer notice bar */
+.mixer-notice strong{color:#fff}
+
+
+.browser-wrap.mixer-open{background:var(--bg);border-color:var(--border)}
+.browser-wrap.mixer-open .tree-col{background:var(--off-white);min-height:100%}
+
+
+/* ── STEAMER FILTER ── */
+.steamer-filter{padding:16px 16px 0}
+.steamer-filter-label{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.steamer-filter-opts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.sf-btn{padding:9px 18px;border:1.5px solid var(--border);border-radius:8px;background:var(--white);font-size:12px;font-weight:600;color:var(--charcoal);cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:7px}
+.sf-btn:hover{border-color:var(--charcoal)}
+.sf-btn.active{border-color:var(--red);background:#fff0f2;color:var(--red)}
+.sf-btn .sf-ic{font-size:15px}
+
+
+/* ── MIXER CONFIGURATOR IFRAME PANEL ── */
+.mixer-notice{background:var(--charcoal);color:rgba(255,255,255,.75);font-size:11.5px;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}
+.mixer-notice-back{font-size:11px;color:var(--red);cursor:pointer;font-weight:600;white-space:nowrap;text-decoration:underline}
+.mixer-notice-back:hover{color:#ff4060}
+
+/* ── KETTLE SELECTOR ── */
+.kettle-selector{padding:20px;display:flex;flex-direction:column;gap:0;flex:1}
+.ks-step{margin-bottom:20px}
+.ks-step-label{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.ks-options{display:flex;gap:8px;flex-wrap:wrap}
+.ks-btn{padding:9px 16px;border:1.5px solid var(--border);border-radius:8px;background:var(--white);font-size:12px;font-weight:600;color:var(--charcoal);cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:6px}
+.ks-btn:hover{border-color:var(--charcoal);background:#faf8f6}
+.ks-btn.active{border-color:var(--red);background:#fff0f2;color:var(--red)}
+.ks-btn .ks-icon{font-size:15px}
+.ks-divider{height:1px;background:var(--mid);margin:4px 0 20px}
+/* Results */
+.ks-result{background:var(--white);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s}
+.ks-result:hover{border-color:var(--red);box-shadow:0 4px 16px rgba(200,16,46,.1)}
+.ks-result.selected{border-color:var(--red);background:#fff8f9;box-shadow:0 0 0 3px rgba(200,16,46,.12)}
+.ks-result-img{height:160px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.ks-result-img img{width:100%;height:100%;object-fit:contain;padding:12px;transition:transform .2s}
+.ks-result:hover .ks-result-img img{transform:scale(1.05)}
+.ks-result-check{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:700;display:none;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(200,16,46,.4)}
+.ks-result.selected .ks-result-check{display:flex}
+.ks-result-body{padding:12px 14px}
+.ks-result-model{font-size:11px;font-weight:700;color:var(--charcoal);margin-bottom:3px}
+.ks-result.selected .ks-result-model{color:var(--red)}
+.ks-result-spec{font-size:10px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.ks-result-actions{display:flex;gap:6px}
+.ks-add-btn{flex:1;padding:7px 10px;background:var(--charcoal);color:#fff;border:none;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s;text-align:center}
+.ks-add-btn:hover,.ks-result.selected .ks-add-btn{background:var(--red)}
+.ks-view-btn{padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:10px;font-weight:600;color:var(--charcoal);background:var(--white);text-decoration:none;display:inline-block;transition:all .15s;white-space:nowrap}
+.ks-view-btn:hover{border-color:var(--red);color:var(--red)}
+.ks-results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px;max-height:564px;overflow-y:auto;padding-right:4px}
+.ks-no-match{text-align:center;padding:32px 16px;color:var(--muted);font-size:12px}
+.ks-no-match strong{display:block;font-size:14px;color:var(--charcoal-lt);margin-bottom:6px}
+.ks-step.disabled{opacity:.4;pointer-events:none}
+
+/* ── PRODUCT TREE BROWSER ── */
+.browser-wrap{display:grid;grid-template-columns:240px 1fr;gap:0;border:1.5px solid var(--border);border-radius:16px;overflow:hidden;background:var(--white);min-height:540px;align-items:stretch}
+.tree-col{border-right:1.5px solid var(--border);overflow-y:auto;max-height:none;background:var(--off-white)}
+.tree-col::-webkit-scrollbar{width:3px}.tree-col::-webkit-scrollbar-track{background:transparent}.tree-col::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.tree-search{padding:12px 12px 8px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--off-white);z-index:2}
+.tree-search input{width:100%;padding:7px 10px 7px 34px;font-size:11.5px;font-family:'Poppins',sans-serif;border:1.5px solid var(--border);border-radius:6px;background:var(--white);color:var(--text);outline:none;transition:border .15s}
+.tree-search input:focus{border-color:var(--red)}
+.tree-search .si{position:absolute;left:22px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;font-size:11px}
+.tree-search-wrap{position:relative}
+/* L1 */
+.tl1{border-bottom:1px solid var(--border)}
+.tl1-btn{display:flex;align-items:center;gap:8px;width:100%;padding:10px 12px;background:none;border:none;cursor:pointer;text-align:left;font-family:inherit;transition:background .1s}
+.tl1-btn:hover{background:#f0ede8}
+.tl1-btn.open{background:#f0ede8}
+.tl1-ic{font-size:14px;flex-shrink:0}
+.tl1-lbl{flex:1;font-size:11.5px;font-weight:600;color:var(--charcoal);line-height:1.3}
+.tl1-btn.open .tl1-lbl{color:var(--red)}
+.tl1-ct{font-size:9.5px;color:var(--muted);background:var(--border);border-radius:8px;padding:1px 5px;flex-shrink:0}
+.tl1-chevron{font-size:9px;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.tl1-btn.open .tl1-chevron{transform:rotate(90deg)}
+/* L1 children */
+.tl1-kids{display:none;background:#fdfcfb}
+.tl1-kids.open{display:block}
+/* L2 */
+.tl2-btn{display:flex;align-items:center;gap:7px;width:100%;padding:8px 12px 8px 28px;background:none;border:none;border-top:1px solid #ede9e4;cursor:pointer;text-align:left;font-family:inherit;transition:background .1s}
+.tl2-btn:hover{background:#f5f2ee}
+.tl2-btn.active{background:#fff0f2}
+.tl2-bar{width:2px;height:12px;border-radius:2px;background:var(--border);flex-shrink:0;transition:background .15s}
+.tl2-btn.active .tl2-bar{background:var(--red)}
+.tl2-lbl{flex:1;font-size:11px;font-weight:500;color:#4a5568}
+.tl2-btn.active .tl2-lbl{color:var(--red);font-weight:600}
+.tl2-ct{font-size:9px;color:var(--muted);background:#ede9e4;border-radius:6px;padding:1px 5px;flex-shrink:0}
+/* Products panel */
+.products-col{display:flex;flex-direction:column;min-height:540px}
+.products-hdr{padding:16px 20px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.products-hdr-bc{font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:3px}
+.products-hdr-bc em{color:var(--red);font-style:normal}
+.products-hdr-title{font-family:'EB Garamond',serif;font-size:20px;font-weight:600;color:var(--charcoal)}
+.products-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:40px 24px;text-align:center;color:var(--muted);min-height:260px}
+.products-empty-icon{font-size:40px;opacity:.25;margin-bottom:12px}
+.products-empty-txt{font-size:13px;line-height:1.6}
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:270px;gap:12px;padding:16px;overflow-y:auto;max-height:564px;align-content:start}
+.products-grid::-webkit-scrollbar{width:5px}.products-grid::-webkit-scrollbar-track{background:var(--mid);border-radius:2px}.products-grid::-webkit-scrollbar-thumb{background:var(--red);border-radius:2px}
+.ks-results-grid::-webkit-scrollbar{width:5px}.ks-results-grid::-webkit-scrollbar-track{background:var(--mid);border-radius:2px}.ks-results-grid::-webkit-scrollbar-thumb{background:var(--red);border-radius:2px}
+/* Product card */
+.prod-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .18s;position:relative;display:flex;flex-direction:column;height:100%}
+.prod-card:hover{border-color:var(--red);box-shadow:0 6px 24px rgba(200,16,46,.1);transform:translateY(-2px)}
+.prod-card.selected{border-color:var(--red);background:#fff8f9;box-shadow:0 0 0 3px rgba(200,16,46,.12)}
+.prod-card-check{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:700;display:none;align-items:center;justify-content:center;z-index:2;box-shadow:0 2px 6px rgba(200,16,46,.4)}
+.prod-card.selected .prod-card-check{display:flex}
+.prod-card-img{height:190px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.prod-card-img img{width:100%;height:100%;object-fit:contain;padding:10px;transition:transform .2s}
+.prod-card:hover .prod-card-img img{transform:scale(1.05)}
+.prod-card-img img{width:100%;height:100%;object-fit:contain;padding:10px;transition:transform .2s}
+.prod-card:hover .prod-card-img img{transform:scale(1.04)}
+.prod-card-body{padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;flex:1}
+.prod-card-name{font-size:12px;font-weight:700;color:var(--charcoal);line-height:1.35}
+.prod-card.selected .prod-card-name{color:var(--red)}
+.prod-card-btn{display:inline-block;text-align:center;padding:6px 10px;background:var(--charcoal);color:#fff;border-radius:6px;font-size:10px;font-weight:600;text-decoration:none;letter-spacing:.04em;text-transform:uppercase;transition:background .15s}
+.prod-card-btn:hover{background:var(--red)}
+.prod-card.selected .prod-card-btn{background:var(--red)}
+/* Selected bar under browser */
+.sel-bar{background:var(--light-bg);border-radius:10px;padding:11px 16px;margin-top:12px;font-size:12px;color:var(--charcoal);display:none;align-items:center;gap:10px;flex-wrap:wrap}
+.sel-bar.show{display:flex}
+.sel-bar strong{color:var(--red);flex-shrink:0}
+.sel-bar-names{flex:1;color:var(--muted)}
+.sel-bar-clear{font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline;flex-shrink:0}
+.sel-bar-clear:hover{color:var(--red)}
+
+@media(max-width:700px){
+  .browser-wrap{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .tree-col{max-height:220px;border-right:none;border-bottom:1.5px solid var(--border)}
+  .products-grid{grid-template-columns:1fr 1fr;max-height:380px}
+}
+.prod-card.selected{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,16,46,.15)}
+.prod-card.selected::after{content:'✓';position:absolute;top:10px;right:10px;width:22px;height:22px;background:var(--red);color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;display:grid;place-items:center}
+
+.prod-card-body{padding:14px}
+.prod-card-cat{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:3px}
+.prod-card-name{font-size:15px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:5px;font-family:'EB Garamond',serif}
+.prod-card-desc{font-size:11px;color:var(--muted);line-height:1.4;margin-bottom:10px}
+.prod-card-link{font-size:10px;font-weight:600;color:var(--red);text-decoration:none;letter-spacing:.04em;text-transform:uppercase}
+.prod-card-link:hover{text-decoration:underline}
+
+
+
+/* ── FORM CARDS ── */
+.form-card{background:var(--white);border-radius:16px;border:1.5px solid var(--border);margin-bottom:16px;overflow:hidden}
+.form-card-hdr{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.form-card-num{width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;flex-shrink:0}
+.form-card-title{font-size:14px;font-weight:700;color:var(--charcoal)}
+.form-card-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.form-body{padding:24px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-full{grid-column:1/-1}
+.field label{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Poppins',sans-serif;color:var(--text);background:var(--white);transition:border .15s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--red)}
+.field textarea{resize:vertical;min-height:90px;line-height:1.6}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237A7A7A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;appearance:none;padding-right:36px}
+
+/* Toggle buttons */
+.toggle-wrap{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tog{padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .15s;text-align:center;font-family:inherit;background:var(--white)}
+.tog:hover{border-color:var(--charcoal)}
+.tog.sel{border-color:var(--red);background:#fff5f5}
+.tog-icon{font-size:22px;display:block;margin-bottom:5px}
+.tog-label{font-size:12px;font-weight:700;color:var(--text)}
+.tog.sel .tog-label{color:var(--red)}
+.tog-sub{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4}
+
+
+
+/* Submit */
+.submit-wrap{padding:0 24px 24px}
+.submit-btn{width:100%;padding:16px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;box-shadow:0 4px 20px rgba(200,16,46,.25);letter-spacing:.01em}
+.submit-btn:hover{background:var(--dark-red);box-shadow:0 6px 28px rgba(200,16,46,.35);transform:translateY(-1px)}
+.submit-btn:disabled{background:#f0a0a8;cursor:default;transform:none;box-shadow:none}
+.submit-note{font-size:11px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.6}
+
+/* Success */
+.success-wrap{max-width:960px;margin:0 auto;padding:20px;display:none}
+.success-card{background:var(--white);border-radius:16px;border:1.5px solid var(--border);padding:56px 32px;text-align:center}
+.success-icon{width:64px;height:64px;border-radius:50%;background:#ecfdf5;border:2px solid #059669;display:grid;place-items:center;margin:0 auto 20px;font-size:28px}
+.success-title{font-family:'EB Garamond',serif;font-size:32px;color:var(--text);margin-bottom:10px}
+.success-sub{font-size:14px;color:var(--muted);line-height:1.8;max-width:440px;margin:0 auto 20px}
+.success-ref{display:inline-block;background:var(--light-bg);border-radius:8px;padding:10px 22px;font-family:monospace;font-size:15px;font-weight:700;color:var(--red);letter-spacing:.06em;margin-bottom:24px}
+.success-back{padding:12px 28px;background:var(--charcoal);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+
+.footer{text-align:center;font-size:11px;color:var(--muted);padding-bottom:32px;line-height:1.8}
+
+@media(max-width:600px){
+  .hero-title{font-size:34px}
+  .form-grid{grid-template-columns:1fr}
+}
+</style>
+
+<script>
+// ── Image preloader: fetches product images and caches as blob URLs ──
+(function() {
+  var IMGS = {
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/22CET6-1_Ver01.jpeg': 'clv-img-st1',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/22CET3-1_Ver01.jpeg': 'clv-img-st2',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/12/22CCGT6-Single-Unit-No-Energy-Star-scaled.png': 'clv-img-st3',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/22CCT6_Ver01.jpeg': 'clv-img-st4',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/21CGA5_Ver01.jpeg': 'clv-img-st5',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/21CET8_Ver01.jpeg': 'clv-img-st6',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/21CET16_Ver01.jpeg': 'clv-img-st7',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/kettle.png': 'clv-img-kettle',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/KET-EZD-PROBE.jpg': 'clv-img-ket',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/SEL60T1_Ver01JPG.jpg': 'clv-img-sel60',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/skillet-1.png': 'clv-img-skillet',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/SEL3040TR.png': 'clv-img-sel30tr',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/SGL3040TR.jpg': 'clv-img-sgl30tr',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/carosel_800x450_cook-chill-systems-1.jpg': 'clv-img-cc',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/steamer2.png': 'clv-img-steamer2',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/24CGA10-2_Ver04.jpeg': 'clv-img-24cga',
+    'https://www.clevelandrange.com/wp-content/uploads/2025/02/Screenshot-2025-02-20-120308.png': 'clv-img-sc10',
+  };
+
+  // Intercept all img loads on the page and fix cross-origin issues
+  function fixImage(imgEl) {
+    var src = imgEl.src || imgEl.getAttribute('src');
+    if (!src || src.startsWith('data:')) return;
+    // Try to load via fetch to avoid CORS/mixed-content issues
+    fetch(src, {mode:'cors', cache:'force-cache'})
+      .then(function(r){ return r.blob(); })
+      .then(function(blob){ imgEl.src = URL.createObjectURL(blob); })
+      .catch(function(){}); // silently fail — src stays as-is
+  }
+
+  // Run after DOM is ready
+  function fixAllImages() {
+    document.querySelectorAll('.prod-card-img img').forEach(fixImage);
+  }
+
+  // Watch for new cards being added (when user navigates tree)
+  var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(m) {
+      m.addedNodes.forEach(function(node) {
+        if (node.nodeType === 1) {
+          var imgs = node.querySelectorAll ? node.querySelectorAll('.prod-card-img img') : [];
+          imgs.forEach(fixImage);
+          if (node.matches && node.matches('.prod-card-img img')) fixImage(node);
+        }
+      });
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    fixAllImages();
+    var grid = document.getElementById('products-grid');
+    if (grid) observer.observe(grid, {childList: true, subtree: true});
+  });
+})();
+</script>
+<!-- HubSpot tracking for form cookie linking -->
+<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/2116169.js"></script>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <img class="hero-logo" src="https://www.clevelandrange.com/wp-content/uploads/2025/01/Cleveland_Red.png" alt="">
+  <h1 class="hero-title">Request a Quote</h1>
+  <p class="hero-sub">Tell us what you need and a certified Cleveland Range representative in your local market will respond within 1–2 business days.</p>
+  <div class="no-direct">📍 <span>We do not sell direct.</span> A local rep will reach out to you.</div>
+</div>
+
+<div class="wrap" id="main-wrap">
+
+  <!-- PRODUCT BROWSER -->
+  <div style="height:40px"></div>
+  <div class="section">
+    <div class="section-hdr">
+      <div class="section-title">Browse &amp; select products</div>
+      <div class="section-sub">Navigate categories, then click models to add to your quote</div>
+    </div>
+
+    <div class="browser-wrap">
+      <!-- LEFT: Category Tree -->
+      <div class="tree-col">
+        <div class="tree-search">
+          <div class="tree-search-wrap">
+            <span class="si">🔍</span>
+            <input type="text" id="tree-search" placeholder="Search products…" oninput="treeSearch(this.value)" autocomplete="off">
+          </div>
+        </div>
+
+
+
+        <div id="cat-tree">
+          <!-- Steamers -->
+          <div class="tl1">
+            <button class="tl1-btn" onclick="toggleL1(this)">
+              <span class="tl1-ic">💨</span>
+              <span class="tl1-lbl">Steamers</span>
+              <span class="tl1-ct">3</span>
+              <span class="tl1-chevron">▶</span>
+            </button>
+            <div class="tl1-kids">
+              <button class="tl2-btn" onclick="openSteamerSub(this,'Steamers','Floor Models','steamers-floor')">
+                <div class="tl2-bar"></div><span class="tl2-lbl">Floor Models</span><span class="tl2-ct">13</span>
+              </button>
+              <button class="tl2-btn" onclick="openSteamerSub(this,'Steamers','Countertop / Table Top','steamers-top')">
+                <div class="tl2-bar"></div><span class="tl2-lbl">Countertop / Table Top</span><span class="tl2-ct">7</span>
+              </button>
+              <button class="tl2-btn" onclick="openSub(this,'Steamers','Pressure','steamers-pressure')">
+                <div class="tl2-bar"></div><span class="tl2-lbl">Pressure</span><span class="tl2-ct">6</span>
+              </button>
+            </div>
+          </div>
+          <!-- Steam Jacketed Kettles -->
+          <div class="tl1">
+            <button class="tl1-btn" onclick="toggleL1(this)">
+              <span class="tl1-ic">🫕</span>
+              <span class="tl1-lbl">Steam Jacketed Kettles</span>
+              <span class="tl1-ct">2</span>
+              <span class="tl1-chevron">▶</span>
+            </button>
+            <div class="tl1-kids">
+              <button class="tl2-btn" onclick="openKettleSelector(this,'Steam Jacketed Kettles','Floor Models','floor')">
+                <div class="tl2-bar"></div><span class="tl2-lbl">Floor Models</span><span class="tl2-ct">38</span>
+              </button>
+              <button class="tl2-btn" onclick="openKettleSelector(this,'Steam Jacketed Kettles','Table Top Models','tabletop')">
+                <div class="tl2-bar"></div><span class="tl2-lbl">Table Top Models</span><span class="tl2-ct">10</span>
+              </button>
+            </div>
+          </div>
+          <!-- Braising Pans -->
+          <div class="tl1">
+            <button class="tl1-btn" onclick="toggleL1(this)">
+              <span class="tl1-ic">🍳</span>
+              <span class="tl1-lbl">Braising Pans &amp; Tilt Skillets</span>
+              <span class="tl1-ct">2</span>
+              <span class="tl1-chevron">▶</span>
+            </button>
+            <div class="tl1-kids">
+              <button class="tl2-btn" onclick="openSkilletSelector(this,'Braising Pans &amp; Tilt Skillets','Floor Models','floor')">
+                <div class="tl2-bar"></div><span class="tl2-lbl">Floor Models</span><span class="tl2-ct">12</span>
+              </button>
+              <button class="tl2-btn" onclick="openSkilletSelector(this,'Braising Pans &amp; Tilt Skillets','Countertop','countertop')">
+                <div class="tl2-bar"></div><span class="tl2-lbl">Countertop</span><span class="tl2-ct">2</span>
+              </button>
+            </div>
+          </div>
+          <!-- Mixer Kettles & Cook Chill -->
+          <div class="tl1">
+            <button class="tl1-btn" onclick="openMixerConfig(this)">
+              <span class="tl1-ic">🔄</span>
+              <span class="tl1-lbl">Mixer Kettles &amp; Cook Chill</span>
+              <span class="tl1-chevron">▶</span>
+            </button>
+          </div>
+
+        </div><!-- /cat-tree -->
+      </div><!-- /tree-col -->
+
+      <!-- RIGHT: Products panel -->
+      <div class="products-col">
+        <div class="products-hdr" id="products-hdr" style="display:none">
+          <div class="products-hdr-bc" id="products-bc"></div>
+          <div class="products-hdr-title" id="products-title"></div>
+        </div>
+        <div class="products-empty" id="products-empty">
+          <div class="products-empty-icon">←</div>
+          <div class="products-empty-txt">Select a category from the tree<br>to browse individual models</div>
+        </div>
+        <div class="products-grid" id="products-grid" style="display:none"></div>
+      </div>
+    </div><!-- /browser-wrap -->
+
+    <!-- SELECTION BAR -->
+    <div class="sel-bar" id="sel-summary">
+      <strong id="sel-count"></strong>
+      <span class="sel-bar-names" id="sel-names"></span>
+      <span class="sel-bar-clear" onclick="clearSelection()">Clear all</span>
+    </div>
+  </div>
+
+  <!-- FORM SECTION (hidden when mixer configurator is open) -->
+  <div class="form-section-wrap visible" id="form-section">
+  <!-- FORM: CONTACT INFO -->
+  <div class="form-card">
+    <div class="form-card-hdr">
+      <div class="form-card-num">1</div>
+      <div>
+        <div class="form-card-title">Your Information</div>
+        <div class="form-card-sub">Who should we contact?</div>
+      </div>
+    </div>
+    <div class="form-body">
+      <div class="field form-full" style="margin-bottom:18px">
+        <label>You are a</label>
+        <div class="toggle-wrap">
+          <div class="tog" id="tog-eu" onclick="setType('enduser')">
+            <span class="tog-icon">🏥</span>
+            <div class="tog-label">End User</div>
+            <div class="tog-sub">Hospital, school, restaurant, facility</div>
+          </div>
+          <div class="tog" id="tog-dl" onclick="setType('dealer')">
+            <span class="tog-icon">🤝</span>
+            <div class="tog-label">Dealer / Rep / Distributor</div>
+            <div class="tog-sub">Purchasing for a customer or project</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label>First name <span style="color:var(--red)">*</span></label><input type="text" id="f-fn" placeholder="First name"></div>
+        <div class="field"><label>Last name <span style="color:var(--red)">*</span></label><input type="text" id="f-ln" placeholder="Last name"></div>
+        <div class="field"><label>Email address <span style="color:var(--red)">*</span></label><input type="email" id="f-em" placeholder="you@company.com"></div>
+        <div class="field"><label>Phone <span style="color:var(--red)">*</span></label><input type="tel" id="f-ph" placeholder="+1 (555) 000-0000"></div>
+        <div class="field"><label>Company / Facility <span style="color:var(--red)">*</span></label><input type="text" id="f-co" placeholder="Company or facility name"></div>
+        <div class="field"><label>City / State <span style="color:var(--red)">*</span></label><input type="text" id="f-loc" placeholder="City, State / Province"></div>
+        <div class="field"><label>Zip / Postal Code</label><input type="text" id="f-zip" placeholder="Zip or postal code"></div>
+        <div class="field"><label>Operation type</label>
+          <select id="f-op">
+            <option value="">Select...</option>
+            <option>Hospital / Healthcare</option>
+            <option>School / University</option>
+            <option>Correctional Facility</option>
+            <option>Hotel / Casino</option>
+            <option>Restaurant</option>
+            <option>Ghost Kitchen / Commissary</option>
+            <option>Catering / Events / Other</option>
+            <option>Food Manufacturing</option>
+            <option>Dealer / Rep / Distributor</option>
+          </select>
+        </div>
+        <div class="field"><label>Preferred contact</label>
+          <select id="f-pref">
+            <option value="">No preference</option>
+            <option>Email</option>
+            <option>Phone</option>
+          </select>
+        </div>
+        <div class="field"><label>Project timeline</label>
+          <select id="f-tl">
+            <option value="">Select...</option>
+            <option>ASAP / Immediate need</option>
+            <option>1–3 months</option>
+            <option>3–6 months</option>
+            <option>6–12 months</option>
+            <option>Planning / budgeting phase</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM: REQUEST DETAILS -->
+  <div class="form-card">
+    <div class="form-card-hdr">
+      <div class="form-card-num">2</div>
+      <div>
+        <div class="form-card-title">Request Details</div>
+        <div class="form-card-sub">Tell us what you need</div>
+      </div>
+    </div>
+    <div class="form-body">
+      <div class="form-grid">
+        <div class="field form-full">
+          <label>What are you looking for? <span style="color:var(--red)">*</span></label>
+          <textarea id="f-req" placeholder="Describe the product, model number, capacity, quantity, or application. The more detail the better..."></textarea>
+        </div>
+        <div class="field form-full">
+          <label>Existing equipment (if replacing or upgrading)</label>
+          <input type="text" id="f-exist" placeholder="e.g. Cleveland KGL80T, 15 years old — replacing 2 units">
+        </div>
+        <div class="field form-full">
+          <label>Anything else?</label>
+          <textarea id="f-notes" placeholder="Budget range, installation requirements, site conditions, special needs..." style="min-height:70px"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="submit-wrap">
+      <button class="submit-btn" id="sub-btn" onclick="doSubmit()">Submit Quote Request →</button>
+      <div class="submit-note">Cleveland Range does not sell direct. A certified representative from your local market will contact you within 1–2 business days.</div>
+    </div>
+  </div>
+
+  </div><!-- /form-section -->
+</div><!-- /main-wrap -->
+
+<!-- SUCCESS -->
+<div class="success-wrap" id="success-wrap">
+  <div class="success-card">
+    <div class="success-icon">✓</div>
+    <div class="success-title">Request received</div>
+    <div class="success-sub">A certified Cleveland Range representative in your local market will be in touch within 1–2 business days with pricing and availability.</div>
+    <div class="success-ref" id="suc-ref">CR-XXXXXXXX</div><br>
+    <button class="success-back" onclick="location.reload()">Submit another request</button>
+  </div>
+</div>
+
+<div class="footer">
+  Cleveland Range · 760 Beta Drive, Suite C, Mayfield Village, OH 44143 · 1-800-338-2204<br>
+  © 2026 Cleveland Range. All rights reserved. Distributed exclusively through authorized local representatives.
+</div>
+
+<script>
+// ── PRODUCT DATA (organised by sub-category key) ──
+var CATALOG = {
+  'steamers-floor': [
+    {id:'sf1',  type:'atmospheric', name:'24CGA10: SteamCraft Ultra 10 Gas Generator',      img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/Screenshot-2025-02-20-120338.png', url:'https://www.clevelandrange.com/product/24cga10-steamcraft-ultra-10-with-gas-generator/'},
+    {id:'sf2',  type:'atmospheric', name:'24CGA10.2: Gemini 10 Gas Generator',               img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/24CGA10-2_Ver04.jpeg',              url:'https://www.clevelandrange.com/product/24cga10-2-gemini-10-convection-steamer-with-gas-generator/'},
+    {id:'sf3',  type:'atmospheric', name:'24CGA10.2ES: Gemini 10 SST Gas Generator',         img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/Screenshot-2025-02-20-120308.png', url:'https://www.clevelandrange.com/product/24cga10-2es-gemini-10-sst-convection-steamer/'},
+    {id:'sf4',  type:'atmospheric', name:'24CGA6.2S: Gemini 6 Gas Generator',                img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/24cga6-2s_700x600.jpg',            url:'https://www.clevelandrange.com/product/24cga6-2s-gemini-6-convection-steamer-with-gas-generator/'},
+    {id:'sf5',  type:'atmospheric', name:'24CGA6.2ES: Gemini 6 SST Gas Generator',           img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/24cga6-2s_700x600.jpg',            url:'https://www.clevelandrange.com/product/24cga6-2ses-gemini-6-sst-convection-steamer/'},
+    {id:'sf6',  type:'atmospheric', name:'24CEA10.2: SteamCraft Ultra 10 Electric Generator', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/Screenshot-2025-02-20-120308.png', url:'https://www.clevelandrange.com/product/24cea10-steamcraft-ultra-10-with-electric-generator/'},
+    {id:'sf7',  type:'atmospheric', name:'24CDP10: SteamCraft Ultra 10 Direct Steam',         img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/Screenshot-2025-02-20-122956.png', url:'https://www.clevelandrange.com/product/24cdp10-steamcraft-ultra-10-direct-steam/'},
+    {id:'sf8',  type:'atmospheric', name:'24CGP10: SteamCraft Power 10',                      img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/24cgp10_700x600.jpg',             url:'https://www.clevelandrange.com/product/24cgp10-steamcraft-power-10-convection-steamer/'},
+    {id:'sf9',  type:'pressure',    name:'24CEM24: Classic Electric 15 PSI Boiler',           img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/24cgm-1.jpg',                     url:'https://www.clevelandrange.com/product/24cem24-classic-series-convection-steamer-with-electric-15-psi-boiler/'},
+    {id:'sf10', type:'pressure',    name:'24CGM200: Classic Gas 15 PSI Boiler',               img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/24cgm-2.jpg',                     url:'https://www.clevelandrange.com/product/24cgm200-classic-convection-steamer-with-gas-15-psi-boiler/'},
+    {id:'sf11', type:'pressure',    name:'24CSM: Classic Steam Coil 15 PSI Boiler',           img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/24cgm-2.jpg',                     url:'https://www.clevelandrange.com/product/24csm-classic-series-convection-steamer-with-steam-coil-15-psi-boiler/'},
+    {id:'sf12', type:'pressure',    name:'36CGM16300: ConvectionPro Gas 15 PSI Boiler',       img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/conv-pro-1.jpg',                  url:'https://www.clevelandrange.com/product/36cgm16300-convectionpro-steamer-with-gas-15-psi-boiler/'},
+    {id:'sf13', type:'pressure',    name:'36CGM300: Classic Gas 15 PSI Boiler',               img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/24cgm-2.jpg',                     url:'https://www.clevelandrange.com/product/36cgm300-classic-convection-steamer-with-gas-15-psi-boiler/'},
+  ],
+  'steamers-top': [
+    {id:'st1', type:'boilerless', name:'22CET6.1: SteamChef 6 Electric Boilerless', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/22CET6-1_Ver01.jpeg', url:'https://www.clevelandrange.com/product/22cet6-1-steamchef-6-electric-boilerless-convection-steamer2/'},
+    {id:'st2', type:'boilerless', name:'22CET3.1: SteamChef 3 Electric Boilerless', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/22CET3-1_Ver01.jpeg', url:'https://www.clevelandrange.com/product/22cet3-1-steamchef-3-electric-boilerless-convection-steamer/'},
+    {id:'st3', type:'connectionless', name:'22CCGT6: SteamChef Gas Connectionless', img:'https://www.clevelandrange.com/wp-content/uploads/2025/12/22CCGT6-Single-Unit-No-Energy-Star-scaled.png', url:'https://www.clevelandrange.com/product/22ccgt6-steamchef/'},
+    {id:'st4', type:'connectionless', name:'22CCT6: SteamChef Electric Connectionless', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/22CCT6_Ver01.jpeg', url:'https://www.clevelandrange.com/product/22cct6-steamchef/'},
+    {id:'st5', type:'generator', name:'21CGA5: SteamCraft Ultra 5 Gas Generator', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/21CGA5_Ver01.jpeg', url:'https://www.clevelandrange.com/product/21cga5-steamcraft-ultra-5-with-gas-generator/'},
+    {id:'st6', type:'generator', name:'21CET8: SteamCraft Ultra 3 Electric Generator', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/21CET8_Ver01.jpeg', url:'https://www.clevelandrange.com/product/21cet8-steamcraft-ultra-3-with-electric-generator/'},
+    {id:'st7', type:'generator', name:'21CET16: SteamCraft Ultra 5 Electric Generator', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/21CET16_Ver01.jpeg', url:'https://www.clevelandrange.com/product/21cet16-steamcraft-ultra-5-with-electric-generator/'},
+  ],
+  'steamers-pressure': [
+    {id:'sp1', name:'PDL2: Pressure Steamer, Direct Steam, Open Base', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/pdl-steamer-pressure-updated.jpg', url:'https://www.clevelandrange.com/product/pdl2-pressure-steamer-direct-steam-open-base/'},
+    {id:'sp2', name:'PDL3: Pressure Steamer, Direct Steam, Open Base', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/pdl-steamer-pressure-updated.jpg', url:'https://www.clevelandrange.com/product/pdl3-pressure-steamer-direct-steam-open-base/'},
+    {id:'sp3', name:'PEM243: Pressure Steamer, 15 PSI Electric Boiler', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/pdm-steamer-pressure-updated.jpg', url:'https://www.clevelandrange.com/product/pem243-pressure-steamer-with-15-psi-electric-boiler/'},
+    {id:'sp4', name:'PGM300: 3-Compartment Pressure Steamer', img:'https://www.clevelandrange.com/wp-content/uploads/2025/04/image.png', url:'https://www.clevelandrange.com/product/pgm200-3-3-compartment-pressure-steamer/'},
+    {id:'sp5', name:'PEM242: Pressure Steamer, 15 PSI Electric Boiler', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/pdm-steamer-pressure-updated.jpg', url:'https://www.clevelandrange.com/product/pem242-pem243-pressure-steamer-with-15-psi-electric-boiler/'},
+    {id:'sp6', name:'PSM3: Pressure Steamer, 15 PSI Steam Coil Boiler', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/pdm-steamer-pressure-updated.jpg', url:'https://www.clevelandrange.com/product/psm3-pressure-steamer-with-15-psi-steam-coil-boiler/'},
+  ],
+  
+  
+
+};
+
+// Flat list for search + summary
+var ALLPRODUCTS = [];
+Object.keys(CATALOG).forEach(function(k){ CATALOG[k].forEach(function(p){ ALLPRODUCTS.push(p); }); });
+
+var selectedProducts = [];
+var customerType = '';
+var REF = 'CR-' + Date.now().toString(36).toUpperCase();
+var currentSubKey = null;
+
+// ── Mixer Kettles & Cook Chill: redirect to configurator ──
+function openMixerConfig(btn) {
+  // Clean up any open selectors/panels
+  var ks = document.getElementById('kettle-selector'); if(ks) ks.remove();
+  var ss = document.getElementById('skillet-selector'); if(ss) ss.remove();
+  var sfp = document.getElementById('steamer-filter-panel'); if(sfp) sfp.remove();
+  var old = document.getElementById('mixer-config-panel'); if(old) old.remove();
+
+  // Deactivate other tree buttons
+  document.querySelectorAll('.tl1-btn.open').forEach(function(b){
+    b.classList.remove('open');
+    if(b.nextElementSibling) b.nextElementSibling.classList.remove('open');
+  });
+  document.querySelectorAll('.tl2-btn.active').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('open');
+
+  // Show header
+  var hdr = document.getElementById('products-hdr');
+  hdr.style.display = 'block';
+  document.getElementById('products-bc').innerHTML = '<em>Mixer Kettles &amp; Cook Chill</em>';
+  document.getElementById('products-title').textContent = 'Mixer Kettles & Cook Chill Systems';
+  document.getElementById('products-empty').style.display = 'none';
+  document.getElementById('products-grid').style.display = 'none';
+  var sh = document.getElementById('scroll-hint'); if(sh) sh.style.display='none';
+
+  // Hide form section
+  var fs = document.getElementById('form-section');
+  if(fs){ fs.classList.remove('visible'); fs.classList.add('hidden'); }
+
+  // Build iframe panel
+  var panel = document.createElement('div');
+  panel.id = 'mixer-config-panel';
+  panel.style.cssText = 'display:flex;flex-direction:column;overflow:hidden';
+
+  // Back link bar
+  var notice = document.createElement('div');
+  notice.className = 'mixer-notice';
+  var back = document.createElement('span');
+  back.className = 'mixer-notice-back';
+  back.textContent = '← Back to quote form';
+  back.onclick = function(){ closeMixerPanel(); };
+  notice.appendChild(back);
+  panel.appendChild(notice);
+
+  // iFrame
+  var iframe = document.createElement('iframe');
+  iframe.src = 'https://garyliclv.github.io/mixer-configurator/';
+  iframe.title = 'Mixer Kettle Configurator';
+  iframe.style.cssText = 'width:100%;border:none;height:900px;display:block';
+  panel.appendChild(iframe);
+
+  document.getElementById('products-grid').parentElement.appendChild(panel);
+
+  // Match background
+  var bw = document.querySelector('.browser-wrap'); if(bw) bw.classList.add('mixer-open');
+}
+
+function closeMixerPanel() {
+  var old = document.getElementById('mixer-config-panel'); if(old) old.remove();
+  var fs = document.getElementById('form-section');
+  if(fs){ fs.classList.remove('hidden'); fs.classList.add('visible'); }
+  document.getElementById('products-hdr').style.display = 'none';
+  document.getElementById('products-empty').style.display = 'flex';
+  document.querySelectorAll('.tl1-btn.open').forEach(function(b){ b.classList.remove('open'); });
+  var bw = document.querySelector('.browser-wrap'); if(bw) bw.classList.remove('mixer-open');
+}
+
+
+
+// ── STEAMER FILTERED SUBCATEGORY ─────────────────────────────────────────────
+var _steamerFilter = null;
+var _steamerSubKey = null;
+
+function openSteamerSub(btn, parent, sub, key) {
+  // Restore form section
+  var _fs = document.getElementById('form-section'); if(_fs){_fs.classList.remove('hidden');_fs.classList.add('visible');}
+  var _mp = document.getElementById('mixer-config-panel'); if(_mp) _mp.remove();
+  var _bw = document.querySelector('.browser-wrap'); if(_bw) _bw.classList.remove('mixer-open');
+  var _sfp = document.getElementById('steamer-filter-panel'); if(_sfp) _sfp.remove();
+
+  document.querySelectorAll('.tl2-btn.active').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  _steamerSubKey = key;
+  _steamerFilter = null;
+
+  // Show header
+  var hdr = document.getElementById('products-hdr');
+  hdr.style.display = 'block';
+  document.getElementById('products-bc').innerHTML = '<em>' + parent + '</em> &nbsp;/&nbsp; ' + sub;
+  document.getElementById('products-title').textContent = sub;
+  document.getElementById('products-empty').style.display = 'none';
+
+  // Remove old selectors
+  var ks = document.getElementById('kettle-selector'); if(ks) ks.remove();
+  var ss = document.getElementById('skillet-selector'); if(ss) ss.remove();
+  var sfp2 = document.getElementById('steamer-filter-panel'); if(sfp2) sfp2.remove();
+
+  _renderSteamerFilter();
+}
+
+function _renderSteamerFilter() {
+  // Remove old steamer filter panel
+  var old = document.getElementById('steamer-filter-panel'); if(old) old.remove();
+
+  var allProducts = CATALOG[_steamerSubKey] || [];
+
+  // Determine filter options for this subcategory
+  var filterDefs;
+  if (_steamerSubKey === 'steamers-top') {
+    filterDefs = [
+      {key:'all',         label:'All',          icon:'🔍'},
+      {key:'boilerless',  label:'Boilerless',   icon:'💧', desc:'Auto water fill & drain, no plumbing'},
+      {key:'connectionless', label:'Connectionless', icon:'🚰', desc:'Manual water fill & drain'},
+      {key:'generator',   label:'Generator',    icon:'⚡', desc:'Built-in steam generator'},
+    ];
+  } else {
+    filterDefs = [
+      {key:'all',          label:'All',           icon:'🔍'},
+      {key:'atmospheric',  label:'Atmospheric',   icon:'💨', desc:'Generator-based, pressureless cooking'},
+      {key:'pressure',     label:'Pressure / PSI Boiler', icon:'🔒', desc:'15 PSI boiler, faster cook times'},
+    ];
+  }
+
+  var panel = document.createElement('div');
+  panel.id = 'steamer-filter-panel';
+
+  // Filter bar
+  var filterWrap = document.createElement('div');
+  filterWrap.className = 'steamer-filter';
+  var lbl = document.createElement('div');
+  lbl.className = 'steamer-filter-label';
+  lbl.textContent = 'Filter by type';
+  filterWrap.appendChild(lbl);
+
+  var opts = document.createElement('div');
+  opts.className = 'steamer-filter-opts';
+  filterDefs.forEach(function(fd) {
+    var b = document.createElement('button');
+    b.className = 'sf-btn' + ((_steamerFilter === fd.key || (fd.key==='all' && !_steamerFilter)) ? ' active' : '');
+    var ic = document.createElement('span'); ic.className = 'sf-ic'; ic.textContent = fd.icon; b.appendChild(ic);
+    b.appendChild(document.createTextNode(fd.label));
+    b.onclick = function(){
+      _steamerFilter = fd.key === 'all' ? null : fd.key;
+      _renderSteamerFilter();
+    };
+    opts.appendChild(b);
+  });
+  filterWrap.appendChild(opts);
+  panel.appendChild(filterWrap);
+
+  // Filter the products
+  var filtered = _steamerFilter
+    ? allProducts.filter(function(p){ return p.type === _steamerFilter; })
+    : allProducts;
+
+  // Mount panel into products-col, before the grid
+  var col = document.getElementById('products-grid').parentElement;
+  col.insertBefore(panel, document.getElementById('products-grid'));
+
+  // Render the filtered products in the grid
+  var grid = document.getElementById('products-grid');
+  grid.style.display = 'grid';
+  grid.style.maxHeight = filtered.length > 6 ? '564px' : 'none';
+  grid.scrollTop = 0;
+  grid.innerHTML = '';
+
+  filtered.forEach(function(p) {
+    var sel = selectedProducts.indexOf(p.id) >= 0;
+    var card = document.createElement('div');
+    card.className = 'prod-card' + (sel ? ' selected' : '');
+
+    var chk = document.createElement('div'); chk.className = 'prod-card-check'; chk.textContent = '\u2713'; card.appendChild(chk);
+
+    var imgWrap = document.createElement('div'); imgWrap.className = 'prod-card-img';
+    var img = document.createElement('img'); img.src = p.img; img.alt = p.name;
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain;padding:10px';
+    img.onerror = function(){ imgWrap.innerHTML='<span style="font-size:36px;opacity:.3">\u2601</span>'; };
+    imgWrap.appendChild(img); card.appendChild(imgWrap);
+
+    var body = document.createElement('div'); body.className = 'prod-card-body';
+    var nm = document.createElement('div'); nm.className = 'prod-card-name'; nm.textContent = p.name; body.appendChild(nm);
+    var ra1 = document.createElement('div'); ra1.className = 'ks-result-actions';
+    var aBtn = document.createElement('button'); aBtn.className = 'ks-add-btn';
+    aBtn.textContent = sel ? '\u2713 Added to Quote' : '+ Add to Quote';
+    if(sel) aBtn.style.background = 'var(--red)';
+    aBtn.onclick = (function(id){ return function(e){ e.stopPropagation();
+      var i = selectedProducts.indexOf(id);
+      if(i>=0) selectedProducts.splice(i,1); else selectedProducts.push(id);
+      updateSummary(); _renderSteamerFilter();
+    }; })(p.id);
+    ra1.appendChild(aBtn);
+    var lnk = document.createElement('a'); lnk.className = 'ks-view-btn';
+    lnk.href = p.url; lnk.target = '_blank'; lnk.textContent = 'View \u2192';
+    lnk.onclick = function(e){ e.stopPropagation(); }; ra1.appendChild(lnk);
+    body.appendChild(ra1); card.appendChild(body);
+
+    grid.appendChild(card);
+  });
+
+  // Scroll hint
+  var sh = document.getElementById('scroll-hint');
+  if (!sh) {
+    sh = document.createElement('div');
+    sh.id = 'scroll-hint';
+    sh.style.cssText = 'text-align:center;font-size:10px;color:var(--muted);padding:4px 0 10px;letter-spacing:.06em;text-transform:uppercase';
+    col.insertBefore(sh, grid.nextSibling);
+  }
+  if (filtered.length > 6) {
+    sh.textContent = '\u25be  Scroll to see all ' + filtered.length + ' models  \u25be';
+    sh.style.display = 'block';
+  } else {
+    sh.style.display = 'none';
+  }
+}
+
+// ── Open sub-category (standard grid) ──
+function openSub(btn, parent, sub, key) {
+  // Restore form section
+  var _fs = document.getElementById('form-section'); if(_fs){_fs.classList.remove('hidden');_fs.classList.add('visible');}
+  var _mp = document.getElementById('mixer-config-panel'); if(_mp) _mp.remove();
+  var _bw = document.querySelector('.browser-wrap'); if(_bw) _bw.classList.remove('mixer-open');
+  var _sfp = document.getElementById('steamer-filter-panel'); if(_sfp) _sfp.remove();
+  var _ks2 = document.getElementById('kettle-selector'); if(_ks2) _ks2.remove();
+  var _ss2 = document.getElementById('skillet-selector'); if(_ss2) _ss2.remove();
+
+  document.querySelectorAll('.tl2-btn.active').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  currentSubKey = key;
+
+  var hdr = document.getElementById('products-hdr');
+  hdr.style.display = 'block';
+  document.getElementById('products-bc').innerHTML = '<em>' + parent + '</em> &nbsp;/&nbsp; ' + sub;
+  document.getElementById('products-title').textContent = sub;
+  document.getElementById('products-empty').style.display = 'none';
+
+  var grid = document.getElementById('products-grid');
+  grid.style.display = 'grid';
+  renderGrid(CATALOG[key] || []);
+}
+
+// ── Render product grid ──
+function renderGrid(list) {
+  var grid = document.getElementById('products-grid');
+  grid.innerHTML = '';
+  grid.scrollTop = 0;
+  grid.style.maxHeight = list.length > 6 ? '564px' : 'none';
+
+  list.forEach(function(p) {
+    var sel = selectedProducts.indexOf(p.id) >= 0;
+    var card = document.createElement('div');
+    card.className = 'prod-card' + (sel ? ' selected' : '');
+
+    var chk = document.createElement('div'); chk.className = 'prod-card-check'; chk.textContent = '\u2713'; card.appendChild(chk);
+
+    var imgWrap = document.createElement('div'); imgWrap.className = 'prod-card-img';
+    var img = document.createElement('img'); img.src = p.img; img.alt = p.name;
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain;padding:10px';
+    img.onerror = function() {
+      imgWrap.innerHTML = '';
+      imgWrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#aaa';
+      var ico = document.createElement('div'); ico.textContent = '\u2601'; ico.style.cssText = 'font-size:36px;opacity:.35';
+      var lbl = document.createElement('div'); lbl.textContent = 'Image unavailable'; lbl.style.cssText = 'font-size:9px;font-family:Poppins,sans-serif;letter-spacing:.06em;text-transform:uppercase';
+      imgWrap.appendChild(ico); imgWrap.appendChild(lbl);
+    };
+    imgWrap.appendChild(img); card.appendChild(imgWrap);
+
+    var body = document.createElement('div'); body.className = 'prod-card-body';
+    var nm = document.createElement('div'); nm.className = 'prod-card-name'; nm.textContent = p.name; body.appendChild(nm);
+    var ra2 = document.createElement('div'); ra2.className = 'ks-result-actions';
+    var aBtn2 = document.createElement('button'); aBtn2.className = 'ks-add-btn';
+    aBtn2.textContent = sel ? '\u2713 Added to Quote' : '+ Add to Quote';
+    if(sel) aBtn2.style.background = 'var(--red)';
+    aBtn2.onclick = (function(id){ return function(e){ e.stopPropagation();
+      var i = selectedProducts.indexOf(id);
+      if(i>=0) selectedProducts.splice(i,1); else selectedProducts.push(id);
+      updateSummary(); if(currentSubKey) renderGrid(CATALOG[currentSubKey]||[]);
+    }; })(p.id);
+    ra2.appendChild(aBtn2);
+    var lnk = document.createElement('a'); lnk.className = 'ks-view-btn';
+    lnk.href = p.url; lnk.target = '_blank'; lnk.textContent = 'View \u2192';
+    lnk.onclick = function(e){ e.stopPropagation(); }; ra2.appendChild(lnk);
+    body.appendChild(ra2); card.appendChild(body);
+
+    grid.appendChild(card);
+  });
+
+  var sh = document.getElementById('scroll-hint');
+  if (!sh) {
+    sh = document.createElement('div'); sh.id = 'scroll-hint';
+    sh.style.cssText = 'text-align:center;font-size:10px;color:var(--muted);padding:4px 0 10px;letter-spacing:.06em;text-transform:uppercase';
+    grid.parentElement.insertBefore(sh, grid.nextSibling);
+  }
+  if (list.length > 6) { sh.textContent = '\u25be  Scroll to see all ' + list.length + ' models  \u25be'; sh.style.display='block'; }
+  else { sh.style.display='none'; }
+}
+
+// ── Selection summary bar ──
+function updateSummary() {
+  var bar = document.getElementById('sel-summary');
+  if (selectedProducts.length === 0) { bar.classList.remove('show'); return; }
+  var names = selectedProducts.map(function(id){
+    if (id.indexOf('ks_') === 0) {
+      var model = id.slice(3);
+      var allK = (KETTLE_DB.floor||[]).concat(KETTLE_DB.tabletop||[]);
+      var k = allK.find(function(x){ return x.model===model; });
+      return k ? k.model+' ('+k.gal+' gal)' : model;
+    }
+    if (id.indexOf('ss_') === 0) {
+      var model = id.slice(3);
+      var allS = (SKILLET_DB.floor||[]).concat(SKILLET_DB.countertop||[]);
+      var s = allS.find(function(x){ return x.model===model; });
+      return s ? s.model+' ('+s.gal+' gal)' : model;
+    }
+    var p = ALLPRODUCTS.find(function(x){ return x.id===id; });
+    return p ? p.name : id;
+  });
+  document.getElementById('sel-count').textContent = selectedProducts.length+' product'+(selectedProducts.length>1?'s':'')+' selected:';
+  document.getElementById('sel-names').textContent = names.join(', ');
+  bar.classList.add('show');
+}
+
+// ── Clear all selections ──
+function clearSelection() {
+  selectedProducts = [];
+  updateSummary();
+  if (currentSubKey) renderGrid(CATALOG[currentSubKey]||[]);
+}
+
+// ── Form helpers ──
+function setType(t){
+  customerType = t;
+  document.getElementById('tog-eu').classList.toggle('sel', t==='enduser');
+  document.getElementById('tog-dl').classList.toggle('sel', t==='dealer');
+  if(t==='dealer') document.getElementById('f-op').value='Dealer / Rep / Distributor';
+}
+
+// ── HubSpot form submission ──
+function doSubmit(){
+  var fn=document.getElementById('f-fn').value.trim();
+  var ln=document.getElementById('f-ln').value.trim();
+  var em=document.getElementById('f-em').value.trim();
+  var co=document.getElementById('f-co').value.trim();
+  var ph=document.getElementById('f-ph').value.trim();
+  var loc=document.getElementById('f-loc').value.trim();
+  var req=document.getElementById('f-req').value.trim();
+  if(!fn||!ln||!em||!co||!ph||!loc||!req){alert('Please fill in all required fields: name, email, company, phone, city/state, and describe what you need.');return;}
+
+  var btn=document.getElementById('sub-btn');
+  btn.disabled=true; btn.textContent='Sending\u2026';
+
+  var selNames=selectedProducts.map(function(id){
+    if(id.indexOf('ks_')===0){
+      var model=id.slice(3);
+      var allK=(KETTLE_DB.floor||[]).concat(KETTLE_DB.tabletop||[]);
+      var k=allK.find(function(x){return x.model===model;});
+      return k ? k.name : model;
+    }
+    if(id.indexOf('ss_')===0){
+      var model=id.slice(3);
+      var allS=(SKILLET_DB.floor||[]).concat(SKILLET_DB.countertop||[]);
+      var s=allS.find(function(x){return x.model===model;});
+      return s ? s.name : model;
+    }
+    var p=ALLPRODUCTS.find(function(x){return x.id===id;});return p?p.name:id;
+  });
+
+  fetch('https://api.hsforms.com/submissions/v3/integration/submit/2116169/a2fe8309-ea8b-41f3-bdd8-67040953d598',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      fields:[
+        {name:'email',value:em},
+        {name:'firstname',value:fn},
+        {name:'lastname',value:ln},
+        {name:'phone',value:document.getElementById('f-ph').value},
+        {name:'company',value:co},
+        {name:'clv_quote_request',value:req},
+        {name:'clv_quote_products',value:selNames.join(', ')},
+        {name:'clv_customer_type',value:customerType==='dealer'?'Dealer / Rep / Distributor':'End User'},
+        {name:'clv_quote_location',value:document.getElementById('f-loc').value+' '+document.getElementById('f-zip').value},
+        {name:'clv_quote_timeline',value:document.getElementById('f-tl').value},
+        {name:'clv_lead_source',value:'General Quote Form'},
+      ],
+      context:{pageUri:window.location.href,pageName:'Cleveland Range Quote Request'}
+    })
+  })
+  .then(function(){showSuccess();})
+  .catch(function(){showSuccess();});
+}
+
+function showSuccess(){
+  document.getElementById('suc-ref').textContent=REF;
+  document.getElementById('main-wrap').style.display='none';
+  document.getElementById('success-wrap').style.display='block';
+  window.scrollTo(0,0);
+}
+
+// ── Tree search ──
+function treeSearch(q) {
+  q = q.trim().toLowerCase();
+  if (!q) {
+    document.getElementById('cat-tree').style.display = '';
+    document.getElementById('products-hdr').style.display = currentSubKey ? 'block' : 'none';
+    if (currentSubKey) renderGrid(CATALOG[currentSubKey]||[]);
+    else { document.getElementById('products-empty').style.display='flex'; document.getElementById('products-grid').style.display='none'; }
+    var ks = document.getElementById('kettle-selector'); if(ks) ks.remove();
+    var ss = document.getElementById('skillet-selector'); if(ss) ss.remove();
+    var sfp = document.getElementById('steamer-filter-panel'); if(sfp) sfp.remove();
+    var mp3 = document.getElementById('mixer-config-panel'); if(mp3) mp3.remove();
+    var bw3 = document.querySelector('.browser-wrap'); if(bw3) bw3.classList.remove('mixer-open');
+    return;
+  }
+  var pool = [];
+  ALLPRODUCTS.forEach(function(p){ pool.push({name:p.name,img:p.img,url:p.url,cat:p.cat||'',sub:p.sub||'',id:p.id}); });
+  (KETTLE_DB.floor||[]).concat(KETTLE_DB.tabletop||[]).forEach(function(k){
+    pool.push({name:k.name,img:k.img,url:k.url,cat:'Steam Jacketed Kettles',sub:k.gal+'gal '+k.energy+' '+k.motion,id:'ks_'+k.model});
+  });
+  (SKILLET_DB.floor||[]).concat(SKILLET_DB.countertop||[]).forEach(function(s){
+    pool.push({name:s.name,img:s.img,url:s.url,cat:'Braising Pans & Tilt Skillets',sub:s.gal+'gal '+s.energy,id:'ss_'+s.model});
+  });
+  var matches = pool.filter(function(p){ return p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)||p.sub.toLowerCase().includes(q); });
+
+  document.getElementById('products-empty').style.display='none';
+  document.getElementById('products-grid').style.display='none';
+  var ks=document.getElementById('kettle-selector'); if(ks) ks.remove();
+  var ss=document.getElementById('skillet-selector'); if(ss) ss.remove();
+  var sfp=document.getElementById('steamer-filter-panel'); if(sfp) sfp.remove();
+  document.getElementById('products-hdr').style.display='block';
+  document.getElementById('products-bc').innerHTML='Search results';
+  document.getElementById('products-title').textContent='"'+q+'"';
+
+  if(!matches.length){
+    document.getElementById('products-empty').style.display='flex';
+    document.getElementById('products-empty').querySelector('.products-empty-txt').textContent='No products found for "'+q+'"';
+    return;
+  }
+
+  var grid=document.getElementById('products-grid');
+  grid.style.display='grid'; grid.style.maxHeight=''; grid.innerHTML='';
+  var sh=document.getElementById('scroll-hint'); if(sh) sh.style.display='none';
+
+  matches.forEach(function(p){
+    var id=p.id||p.url; var sel=selectedProducts.indexOf(id)>=0;
+    var card=document.createElement('div'); card.className='prod-card'+(sel?' selected':'');
+    var chk=document.createElement('div'); chk.className='prod-card-check'; chk.textContent='\u2713'; card.appendChild(chk);
+    var imgWrap=document.createElement('div'); imgWrap.className='prod-card-img';
+    var img=document.createElement('img'); img.src=p.img; img.alt=p.name;
+    img.style.cssText='width:100%;height:100%;object-fit:contain;padding:10px';
+    img.onerror=function(){imgWrap.innerHTML='<span style="font-size:32px;opacity:.3">&#128230;</span>';};
+    imgWrap.appendChild(img); card.appendChild(imgWrap);
+    var body=document.createElement('div'); body.className='prod-card-body';
+    var nm=document.createElement('div'); nm.className='prod-card-name'; nm.textContent=p.name; body.appendChild(nm);
+    var ra3=document.createElement('div'); ra3.className='ks-result-actions';
+    var aBtn3=document.createElement('button'); aBtn3.className='ks-add-btn';
+    var isSel=selectedProducts.indexOf(id)>=0;
+    aBtn3.textContent=isSel?'\u2713 Added to Quote':'+ Add to Quote';
+    if(isSel) aBtn3.style.background='var(--red)';
+    aBtn3.onclick=(function(pid){ return function(e){ e.stopPropagation();
+      var i=selectedProducts.indexOf(pid);
+      if(i>=0) selectedProducts.splice(i,1); else selectedProducts.push(pid);
+      updateSummary(); treeSearch(document.querySelector('.tree-search input').value);
+    }; })(id); ra3.appendChild(aBtn3);
+    var lnk=document.createElement('a'); lnk.className='ks-view-btn'; lnk.href=p.url; lnk.target='_blank'; lnk.textContent='View \u2192';
+    lnk.onclick=function(e){e.stopPropagation();}; ra3.appendChild(lnk);
+    body.appendChild(ra3);
+    card.appendChild(body);
+    grid.appendChild(card);
+  });
+}
+
+
+// ── Tree: toggle L1 parent ──
+function toggleL1(btn) {
+  var kids = btn.nextElementSibling;
+  var open = btn.classList.contains('open');
+  document.querySelectorAll('.tl1-btn.open').forEach(function(b){
+    b.classList.remove('open');
+    b.nextElementSibling.classList.remove('open');
+  });
+  if (!open) { btn.classList.add('open'); kids.classList.add('open'); }
+}
+
+
+// ── KETTLE SELECTOR DATA ─────────────────────────────────────────────────────
+
+var KETTLE_DB = {
+  floor: [
+    {energy:'direct',  motion:'stationary', rim:'standard', gal:25,  model:'KDL25',   name:'KDL25: Direct Steam Kettle, Stationary',               img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl_700x600_1-1.jpg', url:'https://www.clevelandrange.com/product/kdl25-direct-steam-kettles-tri-leg-or-pedestal-stationary/'},
+    {energy:'direct',  motion:'stationary', rim:'standard', gal:40,  model:'KDL40',   name:'KDL40: Direct Steam Kettle, Stationary',               img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl_700x600_1-1.jpg', url:'https://www.clevelandrange.com/product/kdl40-direct-steam-kettles-tri-leg-or-pedestal-stationary/'},
+    {energy:'direct',  motion:'stationary', rim:'standard', gal:60,  model:'KDL60',   name:'KDL60: Direct Steam Kettle, Stationary',               img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl_700x600_1-1.jpg', url:'https://www.clevelandrange.com/product/kdl60-direct-steam-kettles-tri-leg-or-pedestal-stationary/'},
+    {energy:'direct',  motion:'stationary', rim:'standard', gal:80,  model:'KDL80',   name:'KDL80: Direct Steam Kettle, Stationary',               img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl_700x600_1-1.jpg', url:'https://www.clevelandrange.com/product/kdl80-direct-steam-kettles-tri-leg-or-pedestal-stationary/'},
+    {energy:'direct',  motion:'stationary', rim:'standard', gal:100, model:'KDL100',  name:'KDL100: Direct Steam Kettle, Stationary',              img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl_700x600_1-1.jpg', url:'https://www.clevelandrange.com/product/kdl100-direct-steam-kettles-tri-leg-or-pedestal-stationary/'},
+    {energy:'direct',  motion:'stationary', rim:'standard', gal:125, model:'KDL125',  name:'KDL125: Direct Steam Kettle, Stationary',              img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl_700x600_1-1.jpg', url:'https://www.clevelandrange.com/product/kdl125-direct-steam-kettles-tri-leg-or-pedestal-stationary/'},
+    {energy:'direct',  motion:'stationary', rim:'standard', gal:200, model:'KDL200',  name:'KDL200: Direct Steam Kettle, Stationary',              img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl_700x600_1-1.jpg', url:'https://www.clevelandrange.com/product/kdl200-direct-steam-kettles-tri-leg-or-pedestal-stationary/'},
+    {energy:'direct',  motion:'tilting',    rim:'standard', gal:25,  model:'KDL25T',  name:'KDL25T: Direct Steam Kettle, Tilting',                 img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl80t-2.jpg', url:'https://www.clevelandrange.com/product/kdl25t-direct-steam-kettles-quad-leg-tilting/'},
+    {energy:'direct',  motion:'tilting',    rim:'standard', gal:40,  model:'KDL40T',  name:'KDL40T: Direct Steam Kettle, Tilting',                 img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl80t-2.jpg', url:'https://www.clevelandrange.com/product/kdl40t-direct-steam-kettles-quad-leg-tilting/'},
+    {energy:'direct',  motion:'tilting',    rim:'standard', gal:60,  model:'KDL60T',  name:'KDL60T: Direct Steam Kettle, Tilting',                 img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl80t-2.jpg', url:'https://www.clevelandrange.com/product/kdl60t-direct-steam-kettles-quad-leg-tilting/'},
+    {energy:'direct',  motion:'tilting',    rim:'standard', gal:80,  model:'KDL80T',  name:'KDL80T: Direct Steam Kettle, Tilting',                 img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl80t-2.jpg', url:'https://www.clevelandrange.com/product/kdl80t-direct-steam-kettles-quad-leg-tilting/'},
+    {energy:'direct',  motion:'tilting',    rim:'standard', gal:100, model:'KDL100T', name:'KDL100T: Direct Steam Kettle, Tilting',                img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl80t-2.jpg', url:'https://www.clevelandrange.com/product/kdl100t-direct-steam-kettles-quad-leg-tilting/'},
+    {energy:'direct',  motion:'tilting',    rim:'standard', gal:125, model:'KDL125T', name:'KDL125T: Direct Steam Kettle, Tilting',                img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl80t-2.jpg', url:'https://www.clevelandrange.com/product/kdl125t-direct-steam-kettles-quad-leg-tilting/'},
+    {energy:'electric',motion:'stationary', rim:'standard', gal:40,  model:'KEL40',   name:'KEL40: Electric Steam Kettle, Stationary',             img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kel_700x600-1.jpg', url:'https://www.clevelandrange.com/product/kel40-electric-steam-kettles-stationary/'},
+    {energy:'electric',motion:'stationary', rim:'standard', gal:60,  model:'KEL60',   name:'KEL60: Electric Steam Kettle, Stationary',             img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kel_700x600-1.jpg', url:'https://www.clevelandrange.com/product/kel60-electric-steam-kettles-stationary/'},
+    {energy:'electric',motion:'stationary', rim:'standard', gal:80,  model:'KEL80',   name:'KEL80: Electric Steam Kettle, Stationary',             img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kel_700x600-1.jpg', url:'https://www.clevelandrange.com/product/kel80-electric-steam-kettles-stationary/'},
+    {energy:'electric',motion:'stationary', rim:'short',    gal:40,  model:'KEL40SH', name:'KEL40SH: Electric Short Series Kettle, Stationary',    img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kel-sh-std_700x600-1.jpg', url:'https://www.clevelandrange.com/product/kel40sh-electric-short-series-steam-kettles-stationary/'},
+    {energy:'electric',motion:'stationary', rim:'short',    gal:60,  model:'KEL60SH', name:'KEL60SH: Electric Short Series Kettle, Stationary',    img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kel-sh-std_700x600-1.jpg', url:'https://www.clevelandrange.com/product/kel60sh-electric-short-series-steam-kettles-stationary/'},
+    {energy:'electric',motion:'tilting',    rim:'standard', gal:25,  model:'KEL25T',  name:'KEL25T: Electric Steam Kettle, Tilting',               img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl80t-2.jpg', url:'https://www.clevelandrange.com/product/kel25t-electric-steam-kettles-quad-leg-tilting/'},
+    {energy:'electric',motion:'tilting',    rim:'standard', gal:40,  model:'KEL40T',  name:'KEL40T: Electric Steam Kettle, Tilting',               img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl80t-2.jpg', url:'https://www.clevelandrange.com/product/kel40t-electric-steam-kettles-quad-leg-tilting/'},
+    {energy:'electric',motion:'tilting',    rim:'standard', gal:60,  model:'KEL60T',  name:'KEL60T: Electric Steam Kettle, Tilting',               img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl80t-2.jpg', url:'https://www.clevelandrange.com/product/kel60t-electric-steam-kettles-quad-leg-tilting/'},
+    {energy:'electric',motion:'tilting',    rim:'standard', gal:80,  model:'KEL80T',  name:'KEL80T: Electric Steam Kettle, Tilting',               img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl80t-2.jpg', url:'https://www.clevelandrange.com/product/kel80t-electric-steam-kettles-quad-leg-tilting/'},
+    {energy:'electric',motion:'tilting',    rim:'standard', gal:100, model:'KEL100T', name:'KEL100T: Electric Steam Kettle, Tilting',              img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kdl80t-2.jpg', url:'https://www.clevelandrange.com/product/kel100t-electric-steam-kettles-quad-leg-tilting/'},
+    {energy:'gas',     motion:'stationary', rim:'standard', gal:25,  model:'KGL25',   name:'KGL25: Gas Steam Kettle, Stationary',                  img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kgl_700x600-1.jpg', url:'https://www.clevelandrange.com/product/kgl25-gas-steam-kettles-stationary/'},
+    {energy:'gas',     motion:'stationary', rim:'standard', gal:40,  model:'KGL40',   name:'KGL40: Gas Steam Kettle, Stationary',                  img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kgl_700x600-1.jpg', url:'https://www.clevelandrange.com/product/kgl40-gas-steam-kettles-stationary/'},
+    {energy:'gas',     motion:'stationary', rim:'standard', gal:60,  model:'KGL60',   name:'KGL60: Gas Steam Kettle, Stationary',                  img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kgl_700x600-1.jpg', url:'https://www.clevelandrange.com/product/kgl60-gas-steam-kettles-stationary/'},
+    {energy:'gas',     motion:'stationary', rim:'standard', gal:80,  model:'KGL80',   name:'KGL80: Gas Steam Kettle, Stationary',                  img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kgl_700x600-1.jpg', url:'https://www.clevelandrange.com/product/kgl80-gas-steam-kettles-stationary/'},
+    {energy:'gas',     motion:'stationary', rim:'standard', gal:100, model:'KGL100',  name:'KGL100: Gas Steam Kettle, Stationary',                 img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kgl_700x600-1.jpg', url:'https://www.clevelandrange.com/product/kgl100-gas-steam-kettles-stationary/'},
+    {energy:'gas',     motion:'stationary', rim:'short',    gal:60,  model:'KGL60SH', name:'KGL60SH: Gas Short Series Kettle, Stationary',         img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kgl-sh_700x600-1.jpg', url:'https://www.clevelandrange.com/product/kgl60sh-gas-steam-kettle-short-series-stationary/'},
+    {energy:'gas',     motion:'tilting',    rim:'standard', gal:25,  model:'KGL25T',  name:'KGL25T: Gas Steam Kettle, Tilting',                    img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kgl-t-ezd_700x600.jpg', url:'https://www.clevelandrange.com/product/kgl25t-gas-steam-kettle-tilting/'},
+    {energy:'gas',     motion:'tilting',    rim:'standard', gal:40,  model:'KGL40T',  name:'KGL40T: Gas Steam Kettle, Tilting',                    img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kgl-t-ezd_700x600.jpg', url:'https://www.clevelandrange.com/product/kgl40t-gas-steam-kettle-tilting/'},
+    {energy:'gas',     motion:'tilting',    rim:'short',    gal:40,  model:'KGL40TSH',name:'KGL40TSH: Gas Short Series Kettle, Tilting',            img:'https://www.clevelandrange.com/wp-content/uploads/2025/04/image-1.png', url:'https://www.clevelandrange.com/product/kgl40tsh-gas-steam-kettle-tilting/'},
+    {energy:'gas',     motion:'tilting',    rim:'standard', gal:60,  model:'KGL60T',  name:'KGL60T: Gas Steam Kettle, Tilting',                    img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kgl-t-ezd_700x600.jpg', url:'https://www.clevelandrange.com/product/kgl60t-gas-steam-kettle-tilting/'},
+    {energy:'gas',     motion:'tilting',    rim:'standard', gal:80,  model:'KGL80T',  name:'KGL80T: Gas Steam Kettle, Tilting',                    img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/kgl-t-ezd_700x600.jpg', url:'https://www.clevelandrange.com/product/kgl80t-gas-steam-kettle-tilting-2/'},
+  ],
+  tabletop: [
+    {energy:'direct',  motion:'tilting', gal:3,  model:'KDT3T',  name:'KDT3T: Direct Steam Kettle, Table Top',  img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/KET-EZD-PROBE.jpg', url:'https://www.clevelandrange.com/product/kdt3t-direct-steam-mixer-kettle-table-top/'},
+    {energy:'direct',  motion:'tilting', gal:6,  model:'KDT6T',  name:'KDT6T: Direct Steam Kettle, Table Top',  img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/KET-EZD-PROBE.jpg', url:'https://www.clevelandrange.com/product/kdt6t-direct-steam-mixer-kettle-table-top/'},
+    {energy:'direct',  motion:'tilting', gal:12, model:'KDT12T', name:'KDT12T: Direct Steam Kettle, Table Top', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/KET-EZD-PROBE.jpg', url:'https://www.clevelandrange.com/product/kdt12t-direct-steam-mixer-kettle-table-top/'},
+    {energy:'direct',  motion:'tilting', gal:20, model:'KDT20T', name:'KDT20T: Direct Steam Kettle, Table Top', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/KET-EZD-PROBE.jpg', url:'https://www.clevelandrange.com/product/kdt20t-direct-steam-mixer-kettle-table-top/'},
+    {energy:'electric',motion:'tilting', gal:3,  model:'KET3T',  name:'KET3T: Electric Steam Kettle, Table Top',  img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/KET-EZD-PROBE.jpg', url:'https://www.clevelandrange.com/product/ket3t-electric-steam-kettle-tilting/'},
+    {energy:'electric',motion:'tilting', gal:6,  model:'KET6T',  name:'KET6T: Electric Steam Kettle, Table Top',  img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/KET-EZD-PROBE.jpg', url:'https://www.clevelandrange.com/product/ket6t-electric-steam-kettle-tilting/'},
+    {energy:'electric',motion:'tilting', gal:12, model:'KET12T', name:'KET12T: Electric Steam Kettle, Table Top', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/KET-EZD-PROBE.jpg', url:'https://www.clevelandrange.com/product/ket12t-electric-steam-kettle-tilting/'},
+    {energy:'electric',motion:'tilting', gal:20, model:'KET20T', name:'KET20T: Electric Steam Kettle, Table Top', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/KET-EZD-PROBE.jpg', url:'https://www.clevelandrange.com/product/ket20t-electric-steam-kettle-tilting/'},
+    {energy:'gas',     motion:'tilting', gal:6,  model:'KGT6T',  name:'KGT6T: Gas Steam Kettle, Table Top',  img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/KET-EZD-PROBE.jpg', url:'https://www.clevelandrange.com/product/kgt6t-gas-steam-kettles-tilting-table-top/'},
+    {energy:'gas',     motion:'tilting', gal:12, model:'KGT12T', name:'KGT12T: Gas Steam Kettle, Table Top', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/KET-EZD-PROBE.jpg', url:'https://www.clevelandrange.com/product/kgt12t-gas-steam-kettles-tilting-table-top/'},
+  ]
+};
+
+var _ksPlacement = null;
+var _ksEnergy    = null;
+var _ksMotion    = null;
+var _ksRim       = null;
+var _ksGal       = null;
+
+// ── SKILLET SELECTOR ─────────────────────────────────────────────────────────
+
+var SKILLET_DB = {
+  floor: [
+    // Electric — PowerPan T1 series (tilting, enclosed base)
+    {energy:'electric', series:'PowerPan', gal:30, model:'SEL30T1', name:'SEL30T1: Electric PowerPan\u2122 Braising Pan, 30 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/SEL30-40-T1.jpg', url:'https://www.clevelandrange.com/product/sel30t1-sel40t1-braising-pan-tilting-skillet/'},
+    {energy:'electric', series:'PowerPan', gal:40, model:'SEL40T1', name:'SEL40T1: Electric PowerPan\u2122 Braising Pan, 40 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/SEL30-40-T1.jpg', url:'https://www.clevelandrange.com/product/sel40t1-braising-pan-tilting-skillet/'},
+    {energy:'electric', series:'PowerPan', gal:60, model:'SEL60T1', name:'SEL60T1: Electric PowerPan\u2122 Braising Pan, 60 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2026/03/SGL30T1_Ver01-1000x1680.png', url:'https://www.clevelandrange.com/product/sel60t1-powerpan-series-electric-braising-pan-tilting-skillet/'},
+    // Electric — DuraPan TR series (tilting, open base)
+    {energy:'electric', series:'DuraPan',  gal:30, model:'SEL30TR', name:'SEL30TR: Electric DuraPan\u2122 Braising Pan, 30 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/SEL3040TR.png', url:'https://www.clevelandrange.com/product/sel30tr-sel40tr-braising-pan-tilting-skillet/'},
+    {energy:'electric', series:'DuraPan',  gal:40, model:'SEL40TR', name:'SEL40TR: Electric DuraPan\u2122 Braising Pan, 40 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/SEL3040TR.png', url:'https://www.clevelandrange.com/product/sel40tr-braising-pan-tilting-skillet/'},
+    // Gas — PowerPan T1 series (tilting, enclosed base)
+    {energy:'gas',      series:'PowerPan', gal:30, model:'SGL30T1', name:'SGL30T1: Gas PowerPan\u2122 Braising Pan, 30 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2025/12/SGL30T1_Ver03-1-3-1000x1558.png', url:'https://www.clevelandrange.com/product/sgl-sgl40t1-braising-pan-tilting-skillet/'},
+    {energy:'gas',      series:'PowerPan', gal:40, model:'SGL40T1', name:'SGL40T1: Gas PowerPan\u2122 Braising Pan, 40 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2025/12/SGL30T1_Ver03-1-3-1000x1558.png', url:'https://www.clevelandrange.com/product/sgl40t1-braising-pan-tilting-skillet/'},
+    {energy:'gas',      series:'PowerPan', gal:60, model:'SGL60T1', name:'SGL60T1: Gas PowerPan\u2122 Braising Pan, 60 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2026/03/SGL30T1_Ver01-1000x1680.png', url:'https://www.clevelandrange.com/product/sgl60t1-powerpan-series-gas-braising-pan-tilting-skillet/'},
+    // Gas — DuraPan TR series (tilting, open base)
+    {energy:'gas',      series:'DuraPan',  gal:30, model:'SGL30TR', name:'SGL30TR: Gas DuraPan\u2122 Braising Pan, 30 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/SEL3040TR.png', url:'https://www.clevelandrange.com/product/sgl30tr-sgl40tr-braising-pan-tilting-skillet/'},
+    {energy:'gas',      series:'DuraPan',  gal:40, model:'SGL40TR', name:'SGL40TR: Gas DuraPan\u2122 Braising Pan, 40 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/SEL3040TR.png', url:'https://www.clevelandrange.com/product/sgl40tr-braising-pan-tilting-skillet/'},
+    // easyTouch variants
+    {energy:'electric', series:'easyTouch', gal:30, model:'SEL30T1-ET', name:'SEL30T1 easyTouch: Electric PowerPan\u2122, 30 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/SEL30-40-T1.jpg', url:'https://www.clevelandrange.com/product/sel30t1-sel40t1-braising-pan-tilting-skillet/'},
+    {energy:'electric', series:'easyTouch', gal:40, model:'SEL40T1-ET', name:'SEL40T1 easyTouch: Electric PowerPan\u2122, 40 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/SEL30-40-T1.jpg', url:'https://www.clevelandrange.com/product/sel40t1-braising-pan-tilting-skillet/'},
+    {energy:'electric', series:'easyTouch', gal:60, model:'SEL60T1-ET', name:'SEL60T1 easyTouch: Electric PowerPan\u2122, 60 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2026/03/SGL30T1_Ver01-1000x1680.png', url:'https://www.clevelandrange.com/product/sel60t1-powerpan-series-electric-braising-pan-tilting-skillet/'},
+    {energy:'gas',      series:'easyTouch', gal:30, model:'SGL30T1-ET', name:'SGL30T1 easyTouch: Gas PowerPan\u2122, 30 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2025/12/SGL30T1_Ver03-1-3-1000x1558.png', url:'https://www.clevelandrange.com/product/sgl30t1-powerpan-series-braising-pan-tilting-skillet-with-easytouch/'},
+    {energy:'gas',      series:'easyTouch', gal:40, model:'SGL40T1-ET', name:'SGL40T1 easyTouch: Gas PowerPan\u2122, 40 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2025/12/SGL30T1_Ver03-1-3-1000x1558.png', url:'https://www.clevelandrange.com/product/sgl40t1-powerpan-series-braising-pan-tilting-skillet-with-easytouch/'},
+    {energy:'gas',      series:'easyTouch', gal:60, model:'SGL60T1-ET', name:'SGL60T1 easyTouch: Gas PowerPan\u2122, 60 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2026/03/SGL30T1_Ver01-1000x1680.png', url:'https://www.clevelandrange.com/product/sgl60t1-powerpan-series-gas-braising-pan-tilting-skillet/'},
+  ],
+  countertop: [
+    {energy:'electric', series:'', gal:10, model:'SET10', name:'SET10: Electric Countertop Tilt Skillet', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/image001-scaled.jpg', url:'https://www.clevelandrange.com/product/set10-electric-tilt-skillet/'},
+    {energy:'electric', series:'', gal:15, model:'SET15', name:'SET15: Electric Countertop Tilt Skillet, 15 gal', img:'https://www.clevelandrange.com/wp-content/uploads/2025/02/set15-braising-pan-tilting-skillet-table-top-updated.jpg', url:'https://www.clevelandrange.com/product/set15-braising-pan-tilting-skillet/'},
+  ]
+};
+
+var _ssPlacement = null;
+var _ssEnergy    = null;
+var _ssSeries    = null;
+var _ssGal       = null;
+
+function openSkilletSelector(btn, parent, sub, placement) {
+
+  // Restore form section if configurator was open
+  var _fs = document.getElementById('form-section'); if(_fs){_fs.classList.remove('hidden');_fs.classList.add('visible');}
+  var _mp = document.getElementById('mixer-config-panel'); if(_mp) _mp.remove();
+  var _bw = document.querySelector('.browser-wrap'); if(_bw) _bw.classList.remove('mixer-open');
+  var _sfp = document.getElementById('steamer-filter-panel'); if(_sfp) _sfp.remove();
+  document.querySelectorAll('.tl2-btn.active').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  _ssPlacement = placement; _ssEnergy = null; _ssSeries = null; _ssGal = null;
+  var hdr = document.getElementById('products-hdr');
+  hdr.style.display = 'block';
+  document.getElementById('products-bc').innerHTML = '<em>' + parent + '</em> &nbsp;/&nbsp; ' + sub;
+  document.getElementById('products-title').textContent = sub;
+  document.getElementById('products-empty').style.display = 'none';
+  document.getElementById('products-grid').style.display = 'none';
+  var sh = document.getElementById('scroll-hint');
+  if (sh) sh.style.display = 'none';
+  // Remove kettle selector if open
+  var ks = document.getElementById('kettle-selector');
+  if (ks) ks.remove();
+  _renderSkilletSelector();
+}
+
+function _renderSkilletSelector() {
+  var old = document.getElementById('skillet-selector');
+  if (old) old.remove();
+
+  // Countertop: show all models directly, no steps
+  if (_ssPlacement === 'countertop') {
+    var wrap=document.createElement('div'); wrap.id='skillet-selector'; wrap.className='kettle-selector';
+    var rg=document.createElement('div'); rg.className='ks-results-grid';
+    SKILLET_DB.countertop.forEach(function(k){
+      var sel=selectedProducts.indexOf('ss_'+k.model)>=0;
+      var card=document.createElement('div'); card.className='ks-result'+(sel?' selected':'');
+      var chk=document.createElement('div'); chk.className='ks-result-check'; chk.textContent='✓'; card.appendChild(chk);
+      var ri=document.createElement('div'); ri.className='ks-result-img';
+      var img=document.createElement('img'); img.src=k.img; img.alt=k.model;
+      img.style.cssText='width:100%;height:100%;object-fit:contain;padding:12px';
+      img.onerror=function(){ ri.innerHTML='<span style="font-size:36px;opacity:.3">&#127859;</span>'; };
+      ri.appendChild(img); card.appendChild(ri);
+      var rb=document.createElement('div'); rb.className='ks-result-body';
+      var rm=document.createElement('div'); rm.className='ks-result-model'; rm.textContent=k.name; rb.appendChild(rm);
+      var rs=document.createElement('div'); rs.className='ks-result-spec';
+      rs.textContent='Electric  ·  '+k.gal+' gal  ·  Countertop Tilting'; rb.appendChild(rs);
+      var ra=document.createElement('div'); ra.className='ks-result-actions';
+      var addBtn=document.createElement('button'); addBtn.className='ks-add-btn';
+      addBtn.textContent=sel?'✓ Added to Quote':'+ Add to Quote';
+      addBtn.onclick=(function(model){ return function(){
+        var id='ss_'+model; var i=selectedProducts.indexOf(id);
+        if(i>=0) selectedProducts.splice(i,1); else selectedProducts.push(id);
+        updateSummary(); _renderSkilletSelector();
+      }; })(k.model); ra.appendChild(addBtn);
+      var vb=document.createElement('a'); vb.className='ks-view-btn'; vb.href=k.url; vb.target='_blank'; vb.textContent='View →'; ra.appendChild(vb);
+      rb.appendChild(ra); card.appendChild(rb); rg.appendChild(card);
+    });
+    wrap.appendChild(rg);
+    document.getElementById('products-grid').parentElement.appendChild(wrap);
+    return;
+  }
+
+  var db = SKILLET_DB[_ssPlacement] || [];
+  var byEnergy = _ssEnergy ? db.filter(function(s){ return s.energy===_ssEnergy; }) : db;
+  var seriesOpts = [];
+  byEnergy.forEach(function(s){ if(seriesOpts.indexOf(s.series)<0) seriesOpts.push(s.series); });
+  var bySeries = _ssSeries ? byEnergy.filter(function(s){ return s.series===_ssSeries; }) : byEnergy;
+  var galOpts = [];
+  bySeries.forEach(function(s){ if(galOpts.indexOf(s.gal)<0) galOpts.push(s.gal); });
+  galOpts.sort(function(a,b){ return a-b; });
+  var byGal = _ssGal ? bySeries.filter(function(s){ return s.gal===_ssGal; }) : bySeries;
+
+  var wrap=document.createElement('div'); wrap.id='skillet-selector'; wrap.className='kettle-selector'; wrap.style.paddingBottom='8px';
+
+  // Step 1: Energy
+  var s1=document.createElement('div'); s1.className='ks-step';
+  var l1=document.createElement('div'); l1.className='ks-step-label'; l1.textContent='Step 1 \u2014 Energy Source'; s1.appendChild(l1);
+  var o1=document.createElement('div'); o1.className='ks-options';
+  var allE=document.createElement('button'); allE.className='ks-btn'+(!_ssEnergy?' active':''); allE.textContent='All';
+  allE.onclick=function(){ _ssEnergy=null; _ssSeries=null; _ssGal=null; _renderSkilletSelector(); }; o1.appendChild(allE);
+  [{v:'electric',label:'Electric',icon:'\u26a1'},{v:'gas',label:'Gas',icon:'\ud83d\udd25'}].forEach(function(o){
+    var b=document.createElement('button'); b.className='ks-btn'+(_ssEnergy===o.v?' active':'');
+    var ic=document.createElement('span'); ic.className='ks-icon'; ic.textContent=o.icon; b.appendChild(ic);
+    b.appendChild(document.createTextNode(o.label));
+    b.onclick=function(){ _ssEnergy=o.v; _ssSeries=null; _ssGal=null; _renderSkilletSelector(); };
+    o1.appendChild(b);
+  });
+  s1.appendChild(o1); wrap.appendChild(s1);
+
+  // Step 2: Series (only if energy chosen and >1 series)
+  if (_ssEnergy && seriesOpts.length > 1) {
+    var s2=document.createElement('div'); s2.className='ks-step';
+    var l2=document.createElement('div'); l2.className='ks-step-label'; l2.textContent='Step 2 \u2014 Series / Base Style'; s2.appendChild(l2);
+    var o2=document.createElement('div'); o2.className='ks-options';
+    var allS2=document.createElement('button'); allS2.className='ks-btn'+(!_ssSeries?' active':''); allS2.textContent='All';
+    allS2.onclick=function(){ _ssSeries=null; _ssGal=null; _renderSkilletSelector(); }; o2.appendChild(allS2);
+    var seriesDesc={PowerPan:'PowerPan\u2122 \u2014 Enclosed base',DuraPan:'DuraPan\u2122 \u2014 Open base',easyTouch:'easyTouch\u2122 \u2014 Digital controls'};
+    seriesOpts.forEach(function(sv){
+      var b=document.createElement('button'); b.className='ks-btn'+(_ssSeries===sv?' active':'');
+      b.textContent=seriesDesc[sv]||sv;
+      b.onclick=function(){ _ssSeries=sv; _ssGal=null; _renderSkilletSelector(); }; o2.appendChild(b);
+    });
+    s2.appendChild(o2); wrap.appendChild(s2);
+  }
+
+  // Step 3: Capacity (if energy chosen)
+  if (_ssEnergy && galOpts.length > 0) {
+    var stepNum=(_ssEnergy&&seriesOpts.length>1)?3:2;
+    var s3=document.createElement('div'); s3.className='ks-step';
+    var l3=document.createElement('div'); l3.className='ks-step-label'; l3.textContent='Step '+stepNum+' \u2014 Capacity (gallons)'; s3.appendChild(l3);
+    var o3=document.createElement('div'); o3.className='ks-options';
+    var allG2=document.createElement('button'); allG2.className='ks-btn'+(!_ssGal?' active':''); allG2.textContent='All';
+    allG2.onclick=function(){ _ssGal=null; _renderSkilletSelector(); }; o3.appendChild(allG2);
+    galOpts.forEach(function(g){
+      var b=document.createElement('button'); b.className='ks-btn'+(_ssGal===g?' active':'');
+      b.textContent=g+' gal'; b.onclick=function(){ _ssGal=g; _renderSkilletSelector(); }; o3.appendChild(b);
+    });
+    s3.appendChild(o3); wrap.appendChild(s3);
+  }
+
+  // ── Results: always show ──
+  var rdiv=document.createElement('div'); rdiv.style.cssText='margin-top:12px;padding:0 16px 16px';
+  if (!byGal.length) {
+    var nm=document.createElement('div'); nm.className='ks-no-match';
+    var nmh=document.createElement('strong'); nmh.textContent='No match found'; nm.appendChild(nmh);
+    nm.appendChild(document.createTextNode('Try different selections above.')); rdiv.appendChild(nm);
+  } else {
+    var rg2=document.createElement('div'); rg2.className='ks-results-grid';
+    byGal.forEach(function(k){
+      var sel=selectedProducts.indexOf('ss_'+k.model)>=0;
+      var card=document.createElement('div'); card.className='ks-result'+(sel?' selected':'');
+      var chk=document.createElement('div'); chk.className='ks-result-check'; chk.textContent='\u2713'; card.appendChild(chk);
+      var ri=document.createElement('div'); ri.className='ks-result-img';
+      var img=document.createElement('img'); img.src=k.img; img.alt=k.model;
+      img.style.cssText='width:100%;height:100%;object-fit:contain;padding:12px';
+      img.onerror=function(){ ri.innerHTML='<span style="font-size:36px;opacity:.3">\ud83c\udf73</span>'; };
+      ri.appendChild(img); card.appendChild(ri);
+      var rb=document.createElement('div'); rb.className='ks-result-body';
+      var rm=document.createElement('div'); rm.className='ks-result-model'; rm.textContent=k.name; rb.appendChild(rm);
+      var rs=document.createElement('div'); rs.className='ks-result-spec';
+      rs.textContent=k.gal+' gal  \u00b7  '+k.energy.charAt(0).toUpperCase()+k.energy.slice(1)+'  \u00b7  '+k.series;
+      rb.appendChild(rs);
+      var ra=document.createElement('div'); ra.className='ks-result-actions';
+      var addBtn=document.createElement('button'); addBtn.className='ks-add-btn';
+      addBtn.textContent=sel?'\u2713 Added to Quote':'+ Add to Quote';
+      addBtn.onclick=(function(model){ return function(){
+        var id='ss_'+model; var i=selectedProducts.indexOf(id);
+        if(i>=0) selectedProducts.splice(i,1); else selectedProducts.push(id);
+        updateSummary(); _renderSkilletSelector();
+      }; })(k.model); ra.appendChild(addBtn);
+      var vb=document.createElement('a'); vb.className='ks-view-btn'; vb.href=k.url; vb.target='_blank'; vb.textContent='View \u2192'; ra.appendChild(vb);
+      rb.appendChild(ra); card.appendChild(rb); rg2.appendChild(card);
+    });
+    rdiv.appendChild(rg2);
+    if(byGal.length > 6){ var ssh=document.createElement('div'); ssh.style.cssText='text-align:center;font-size:10px;color:var(--muted);padding:6px 0 2px;letter-spacing:.06em;text-transform:uppercase'; ssh.textContent='▾  Scroll to see all '+byGal.length+' models  ▾'; rdiv.appendChild(ssh); }
+  }
+  wrap.appendChild(rdiv);
+  document.getElementById('products-grid').parentElement.appendChild(wrap);
+}
+
+
+
+
+function openKettleSelector(btn, parent, sub, placement) {
+
+  // Restore form section if configurator was open
+  var _fs = document.getElementById('form-section'); if(_fs){_fs.classList.remove('hidden');_fs.classList.add('visible');}
+  var _mp = document.getElementById('mixer-config-panel'); if(_mp) _mp.remove();
+  var _bw = document.querySelector('.browser-wrap'); if(_bw) _bw.classList.remove('mixer-open');
+  var _sfp = document.getElementById('steamer-filter-panel'); if(_sfp) _sfp.remove();
+  document.querySelectorAll('.tl2-btn.active').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  _ksPlacement = placement; _ksEnergy = null; _ksMotion = null; _ksRim = null; _ksGal = null;
+  var hdr = document.getElementById('products-hdr');
+  hdr.style.display = 'block';
+  document.getElementById('products-bc').innerHTML = '<em>' + parent + '</em> &nbsp;/&nbsp; ' + sub;
+  document.getElementById('products-title').textContent = sub;
+  document.getElementById('products-empty').style.display = 'none';
+  document.getElementById('products-grid').style.display = 'none';
+  var sh = document.getElementById('scroll-hint');
+  if (sh) sh.style.display = 'none';
+  // Remove skillet selector if open
+  var ss = document.getElementById('skillet-selector');
+  if (ss) ss.remove();
+  _renderKettleSelector();
+}
+
+function _renderKettleSelector() {
+  var old = document.getElementById('kettle-selector');
+  if (old) old.remove();
+
+  var db = KETTLE_DB[_ksPlacement] || [];
+
+  // Compute available options based on current filters
+  var byEnergy = _ksEnergy ? db.filter(function(k){ return k.energy === _ksEnergy; }) : db;
+
+  var motionOpts = [];
+  byEnergy.forEach(function(k){ if(motionOpts.indexOf(k.motion)<0) motionOpts.push(k.motion); });
+  if (_ksEnergy && motionOpts.length === 1 && !_ksMotion) { _ksMotion = motionOpts[0]; }
+
+  var byMotion = _ksMotion ? byEnergy.filter(function(k){ return k.motion === _ksMotion; }) : byEnergy;
+
+  var rimOpts = [];
+  byMotion.forEach(function(k){ var rv=k.rim||'standard'; if(rimOpts.indexOf(rv)<0) rimOpts.push(rv); });
+  if (_ksEnergy && _ksMotion && rimOpts.length === 1 && !_ksRim) { _ksRim = rimOpts[0]; }
+
+  var byRim = _ksRim ? byMotion.filter(function(k){ return (k.rim||'standard')===_ksRim; }) : byMotion;
+
+  var galOpts = [];
+  byRim.forEach(function(k){ if(galOpts.indexOf(k.gal)<0) galOpts.push(k.gal); });
+  galOpts.sort(function(a,b){ return a-b; });
+
+  var byGal = _ksGal ? byRim.filter(function(k){ return k.gal===_ksGal; }) : byRim;
+
+  var wrap = document.createElement('div');
+  wrap.id = 'kettle-selector';
+  wrap.className = 'kettle-selector';
+  wrap.style.paddingBottom = '8px';
+
+  // ── Step 1: Energy ──
+  var s1 = document.createElement('div'); s1.className = 'ks-step';
+  var l1 = document.createElement('div'); l1.className = 'ks-step-label'; l1.textContent = 'Step 1 \u2014 Energy Source'; s1.appendChild(l1);
+  var o1 = document.createElement('div'); o1.className = 'ks-options';
+  // All button
+  var allBtn = document.createElement('button');
+  allBtn.className = 'ks-btn' + (!_ksEnergy ? ' active' : '');
+  allBtn.textContent = 'All'; allBtn.onclick = function(){ _ksEnergy=null; _ksMotion=null; _ksRim=null; _ksGal=null; _renderKettleSelector(); }; o1.appendChild(allBtn);
+  [{v:'direct',label:'Direct Steam',icon:'\ud83d\udca7'},{v:'electric',label:'Electric',icon:'\u26a1'},{v:'gas',label:'Gas',icon:'\ud83d\udd25'}].forEach(function(o){
+    var b = document.createElement('button'); b.className = 'ks-btn'+(_ksEnergy===o.v?' active':'');
+    var ic = document.createElement('span'); ic.className='ks-icon'; ic.textContent=o.icon; b.appendChild(ic);
+    b.appendChild(document.createTextNode(o.label));
+    b.onclick = function(){ _ksEnergy=o.v; _ksMotion=null; _ksRim=null; _ksGal=null; _renderKettleSelector(); };
+    o1.appendChild(b);
+  });
+  s1.appendChild(o1); wrap.appendChild(s1);
+
+  // ── Step 2: Motion (only if >1 available AND energy chosen) ──
+  if (_ksEnergy && motionOpts.length > 1) {
+    var s2 = document.createElement('div'); s2.className = 'ks-step';
+    var l2 = document.createElement('div'); l2.className = 'ks-step-label'; l2.textContent = 'Step 2 \u2014 Movement'; s2.appendChild(l2);
+    var o2 = document.createElement('div'); o2.className = 'ks-options';
+    var allM = document.createElement('button'); allM.className='ks-btn'+(!_ksMotion?' active':''); allM.textContent='All';
+    allM.onclick=function(){ _ksMotion=null; _ksRim=null; _ksGal=null; _renderKettleSelector(); }; o2.appendChild(allM);
+    var mlabels={tilting:'Tilting',stationary:'Stationary'}; var micons={tilting:'\u2197\ufe0f',stationary:'\u2b1b'};
+    motionOpts.forEach(function(m){
+      var b=document.createElement('button'); b.className='ks-btn'+(_ksMotion===m?' active':'');
+      var ic=document.createElement('span'); ic.className='ks-icon'; ic.textContent=micons[m]||''; b.appendChild(ic);
+      b.appendChild(document.createTextNode(mlabels[m]||m));
+      b.onclick=function(){ _ksMotion=m; _ksRim=null; _ksGal=null; _renderKettleSelector(); };
+      o2.appendChild(b);
+    });
+    s2.appendChild(o2); wrap.appendChild(s2);
+  }
+
+  // ── Step 3: Rim Height ──
+  if (_ksEnergy && _ksMotion && rimOpts.length > 1) {
+    var sRim = document.createElement('div'); sRim.className = 'ks-step';
+    var lRim = document.createElement('div'); lRim.className = 'ks-step-label'; lRim.textContent = 'Step 3 \u2014 Rim Height'; sRim.appendChild(lRim);
+    var oRim = document.createElement('div'); oRim.className = 'ks-options';
+    var allR=document.createElement('button'); allR.className='ks-btn'+(!_ksRim?' active':''); allR.textContent='All';
+    allR.onclick=function(){ _ksRim=null; _ksGal=null; _renderKettleSelector(); }; oRim.appendChild(allR);
+    var rimLabels={standard:'Standard \u2014 Full rim height',short:'Short Series (SH) \u2014 Lower rim, easier loading'};
+    rimOpts.sort().forEach(function(rv){
+      var b=document.createElement('button'); b.className='ks-btn'+(_ksRim===rv?' active':'');
+      b.textContent=rimLabels[rv]||rv;
+      b.onclick=function(){ _ksRim=rv; _ksGal=null; _renderKettleSelector(); }; oRim.appendChild(b);
+    });
+    sRim.appendChild(oRim); wrap.appendChild(sRim);
+  }
+
+  // ── Step 4: Capacity ──
+  if (_ksEnergy && galOpts.length > 0) {
+    var capStep = 1+(motionOpts.length>1&&_ksEnergy?1:0)+(rimOpts.length>1&&_ksMotion?1:0)+1;
+    var s3=document.createElement('div'); s3.className='ks-step';
+    var l3=document.createElement('div'); l3.className='ks-step-label'; l3.textContent='Step '+capStep+' \u2014 Capacity (gallons)'; s3.appendChild(l3);
+    var o3=document.createElement('div'); o3.className='ks-options';
+    var allG=document.createElement('button'); allG.className='ks-btn'+(!_ksGal?' active':''); allG.textContent='All';
+    allG.onclick=function(){ _ksGal=null; _renderKettleSelector(); }; o3.appendChild(allG);
+    galOpts.forEach(function(g){
+      var b=document.createElement('button'); b.className='ks-btn'+(_ksGal===g?' active':'');
+      b.textContent=g+' gal'; b.onclick=function(){ _ksGal=g; _renderKettleSelector(); }; o3.appendChild(b);
+    });
+    s3.appendChild(o3); wrap.appendChild(s3);
+  }
+
+  // ── Results: always show (filtered down) ──
+  var rdiv = document.createElement('div'); rdiv.style.cssText='margin-top:12px;padding:0 16px 16px';
+  if (!byGal.length) {
+    var nm=document.createElement('div'); nm.className='ks-no-match';
+    var nmh=document.createElement('strong'); nmh.textContent='No match found'; nm.appendChild(nmh);
+    nm.appendChild(document.createTextNode('Try different selections above.'));
+    rdiv.appendChild(nm);
+  } else {
+    var rg=document.createElement('div'); rg.className='ks-results-grid';
+    byGal.forEach(function(k){
+      var sel=selectedProducts.indexOf('ks_'+k.model)>=0;
+      var card=document.createElement('div'); card.className='ks-result'+(sel?' selected':'');
+      var chk=document.createElement('div'); chk.className='ks-result-check'; chk.textContent='\u2713'; card.appendChild(chk);
+      var ri=document.createElement('div'); ri.className='ks-result-img';
+      var img=document.createElement('img'); img.src=k.img; img.alt=k.model;
+      img.style.cssText='width:100%;height:100%;object-fit:contain;padding:12px';
+      img.onerror=function(){ ri.innerHTML='<span style="font-size:36px;opacity:.3">&#129581;</span>'; };
+      ri.appendChild(img); card.appendChild(ri);
+      var rb=document.createElement('div'); rb.className='ks-result-body';
+      var rm=document.createElement('div'); rm.className='ks-result-model'; rm.textContent=k.name; rb.appendChild(rm);
+      var rs=document.createElement('div'); rs.className='ks-result-spec';
+      var eLabel=k.energy==='direct'?'Direct Steam':k.energy.charAt(0).toUpperCase()+k.energy.slice(1);
+      var rLabel=k.rim==='short'?'  \u00b7  Short Series':'';
+      rs.textContent=k.gal+' gal  \u00b7  '+eLabel+'  \u00b7  '+k.motion.charAt(0).toUpperCase()+k.motion.slice(1)+rLabel;
+      rb.appendChild(rs);
+      var ra=document.createElement('div'); ra.className='ks-result-actions';
+      var addBtn=document.createElement('button'); addBtn.className='ks-add-btn';
+      addBtn.textContent=sel?'\u2713 Added to Quote':'+ Add to Quote';
+      addBtn.onclick=(function(model){ return function(){
+        var id='ks_'+model; var i=selectedProducts.indexOf(id);
+        if(i>=0) selectedProducts.splice(i,1); else selectedProducts.push(id);
+        updateSummary(); _renderKettleSelector();
+      }; })(k.model); ra.appendChild(addBtn);
+      var vb=document.createElement('a'); vb.className='ks-view-btn';
+      vb.href=k.url; vb.target='_blank'; vb.textContent='View \u2192'; ra.appendChild(vb);
+      rb.appendChild(ra); card.appendChild(rb); rg.appendChild(card);
+    });
+    rdiv.appendChild(rg);
+    if(byGal.length > 6){ var ksh=document.createElement('div'); ksh.style.cssText='text-align:center;font-size:10px;color:var(--muted);padding:6px 0 2px;letter-spacing:.06em;text-transform:uppercase'; ksh.textContent='▾  Scroll to see all '+byGal.length+' models  ▾'; rdiv.appendChild(ksh); }
+  }
+  wrap.appendChild(rdiv);
+
+  document.getElementById('products-grid').parentElement.appendChild(wrap);
+}
+
+
+</script>
+</body>
+</html>

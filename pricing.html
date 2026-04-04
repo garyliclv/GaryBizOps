@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cleveland Range — Pricing Model</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --red: #C8102E; --red-dark: #9E0C24; --red-light: #fdf0f2;
+    --charcoal: #333F48; --offwhite: #f4f1ee; --mid: #e8e4e0;
+    --muted: #888580; --text: #1a1a1a; --border: rgba(51,63,72,0.15);
+    --border-mid: rgba(51,63,72,0.25); --card: #ffffff;
+    --success-bg:#edf7ee; --success:#2d7a35;
+    --warn-bg:#fff8e6; --warn:#9a6700;
+    --danger-bg:#fdecea; --danger:#c0392b;
+  }
+  body { font-family:'Poppins',sans-serif; background:var(--offwhite); color:var(--text); min-height:100vh; }
+  .site-header { background:var(--charcoal); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:56px; position:sticky; top:0; z-index:100; border-bottom:3px solid var(--red); }
+  .logo-text { font-family:'EB Garamond',serif; font-size:22px; color:var(--red); letter-spacing:.02em; }
+  .logo-sub { font-size:10px; color:rgba(255,255,255,.4); letter-spacing:.08em; text-transform:uppercase; display:block; margin-top:1px; }
+  .header-tag { font-size:11px; color:rgba(255,255,255,.4); letter-spacing:.06em; text-transform:uppercase; }
+  .page { max-width:980px; margin:0 auto; padding:2rem 1.5rem 4rem; }
+  .page-eyebrow { font-size:11px; font-weight:500; color:var(--red); text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px; }
+  .page-title { font-family:'EB Garamond',serif; font-size:30px; font-weight:500; color:var(--charcoal); margin-bottom:4px; }
+  .page-sub { font-size:13px; color:var(--muted); margin-bottom:2rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border); }
+  .sec-label { font-size:10px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:.65rem; display:flex; align-items:center; gap:8px; }
+  .sec-label::after { content:''; flex:1; height:1px; background:var(--border); }
+  .section { margin-bottom:1.5rem; }
+  .row { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+  .field { display:flex; flex-direction:column; gap:4px; }
+  .field label { font-size:11px; font-weight:500; color:var(--charcoal); }
+  .field select, .field input[type="number"] { height:38px; border:1px solid var(--border-mid); border-radius:6px; padding:0 10px; font-size:13px; font-family:'Poppins',sans-serif; color:var(--text); background:#ffffff; width:100%; -moz-appearance:textfield; }
+  .field select:focus, .field input:focus { outline:none; border-color:var(--red); box-shadow:0 0 0 3px rgba(200,16,46,.1); }
+  input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance:none; }
+  .field .input-wrap { position:relative; }
+  .field .pre { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:12px; color:var(--muted); pointer-events:none; }
+  .field .suf { position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:12px; color:var(--muted); pointer-events:none; }
+  .has-pre { padding-left:22px !important; }
+  .has-suf { padding-right:30px !important; }
+  .desc-box { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:10px 12px; font-size:12px; color:var(--muted); min-height:38px; display:flex; align-items:center; line-height:1.4; }
+  .disc-pills { display:flex; gap:8px; flex-wrap:wrap; }
+  .pill { padding:7px 14px; font-size:12px; font-weight:500; border:1px solid var(--border-mid); border-radius:20px; cursor:pointer; background:var(--card); color:var(--charcoal); transition:.15s; white-space:nowrap; }
+  .pill:hover { border-color:var(--red); color:var(--red); }
+  .pill.active { background:var(--red); color:#fff; border-color:var(--red-dark); }
+  .override-row { display:flex; gap:8px; align-items:center; margin-top:8px; }
+  .override-row .field { flex:1; }
+  .wf { display:flex; align-items:stretch; overflow-x:auto; padding-bottom:4px; }
+  .wf-step { flex:1; min-width:140px; background:var(--card); border:1px solid var(--border-mid); border-right:none; padding:16px 16px 14px; }
+  .wf-step:first-child { border-radius:6px 0 0 6px; }
+  .wf-step:last-child { border-radius:0 6px 6px 0; border-right:1px solid var(--border-mid); }
+  .wf-step.hl { background:var(--red); border-color:var(--red-dark); }
+  .wf-arr { width:16px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:12px; background:var(--mid); flex-shrink:0; }
+  .wf-lbl { font-size:11px; font-weight:500; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px; line-height:1.3; }
+  .wf-step.hl .wf-lbl { color:rgba(255,255,255,.65); }
+  .wf-val { font-family:'EB Garamond',serif; font-size:28px; font-weight:500; color:var(--charcoal); display:block; }
+  .wf-step.hl .wf-val { color:#fff; }
+  .wf-cur { font-size:10px; color:var(--muted); margin-top:1px; display:block; }
+  .wf-step.hl .wf-cur { color:rgba(255,255,255,.55); }
+  .metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; }
+  .m { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:13px 13px 10px; }
+  .m-lbl { font-size:10px; font-weight:500; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px; line-height:1.3; }
+  .m-val { font-family:'EB Garamond',serif; font-size:24px; font-weight:500; color:var(--charcoal); }
+  .m-sub { font-size:10px; color:var(--muted); margin-top:2px; }
+  .m.good { background:var(--success-bg); border-color:rgba(45,122,53,.2); }
+  .m.good .m-val { color:var(--success); }
+  .m.warn { background:var(--warn-bg); border-color:rgba(154,103,0,.2); }
+  .m.warn .m-val { color:var(--warn); }
+  .m.bad { background:var(--danger-bg); border-color:rgba(192,57,43,.2); }
+  .m.bad .m-val { color:var(--danger); }
+  .vol-card { background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  thead th { padding:9px 14px; text-align:left; font-size:10px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; background:var(--offwhite); border-bottom:1px solid var(--border); }
+  thead th.r { text-align:right; }
+  tbody td { padding:9px 14px; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody td.r { text-align:right; }
+  tbody td.u { font-weight:500; color:var(--charcoal); }
+  tbody tr:hover td { background:var(--offwhite); }
+  td.good { color:var(--success); font-weight:500; }
+  td.warn { color:var(--warn); font-weight:500; }
+  td.bad { color:var(--danger); font-weight:500; }
+  .note { font-size:12px; color:var(--charcoal); background:var(--red-light); border:1px solid rgba(200,16,46,.2); border-radius:8px; padding:12px 14px; line-height:1.6; }
+  .note strong { color:var(--red); }
+  footer { text-align:center; padding:1.5rem; font-size:11px; color:var(--muted); border-top:1px solid var(--border); margin-top:2rem; font-family:'EB Garamond',serif; letter-spacing:.04em; }
+  @media(max-width:600px){ .site-header{padding:0 1rem;} .page{padding:1.25rem 1rem 3rem;} }
+</style>
+</head>
+<style>
+#lockScreen {
+  position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999;
+  background:linear-gradient(135deg, #333F48 0%, #1a2028 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Poppins',sans-serif;
+}
+#lockScreen .lock-card {
+  background:#fff; border-radius:16px; padding:48px 40px; text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3); max-width:380px; width:90%;
+}
+#lockScreen h2 { font-family:'EB Garamond',serif; font-size:24px; color:#333F48; margin-bottom:6px; }
+#lockScreen p { font-size:13px; color:#888; margin-bottom:24px; }
+#lockScreen .pin-input {
+  display:flex; gap:8px; justify-content:center; margin-bottom:20px;
+}
+#lockScreen .pin-input input {
+  width:48px; height:56px; text-align:center; font-size:22px; font-weight:600;
+  border:2px solid #d1d5db; border-radius:10px; font-family:'Poppins',sans-serif;
+  color:#333F48; outline:none; transition:border 0.2s;
+}
+#lockScreen .pin-input input:focus { border-color:#C8102E; box-shadow:0 0 0 3px rgba(200,16,46,0.1); }
+#lockScreen .error { color:#C8102E; font-size:12px; min-height:18px; margin-bottom:12px; }
+#lockScreen .unlock-btn {
+  background:#C8102E; color:#fff; border:none; padding:12px 40px; border-radius:8px;
+  font-size:14px; font-weight:600; cursor:pointer; font-family:'Poppins',sans-serif;
+  transition:background 0.2s;
+}
+#lockScreen .unlock-btn:hover { background:#9E0C24; }
+#lockScreen .brand { font-size:11px; color:#bbb; margin-top:20px; font-family:'EB Garamond',serif; }
+#appContent { display:none; }
+</style>
+<body>
+<div id="lockScreen">
+  <div class="lock-card">
+    <h2>Cleveland Range</h2>
+    <p>Commercial Pricing Tool &#183; Enter PIN to continue</p>
+    <div class="pin-input">
+      <input type="password" maxlength="1" id="p1" inputmode="numeric" autofocus>
+      <input type="password" maxlength="1" id="p2" inputmode="numeric">
+      <input type="password" maxlength="1" id="p3" inputmode="numeric">
+      <input type="password" maxlength="1" id="p4" inputmode="numeric">
+    </div>
+    <div class="error" id="pinError"></div>
+    <button class="unlock-btn" onclick="checkPin()">Unlock</button>
+    <div class="brand">Reliability You Can Taste.&#174;</div>
+  </div>
+</div>
+
+<div id="appContent">
+
+<header class="site-header">
+  <div>
+    <div class="logo-text">Cleveland<span style="font-size:11px;">®</span></div>
+    <span class="logo-sub">Reliability You Can Taste.™</span>
+  </div>
+  <div class="header-tag">Pricing Model</div>
+</header>
+
+<div class="page">
+  <!-- Tab nav -->
+  <div style="display:flex;gap:0;margin-bottom:2rem;border-bottom:2px solid var(--border);">
+    <button class="tab-btn active" data-tab="pricing" onclick="switchTab('pricing')" style="padding:10px 20px;font-size:13px;font-family:'Poppins',sans-serif;font-weight:500;background:none;border:none;border-bottom:3px solid var(--red);margin-bottom:-2px;color:var(--red);cursor:pointer;">Pricing Model</button>
+    <button class="tab-btn" data-tab="cogs" onclick="switchTab('cogs')" style="padding:10px 20px;font-size:13px;font-family:'Poppins',sans-serif;font-weight:500;background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;color:var(--muted);cursor:pointer;">COGS Analysis</button>
+  </div>
+  <div id="tab-pricing">
+  <div class="page-eyebrow">Internal Use Only</div>
+  <h1 class="page-title">Product Pricing Model</h1>
+  <p class="page-sub">Select a model and configuration — list price and standard cost load automatically. Adjust any field to model scenarios.</p>
+  <div style="background:var(--charcoal);color:rgba(255,255,255,0.85);font-size:11px;padding:8px 14px;border-radius:6px;margin-bottom:1.5rem;letter-spacing:0.04em;">
+    All amounts in USD unless otherwise noted.
+  </div>
+
+  <!-- Product selection -->
+  <div class="section">
+    <div class="sec-label">Product selection</div>
+    <div class="row" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));position:relative;">
+      <div class="field">
+        <label>Search model</label>
+        <input type="text" id="model-search" placeholder="Type model name or item number…" style="height:38px;border:1px solid var(--border-mid);border-radius:6px;padding:0 10px;font-size:13px;font-family:'Poppins',sans-serif;color:var(--text);background:#ffffff;width:100%;" autocomplete="off">
+        <div id="search-dropdown" style="display:none;position:absolute;z-index:200;background:var(--card);border:1px solid var(--border-mid);border-radius:6px;max-height:260px;overflow-y:auto;width:100%;box-shadow:0 4px 16px rgba(0,0,0,.1);margin-top:2px;"></div>
+      </div>
+      <div class="field">
+        <label>Model family</label>
+        <select id="sel-model"><option value="">— select model —</option></select>
+      </div>
+      <div class="field">
+        <label>Item number / configuration</label>
+        <select id="sel-item"><option value="">— select item —</option></select>
+      </div>
+    </div>
+    <div style="margin-top:8px;" class="field">
+      <label>Description</label>
+      <div class="desc-box" id="desc-box">Select a model and item above</div>
+    </div>
+  </div>
+
+  <!-- Selected model hero -->
+  <div id="model-hero" style="display:none;background:var(--charcoal);border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;">
+    <div style="font-size:10px;font-weight:500;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;" id="hero-cat"></div>
+    <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
+      <div style="font-family:'EB Garamond',serif;font-size:36px;font-weight:500;color:#ffffff;" id="hero-model"></div>
+      <div style="font-size:13px;color:rgba(255,255,255,.55);" id="hero-item"></div>
+    </div>
+    <div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:4px;" id="hero-desc"></div>
+  </div>
+
+  <!-- Price inputs -->
+  <div class="section">
+    <div class="sec-label">Price inputs (USD)</div>
+    <div class="row">
+      <div class="field">
+        <label>List price <span style="color:var(--muted);font-weight:400;">(auto-loaded, override)</span></label>
+        <div class="input-wrap"><span class="pre">$</span><input type="number" id="list" value="0" step="100" class="has-pre"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Discount structure -->
+  <div class="section">
+    <div class="sec-label">Discount structure</div>
+    <div class="disc-pills">
+      <div class="pill active" data-chain="10,5,5" id="pill-std">Standard &nbsp; 10/5/5</div>
+      <div class="pill" data-chain="10,5,5,5" id="pill-sp">Special &nbsp; 10/5/5/5</div>
+      <div class="pill" data-chain="10,5,5,5,5" id="pill-ss">Super Special &nbsp; 10/5/5/5/5</div>
+      <div class="pill" data-chain="override" id="pill-ov">Custom override</div>
+    </div>
+    <div class="override-row" id="override-row" style="display:none;">
+      <div class="field"><label>Tier 1 %</label><div class="input-wrap"><input type="number" id="ov1" value="10" step="0.5" class="has-suf"><span class="suf">%</span></div></div>
+      <div class="field"><label>Tier 2 %</label><div class="input-wrap"><input type="number" id="ov2" value="5" step="0.5" class="has-suf"><span class="suf">%</span></div></div>
+      <div class="field"><label>Tier 3 %</label><div class="input-wrap"><input type="number" id="ov3" value="0" step="0.5" class="has-suf"><span class="suf">%</span></div></div>
+      <div class="field"><label>Tier 4 %</label><div class="input-wrap"><input type="number" id="ov4" value="0" step="0.5" class="has-suf"><span class="suf">%</span></div></div>
+      <div class="field"><label>Tier 5 %</label><div class="input-wrap"><input type="number" id="ov5" value="0" step="0.5" class="has-suf"><span class="suf">%</span></div></div>
+    </div>
+  </div>
+
+  <!-- Cost inputs -->
+  <div class="section">
+    <div class="sec-label">Cost inputs (USD)</div>
+    <div class="row">
+      <div class="field">
+        <label>Std cost <span style="color:var(--muted);font-weight:400;">(auto-loaded, override)</span></label>
+        <div class="input-wrap"><span class="pre">$</span><input type="number" id="cogs" value="0" step="100" class="has-pre"></div>
+      </div>
+      <div class="field">
+        <label>Rebate</label>
+        <div class="input-wrap"><input type="number" id="rebate" value="20" step="0.5" class="has-suf"><span class="suf">%</span></div>
+      </div>
+      <div class="field">
+        <label>Commission</label>
+        <div class="input-wrap"><input type="number" id="comm" value="6" step="0.5" class="has-suf"><span class="suf">%</span></div>
+      </div>
+      <div class="field">
+        <label>Warranty</label>
+        <div class="input-wrap"><input type="number" id="warr" value="3" step="0.5" class="has-suf"><span class="suf">%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MRICP reference -->
+  <div class="section">
+    <div class="sec-label">MRICP — minimum in-cart price (web dealer policy)</div>
+    <div class="m" id="mricp-box" style="display:inline-block;min-width:320px;"></div>
+  </div>
+
+  <!-- Waterfall -->
+  <div class="section">
+    <div class="sec-label">Price waterfall</div>
+    <div class="wf" id="wf"></div>
+  </div>
+
+  <!-- Metrics -->
+  <div class="section">
+    <div class="sec-label">Contribution analysis</div>
+    <div class="metrics" id="metrics"></div>
+  </div>
+
+  <!-- Volume table -->
+  <div class="section">
+    <div class="sec-label">Volume sensitivity</div>
+    <div class="vol-card"><table id="voltable"></table></div>
+  </div>
+
+  <div class="note" id="note"></div>
+
+  <!-- Competitor comparison -->
+  <div class="section" id="comp-section" style="display:none;">
+    <div class="sec-label">Competitor comparison <span style="font-weight:400;font-size:9px;letter-spacing:.03em;text-transform:none;">standard net price vs Cleveland NET</span></div>
+    <div class="vol-card"><table id="comp-table"></table></div>
+    <div style="font-size:10px;color:var(--muted);margin-top:6px;">Net prices calculated using each manufacturer's standard discount structure. Green = Cleveland is cheaper. Red = Cleveland is more expensive.</div>
+  </div>
+  </div><!-- end tab-pricing -->
+
+  <!-- COGS Analysis Tab -->
+  <div id="tab-cogs" style="display:none;">
+    <div class="page-eyebrow">FY25 — Volume Weighted</div>
+    <h1 class="page-title">COGS as % of List Price</h1>
+    <p class="page-sub">Stan's transfer pricing analysis. Volume-weighted average based on FY25 units sold.</p>
+
+    <!-- Summary cards -->
+    <div class="section">
+      <div class="metrics" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));">
+        <div class="m highlight" style="background:var(--red);border-color:var(--red-dark);">
+          <div class="m-lbl" style="color:rgba(255,255,255,.65);">Wtd avg COGS%</div>
+          <div class="m-val" style="color:#fff;">19.2%</div>
+          <div class="m-sub" style="color:rgba(255,255,255,.55);">of list price</div>
+        </div>
+
+        <div class="m">
+          <div class="m-lbl">Total FY25 units</div>
+          <div class="m-val">5,968</div>
+          <div class="m-sub">models with volume</div>
+        </div>
+        <div class="m">
+          <div class="m-lbl">Total FY25 sales</div>
+          <div class="m-val">$99.4M</div>
+          <div class="m-sub">USD</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Model detail table -->
+    <!-- Top 10 leaderboard -->
+    <div class="section">
+      <div class="sec-label">Top 10 by weighted cost contribution</div>
+      <div id="leaderboard" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;"></div>
+    </div>
+
+    <div class="section">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:.65rem;">
+        <div class="sec-label" style="margin-bottom:0;flex:1;">Model detail</div>
+        <select id="cogs-filter" onchange="renderCogsTable()" style="height:32px;border:1px solid var(--border-mid);border-radius:6px;padding:0 8px;font-size:12px;font-family:'Poppins',sans-serif;background:#fff;">
+          <option value="all">All categories</option>
+          <option value="Steamers — Countertop">Steamers — Countertop</option>
+          <option value="Steamers — Generator/Boilers">Steamers — Generator/Boilers</option>
+          <option value="Braising Pans — Electric">Braising Pans — Electric</option>
+          <option value="Braising Pans — Gas">Braising Pans — Gas</option>
+          <option value="Kettles — Gas">Kettles — Gas</option>
+          <option value="Kettles — Electric">Kettles — Electric</option>
+          <option value="Other">Other</option>
+        </select>
+        <select id="cogs-sort" onchange="renderCogsTable()" style="height:32px;border:1px solid var(--border-mid);border-radius:6px;padding:0 8px;font-size:12px;font-family:'Poppins',sans-serif;background:#fff;">
+          <option value="cogs_asc">COGS% ↑</option>
+          <option value="cogs_desc">COGS% ↓</option>
+          <option value="vol_desc">Volume ↓</option>
+          <option value="wtd_desc">Wtd cost $ ↓</option>
+          <option value="wtd_pct_desc">Wtd cost % ↓</option>
+          <option value="model">Model A-Z</option>
+        </select>
+      </div>
+      <div class="vol-card"><table id="cogs-table"></table></div>
+    </div>
+
+    <!-- Transfer price policy -->
+    <div class="section">
+      <div class="sec-label">Transfer price policy — cost plus to % of list</div>
+      <div class="vol-card"><table id="tp-table"></table></div>
+    </div>
+  </div>
+</div>
+
+<footer>Cleveland Range — Internal Use Only &nbsp;|&nbsp; Reliability You Can Taste.™</footer>
+
+<script>
+const CATALOG = {"21CET16": {"cat": "Steamers \u2014 Countertop", "items": [{"item": "21CET162083EZT", "desc": "21CET16, 208 volt, 3 Phase, easyTimer", "list": 12364.0, "cost": 2612.14}, {"item": "21CET162403EZT", "desc": "21CET16, 240 volt, 3 Phase, easyTimer", "list": 12364.0, "cost": 2612.14}, {"item": "21CET164803EZT", "desc": "21CET16, 480 volt, 3 Phase, easyTimer", "list": 13010.6, "cost": 2612.14}]}, "21CET8": {"cat": "Steamers \u2014 Countertop", "items": [{"item": "21CET82083EZT", "desc": "21CET8, 208 volt, 3 Phase, easyTimer", "list": 9683.1, "cost": 2197.53}, {"item": "21CET82081EZT", "desc": "21CET8, 208 volt, 1 Phase, easyTimer", "list": 9683.1, "cost": 2197.53}, {"item": "21CET82401EZT", "desc": "21CET8, 240 volt, 1 Phase, easyTimer", "list": 9683.1, "cost": 2197.53}, {"item": "21CET82403EZT", "desc": "21CET8, 240 volt, 3 Phase, easyTimer", "list": 9683.1, "cost": 2197.53}, {"item": "21CET84803EZT", "desc": "21CET8, 480 volt, 3 Phase, easyTimer", "list": 10329.7, "cost": 2197.53}]}, "21CGA5": {"cat": "Steamers \u2014 Countertop", "items": [{"item": "21CGA5NEZT", "desc": "21CGA5, NAT, 120 Volt, easyTimer", "list": 15229.0, "cost": 3002.55}, {"item": "CGA500033", "desc": "21CGA5, LP, 120 Volt, easyTimer", "list": 15229.0, "cost": 3002.55}]}, "22CCGT6": {"cat": "Steamers \u2014 Countertop", "items": [{"item": "22CCGT6", "desc": "6-Pan Gas Connectionless Convection Steamer (No Drain And Water Connection Required)", "list": 14079.0, "cost": 3434.98}]}, "22CCT6": {"cat": "Steamers \u2014 Countertop", "items": [{"item": "22CCT62082403CEZT", "desc": "22CCT6, 208-240 Volt, 3 Phase, Cord & Plug, easyTimer Style Controls", "list": 11579.44, "cost": 2952.58}, {"item": "22CCT62082403EZT", "desc": "22CCT6, 208-240 Volt, 3 Phase, easyTimer Style Controls", "list": 11579.44, "cost": 2952.58}, {"item": "22CCT62082401EZT", "desc": "22CCT6, 208-240 Volt, 1 Phase, easyTimer Style Controls", "list": 11579.44, "cost": 2952.58}, {"item": "22CCT64404803EZT", "desc": "22CCT6, 440-480  Volt, 3 Phase, easyTimer Style Controls", "list": 12226.04, "cost": 2952.58}, {"item": "22CCT64404803CEZT", "desc": "22CCT6, 440-480  Volt, 3 Phase, Cord & Plug, easyTimer Style Controls", "list": 12226.04, "cost": 2952.58}]}, "22CET3.1": {"cat": "Steamers \u2014 Countertop", "items": [{"item": "22CET32082401EZT", "desc": "STMCF3.1,208-240,1PH,ENERGY STAR,12 KW, easyTimer", "list": 11073.82, "cost": 2684.82}, {"item": "22CET32082403EZTHR", "desc": "STMCF3.1,208-240,3 PH, ENERGY STAR,12 KW,  easyTimer, HINGED RIGHT", "list": 11606.82, "cost": 2684.82}, {"item": "22CET32082403EZT", "desc": "STMCF3.1,208-240,3 PH, ENERGY STAR,12 KW,  easyTimer", "list": 11073.82, "cost": 2684.82}, {"item": "22CET34801EZT", "desc": "STMCF3.1, 480 VOLT, 1 PH, ENERGY STAR,12 KW,  easyTimer", "list": 11720.42, "cost": 2684.82}, {"item": "22CET34803EZT", "desc": "STMCF3.1, 480 VOLT 3 PH, 12 KW,  easyTimer", "list": 11720.42, "cost": 2684.82}]}, "22CET6.1": {"cat": "Steamers \u2014 Countertop", "items": [{"item": "22CET62082401EZT", "desc": "STMCF6.1 208-240,1PH,ENERGY STAR,12 KW, easyTimer", "list": 13558.0, "cost": 2851.9}, {"item": "22CET62082401EZTHR", "desc": "STMCF6.1,208-240,1PH, ENERGY STAR,12 KW, Door Hinged Right", "list": 14091.0, "cost": 2851.9}, {"item": "22CET62082403EZT", "desc": "STMCF6.1,208-240,3 PH, ENERGY STAR,12 KW,  easyTimer", "list": 13558.0, "cost": 2851.9}, {"item": "22CET62082403EZTHR", "desc": "STMCF6.1,208-240,3 PH, ENERGY STAR,12 KW,  easyTimer, HINGED RIGHT", "list": 14091.0, "cost": 2851.9}, {"item": "22CET64801EZT", "desc": "STMCF6.1, 480 VOLT, 1 PH, ENERGY STAR,12 KW,  easyTimer", "list": 14204.6, "cost": 2851.9}, {"item": "22CET64803EZT", "desc": "STMCF6.1, 480 VOLT 3 PH, 12 KW,  easyTimer", "list": 14204.6, "cost": 2851.9}]}, "22CET6.2": {"cat": "Steamers \u2014 Countertop", "items": [{"item": "22CET6.2", "desc": "6-Pan Booster easyTouch Electric Boilerless Convection Steamer (Drain And Water Connection Required)", "list": 14558.0, "cost": 3175.43}]}, "22CGT3.1": {"cat": "Steamers \u2014 Countertop", "items": [{"item": "22CGT3.1NATEZT", "desc": "STEAMCHEF 3.1,3 PAN,NAT, easyTimer", "list": 13390.98, "cost": 3328.1}]}, "22CGT6.1": {"cat": "Steamers \u2014 Countertop", "items": [{"item": "22CGT6.1NATEZT", "desc": "STEAMCHEF 6.1,6 PAN,NAT, easyTimer", "list": 16321.0, "cost": 3434.98}, {"item": "CGT00042", "desc": "22CGT6.1,LP,32K,HL,EZT", "list": 16321.0, "cost": 3434.98}]}, "SET10 EZH": {"cat": "Braising Pans \u2014 Electric", "items": [{"item": "SET10 EZH", "desc": "SET10 EasyTouch", "list": 15000.0, "cost": 3179.81}]}, "SET15": {"cat": "Braising Pans \u2014 Electric", "items": [{"item": "SET15208P", "desc": "SET-15  208/3 SCL15", "list": 14463.7, "cost": 1955.68}]}, "24CDP10": {"cat": "Steamers \u2014 Generator/Boilers", "items": [{"item": "24CDP10EZT", "desc": "21CDP10, Direct Steam, 120 Volt, easyTimer", "list": 26904.92, "cost": 4975.5}]}, "24CEA10.2": {"cat": "Steamers \u2014 Generator/Boilers", "items": [{"item": "24CEA10.22083EZT", "desc": "21CEA10.2, 208 Volt, 3 Phase, easyTimer", "list": 28392.1, "cost": 6158.01}, {"item": "CEA00077", "desc": "24CEA10.2,208,3 Phase,easyTimer, LWO", "list": 28521.1, "cost": 6158.01}, {"item": "CEA00079", "desc": "24CEA10.2,240,3 Phase,easyTimer", "list": 28392.1, "cost": 6158.01}, {"item": "24CEA10.24803EZT", "desc": "21CEA10.2, 480 Volt, 3 Phase, easyTimer", "list": 29038.7, "cost": 6158.01}, {"item": "CEA00081", "desc": "24CEA10.2,480,3 Phase,easyTimer, Corretional Pckg", "list": 31116.1, "cost": 6158.01}]}, "24CEM24": {"cat": "Steamers \u2014 Generator/Boilers", "items": [{"item": "24CEM242083MCS", "desc": "24CEM24; 208 VOLT 3 PH MCS TIMERS; DHL", "list": 36710.98, "cost": 5829.94}, {"item": "24CEM482083MCS", "desc": "24CEM48;208 VOLT 3 PHASE 48 KW, MECHANICAL CONTROLS", "list": 39087.98, "cost": 5829.94}]}, "24CGA10": {"cat": "Steamers \u2014 Generator/Boilers", "items": [{"item": "24CGA10NEZT", "desc": "24CGA10, NAT, 120 Volt, easyTimer", "list": 27190.06, "cost": 5414.5}, {"item": "CGA00161", "desc": "24CGA10,NAT,easyTimer, HINGED RIGHT", "list": 28209.06, "cost": 5414.5}, {"item": "24CGA10LPEZT", "desc": "21CGA10, LP Gas, 120 Volt, easyTimer", "list": 27190.06, "cost": 5414.5}]}, "24CGA10.2": {"cat": "Steamers \u2014 Generator/Boilers", "items": [{"item": "24CGA10.2NEZT", "desc": "21CGA10.2, NAT, 120 Volt, easyTimer", "list": 29982.1, "cost": 6168.25}, {"item": "24CGA10.2NEZTHR", "desc": "24CGA10.2,NAT,easyTimer, HINGED RIGHT", "list": 31001.1, "cost": 6168.25}, {"item": "CGA00174", "desc": "24CGA10.2,LP,easyTimer, Correctional Package", "list": 32060.1, "cost": 6168.25}, {"item": "CGA00171", "desc": "24CGA10.2,NAT,easyTimer, Correctional Package", "list": 32060.1, "cost": 6168.25}, {"item": "24CGA10.2LPEZT", "desc": "24CGA10.2, LP Gas, 120 Volt, easyTimer", "list": 29982.1, "cost": 6168.25}]}, "24CGA10.2ES": {"cat": "Steamers \u2014 Generator/Boilers", "items": [{"item": "24CGA10.2ESNEZT", "desc": "24CGA10.2ES,NAT,HL,", "list": 33569.14, "cost": 6622.5}, {"item": "CGAES00040", "desc": "24CGA10.2ES,LP,easyTimer,HL", "list": 33569.14, "cost": 6622.5}]}, "24CGA6.2S": {"cat": "Steamers \u2014 Generator/Boilers", "items": [{"item": "24CGA6.2SNEZT", "desc": "24CGA6.2, NAT, Doors Hinged Left easyTimer", "list": 29470.12, "cost": 6260.36}]}, "24CGM200": {"cat": "Steamers \u2014 Generator/Boilers", "items": [{"item": "24CGMNMCSHL", "desc": "24CGM;NAT;MECH CTRL;H.L.", "list": 38208.76, "cost": 7198.98}, {"item": "24CGMLPMCSHL", "desc": "24CGM;LP;MECH CTRL;H.L.", "list": 38208.76, "cost": 7198.98}]}, "24CGP10": {"cat": "Steamers \u2014 Generator/Boilers", "items": [{"item": "24CGP10NEZT", "desc": "21CGP10, NAT, 120 Volt, easyTimer", "list": 43032.82, "cost": 8241.38}]}, "24CSM": {"cat": "Steamers \u2014 Generator/Boilers", "items": [{"item": "24CSMMCS", "desc": "24CSM; STEAM COIL; DHL MCS TIMERS", "list": 41005.04, "cost": 6766.36}]}, "36CDM16": {"cat": "Steamers \u2014 Generator/Boilers", "items": [{"item": "CDM00003", "desc": "36CDM16,HL,MCS", "list": 34481.8, "cost": 8340.0}]}, "36CGM16300": {"cat": "Steamers \u2014 Generator/Boilers", "items": [{"item": "36CGM16300MCS", "desc": "36CGM16300 NAT MCS TIMERS; DH LEFT", "list": 51461.94, "cost": 11441.9}]}, "36CGM300": {"cat": "Steamers \u2014 Generator/Boilers", "items": [{"item": "36CGM300MCS", "desc": "36CGM300; NAT MCS TIMERS; DH LEFT", "list": 43236.34, "cost": 7803.48}]}, "SEL30T1": {"cat": "Braising Pans \u2014 Electric", "items": [{"item": "SEL30T1208PTP", "desc": "SEL30T1,208/3,PT,DOMESTI NO TD", "list": 21251.6, "cost": 4240.52}, {"item": "SEL30T1208HTP", "desc": "SEL30T1,208/3,HT", "list": 20627.6, "cost": 4240.52}, {"item": "SELT100366", "desc": "SEL30T1,208,3 Phase,60HZ, TD2SK", "list": 21515.6, "cost": 4240.52}, {"item": "SELT100360", "desc": "SEL30T1,480,3 Phase,60HZ, TD2SK", "list": 22260.6, "cost": 4240.52}]}, "SEL30TR": {"cat": "Braising Pans \u2014 Electric", "items": [{"item": "SEL30T208HTP", "desc": "SEL30TR,208/3 HAND TILT, NO TD", "list": 19984.18, "cost": 4286.99}, {"item": "SELTR00422", "desc": "SEL30TR,208,3 Phase,60HZ, TD2SK", "list": 20872.18, "cost": 4286.99}, {"item": "SELTR00460", "desc": "SEL30TR,208,3 Phase,60HZ, SLD, TD2SK", "list": 22518.18, "cost": 4286.99}, {"item": "SELTR00416", "desc": "SEL30TR,480,3 Phase,60HZ, SLD, TD2SK", "list": 23263.18, "cost": 4286.99}, {"item": "SELTR00446", "desc": "SEL30TR,480,3 Phase,60HZ", "list": 20729.18, "cost": 4286.99}, {"item": "SEL30T208PTP", "desc": "SEL30TR,208/3 POWER TILT, NO TD", "list": 20608.18, "cost": 4286.99}]}, "SEL40T1": {"cat": "Braising Pans \u2014 Electric", "items": [{"item": "SEL40T1208HTP", "desc": "SEL40T1,208/3,HT,DOMESTI NO TD", "list": 22483.66, "cost": 4816.62}, {"item": "SELT100358", "desc": "SEL40T1,208,3 Phase,60HZ, TD2SK", "list": 23371.66, "cost": 4816.62}, {"item": "SELT100370", "desc": "SEL40T1,208,3 Phase,60HZ, POWER TILT, TD2SK", "list": 23995.66, "cost": 4816.62}, {"item": "SEL40T1208PTP", "desc": "SEL40T1,208/3,PT,DOMESTI NO TD", "list": 23107.66, "cost": 4816.62}, {"item": "SELT100361", "desc": "SEL40T1,480,3 Phase,60HZ, TD2SK", "list": 24116.66, "cost": 4816.62}, {"item": "SELT100380", "desc": "SEL40T1,480,3 Phase,60HZ", "list": 23228.66, "cost": 4816.62}, {"item": "SELT100357", "desc": "SEL40T1,480,3 Phase,60HZ, POWER TILT, TD2SK", "list": 24740.66, "cost": 4816.62}, {"item": "SELT100401", "desc": "SEL40T1,480,3 Phase,60HZ, POWER TILT", "list": 23852.66, "cost": 4816.62}]}, "SEL40TR": {"cat": "Braising Pans \u2014 Electric", "items": [{"item": "SEL40T208PTP", "desc": "SEL40TR,208/3,PT,POWER TILT NO TD", "list": 22788.6, "cost": 5286.2}, {"item": "SELTR00419", "desc": "SEL40TR,208,3 Phase,60HZ, TD2SK", "list": 23052.6, "cost": 5286.2}, {"item": "SELTR00449", "desc": "SEL40TR,480,3 Phase,60HZ, POWER TILT, TD2SK", "list": 24421.6, "cost": 5286.2}, {"item": "SELTR00414", "desc": "SEL40TR,208,3 Phase,60HZ, HAND TILT", "list": 22164.6, "cost": 5286.2}, {"item": "SELTR00429", "desc": "SEL40TR,480,3 Phase,60HZ", "list": 22909.6, "cost": 5286.2}, {"item": "SELTR00413", "desc": "SEL40TR,480,3 Phase,60HZ, TD2SK", "list": 23797.6, "cost": 5286.2}]}, "SGL30T1": {"cat": "Braising Pans \u2014 Gas", "items": [{"item": "SGL30T1NATHTP", "desc": "SGL30T1;NAT,MTILT,NO TD", "list": 27178.4, "cost": 4727.61}, {"item": "SGLT100531", "desc": "SGL30T1,NAT, POWER TILT, TD2SK", "list": 28690.4, "cost": 4727.61}, {"item": "SGLT100559", "desc": "SGL30T1,NAT, easyDial", "list": 28356.4, "cost": 4727.61}, {"item": "SGLT100527", "desc": "SGL30T1,NAT, TD2SK", "list": 28066.4, "cost": 4727.61}, {"item": "SGLT100557", "desc": "SGL30T1,NAT, easyDial, Probe", "list": 29131.4, "cost": 4727.61}, {"item": "SGLT100541", "desc": "SGL30T1,PROPANE GAS", "list": 27178.4, "cost": 4727.61}, {"item": "SGLT100538", "desc": "SGL30T1,NAT, Casters, TD2SK", "list": 28996.4, "cost": 4727.61}, {"item": "SGLT100608", "desc": "SGL30T1,NAT, easyDial, POWER TILT", "list": 28980.4, "cost": 4727.61}, {"item": "SGLT100565", "desc": "SGL30T1,NAT, Casters, POWER TILT, TD2SK", "list": 29620.4, "cost": 4727.61}, {"item": "SGLT100547", "desc": "SGL30T1,PROPANE GAS, TD2SK", "list": 28066.4, "cost": 4727.61}, {"item": "SGLT100539", "desc": "SGL30T1,NAT, POWER TILT", "list": 27802.4, "cost": 4727.61}, {"item": "SGL30T1NATPTP", "desc": "SGL30T1;NAT,PT,115/1/60, 0-1999\"", "list": 27802.4, "cost": 4727.61}, {"item": "SGL30T1NATHTTD2P", "desc": "SGL30T1; NAT,MTILT,TD2, 0-1999'", "list": 28067.74, "cost": 4727.61}]}, "SGL30T1 EZH": {"cat": "Braising Pans \u2014 Gas", "items": [{"item": "SGL30T1 EZH", "desc": "30 Gallon (117 Liter) Gas Manual Tilt easyTouch", "list": 28678.4, "cost": 5906.0}]}, "SGL30TR": {"cat": "Braising Pans \u2014 Gas", "items": [{"item": "SGL30TNATHTP", "desc": "SGL30TR; NAT,HAND TILT", "list": 25559.78, "cost": 3944.13}, {"item": "SGLTR00818", "desc": "SGL30TR,120,1PH,60HZ, NAT, TD2SK", "list": 26447.78, "cost": 3944.13}, {"item": "SGLTR00822", "desc": "SGL30TR,120,1PH,60HZ, LP", "list": 25559.78, "cost": 3944.13}, {"item": "SGLTR00824", "desc": "SGL30TR,120,1PH,60HZ, NAT, SLD, TD2SK", "list": 28093.78, "cost": 3944.13}, {"item": "SGLTR00827", "desc": "SGL30TR,120,1PH,60HZ, NAT, POWER TILT, TD2SK", "list": 27071.78, "cost": 3944.13}, {"item": "SGLTR00833", "desc": "SGL30TR,120,1PH,60HZ, NAT, SLD, POWER TILT, TD2SK", "list": 28717.78, "cost": 3944.13}, {"item": "SGLTR00819", "desc": "SGL30TR,120,1PH,60HZ, NAT, SLD", "list": 27205.78, "cost": 3944.13}, {"item": "SGL30TNATPTP", "desc": "SGL30TR;NAT,POWER TILT ,120/1/60, 0-2999'", "list": 26183.78, "cost": 3944.13}]}, "SGL40T1": {"cat": "Braising Pans \u2014 Gas", "items": [{"item": "SGL40T1NATHTP", "desc": "SGL40T1;NAT, HAND TILT,NO TD, 0-1999'", "list": 29265.54, "cost": 5197.86}, {"item": "SGLT100532", "desc": "SGL40T1,PROPANE GAS", "list": 29265.54, "cost": 5197.86}, {"item": "SGLT100577", "desc": "SGL40T1,NAT, Correctional Pckg, TD2SK", "list": 31730.54, "cost": 5197.86}, {"item": "SGLT100536", "desc": "SGL40T1,NAT, Casters, TD2SK", "list": 31083.54, "cost": 5197.86}, {"item": "SGLT100530", "desc": "SGL40T1,PROPANE GAS, TD2SK", "list": 30153.54, "cost": 5197.86}, {"item": "SGLT100561", "desc": "SGL40T1,NAT, easyDial, POWER TILT", "list": 31067.54, "cost": 5197.86}, {"item": "SGLT100571", "desc": "SGL40T1,NAT, easyDial", "list": 30443.54, "cost": 5197.86}, {"item": "SGLT100564", "desc": "SGL40T1,NAT, Casters, POWER TILT, TD2SK", "list": 31707.54, "cost": 5197.86}, {"item": "SGLT100555", "desc": "SGL40T1,NAT, Correctional Pckg", "list": 30842.54, "cost": 5197.86}, {"item": "SGL40T1NATPTP", "desc": "SGL40T1;NAT,POWER TILT,115/1/60, 0-1999'", "list": 29889.54, "cost": 5197.86}, {"item": "SGL40T1NATHTD2P", "desc": "SGL40T1; NAT,HAND TILT,TD2, 0-1999'", "list": 30154.88, "cost": 5197.86}, {"item": "SGL40T1NATPTD2P", "desc": "SGL40T1;NAT,POWER TILT,TD2,115/1 60,0-1999'", "list": 30778.88, "cost": 5197.86}]}, "SGL40T1 EZH": {"cat": "Braising Pans \u2014 Gas", "items": [{"item": "SGL40T1 EZH", "desc": "40 Gallon (156 Liter) Gas Manual Tilt easyTouch", "list": 30765.54, "cost": 6855.42}]}, "SGL40TR": {"cat": "Braising Pans \u2014 Gas", "items": [{"item": "SGL40TNATHTP", "desc": "SGL40TR;NAT,HAND TILT ,120/1/60, 0-2999'", "list": 27653.28, "cost": 4666.25}, {"item": "SGL40TNATPTD2P", "desc": "SGL40TR;NAT,POWER TILT, TD2SK", "list": 29165.28, "cost": 4666.25}, {"item": "SGLTR00837", "desc": "SGL40TR,120,1PH,60HZ, NAT, SLD, TD2SK", "list": 30187.28, "cost": 4666.25}, {"item": "SGLTR00838", "desc": "SGL40TR,120,1PH,60HZ, LP", "list": 27653.28, "cost": 4666.25}, {"item": "SGLTR00830", "desc": "SGL40TR,120,1PH,60HZ, NAT, Correctional Pckg, TD2SK", "list": 30118.28, "cost": 4666.25}, {"item": "SGLTR00828", "desc": "SGL40TR,120,1PH,60HZ, NAT, POWER TILT, TD2SK", "list": 29165.28, "cost": 4666.25}, {"item": "SGLTR00840", "desc": "SGL40TR,120,1PH,60HZ, NAT, POWER TILT, SLD, TD2SK", "list": 30811.28, "cost": 4666.25}, {"item": "SGLTR00829", "desc": "SGL40TR,120,1PH,60HZ, LP, TD2SK", "list": 28541.28, "cost": 4666.25}, {"item": "SGLTR00842", "desc": "SGL40TR,120,1PH,60HZ, NAT, Correctional Pckg", "list": 29230.28, "cost": 4666.25}, {"item": "SGL40TNATPTP", "desc": "SGL40TR;NAT,POWER TILT,120/1/60", "list": 28277.28, "cost": 4666.25}, {"item": "SGL40TNATHTD2P", "desc": "SGL40TR,120,1PH,60HZ NAT, TD2SK", "list": 28542.62, "cost": 4666.25}]}, "KGL25": {"cat": "Kettles \u2014 Gas", "items": [{"item": "KGL25P", "desc": "KGL25,120,1PH,60HZ NAT", "list": 22169.9, "cost": 4533.66}]}, "KGL25T": {"cat": "Kettles \u2014 Gas", "items": [{"item": "KGL25TP", "desc": "KGL25T,120,1PH,60HZ NAT,TD2,CHS,0 TO 1999FT", "list": 37446.24, "cost": 5611.74}, {"item": "KGLT01606", "desc": "KGL25T,316G1 SS,120,60HZ, NAT, CHS, Markings, TD2", "list": 38249.24, "cost": 5611.74}, {"item": "KGLT01592", "desc": "KGL25T,316G1 SS,120,60HZ, NAT, TD2", "list": 35792.24, "cost": 5611.74}, {"item": "KGLT01636", "desc": "KGL25T,316G1 SS,120,60HZ, NAT, NO VALVE", "list": 34136.24, "cost": 5611.74}, {"item": "KGLT01618", "desc": "KGL25T,316G1 SS,120,60HZ, LP, CHS, TD2", "list": 37446.24, "cost": 5611.74}]}, "KGL40": {"cat": "Kettles \u2014 Gas", "items": [{"item": "KGL40P", "desc": "KGL40,120,1PH,60HZ NAT,TD2,CHS,0 TO 1999FT", "list": 24899.4, "cost": 5423.03}, {"item": "KGL1139", "desc": "KGL40,316G1 SS,120,60HZ, NAT, Markings", "list": 25702.4, "cost": 5423.03}, {"item": "KGL1120", "desc": "KGL40,316G1 SS,120,60HZ, LP", "list": 24899.4, "cost": 5423.03}]}, "KGL40T": {"cat": "Kettles \u2014 Gas", "items": [{"item": "KGL40TP", "desc": "KGL40T,120,1PH,60HZ NAT,TD2,CHS", "list": 41258.66, "cost": 6563.91}, {"item": "KGLT01585", "desc": "KGL40T,316G1 SS,120,60HZ, NAT, CHS, TD2", "list": 42061.66, "cost": 6563.91}, {"item": "KGLT01595", "desc": "KGL40T,316G1 SS,120,60HZ, TD2, NAT", "list": 39244.66, "cost": 6563.91}, {"item": "KGLT01603", "desc": "KGL40T,316G1 SS,120,60HZ, LP, CHS, TD2", "list": 41258.66, "cost": 6563.91}, {"item": "KGLT01599", "desc": "KGL40T,316G1 SS,120,60HZ, NAT", "list": 37588.66, "cost": 6563.91}, {"item": "KGL40TPEZDPR", "desc": "KGL40T, 40 Gal, Tilting, TD2, CHS40, NAT, easyDial, Probe", "list": 43211.66, "cost": 6563.91}]}, "KGL40TSH": {"cat": "Kettles \u2014 Gas", "items": [{"item": "KGL40TSHP", "desc": "KGL40TSH,120/60/1,TD2, NAT,CHS,0 TO 1999FT", "list": 46452.44, "cost": 7229.29}]}, "KGL60": {"cat": "Kettles \u2014 Gas", "items": [{"item": "KGL60P", "desc": "KGL60,120,1PH,60HZ NAT", "list": 31049.52, "cost": 5598.36}, {"item": "KGL1213", "desc": "KGL60,316G1 SS,120,60HZ, NAT, Correctional Pckg, Bar Rim", "list": 35416.52, "cost": 5598.36}, {"item": "KGL1144", "desc": "KGL60,316G1 SS,120,60HZ, NAT, Markings", "list": 31852.52, "cost": 5598.36}, {"item": "KGL1099", "desc": "KGL60,316G1 SS,120,60HZ, LP, Correctional Pckg, Bar Rim", "list": 35416.52, "cost": 5598.36}]}, "KGL60SH": {"cat": "Kettles \u2014 Gas", "items": [{"item": "KGL60SHP", "desc": "KGL60SH,120,1PH,60HZ NAT,TD2,CHS,0-1999FT", "list": 33699.52, "cost": 5990.4}, {"item": "KGL1101", "desc": "KGL60SH,316G2 SS,120,60H, NAT, TD3S", "list": 35862.52, "cost": 5990.4}]}, "KGL60T": {"cat": "Kettles \u2014 Gas", "items": [{"item": "KGL60TP", "desc": "KGL60T,120,1PH,60HZ NAT,TD2,CHS", "list": 42556.48, "cost": 6872.08}, {"item": "KGLT01586", "desc": "KGL60T,316G1 SS,120,60HZ, NAT, CHS, Markings, TD2", "list": 43359.48, "cost": 6872.08}, {"item": "KGLT01651", "desc": "KGL60T,316G1 SS,120,60HZ, NAT", "list": 38804.48, "cost": 6872.08}, {"item": "KGLT01670", "desc": "KGL60T,316G1 SS,120,60HZ, NAT, TD2", "list": 40460.48, "cost": 6872.08}, {"item": "KGLT01691", "desc": "KGL60T,316G1 SS,120,60HZ, NAT, Markings, TD2", "list": 41417.48, "cost": 6872.08}, {"item": "KGLT01616", "desc": "KGL60T,316G1 SS,120,60HZ, CHS, NAT", "list": 40900.48, "cost": 6872.08}, {"item": "KGLT01712", "desc": "KGL60T,316G1 SS,120,60HZ, LP, TD3A", "list": 45216.48, "cost": 6872.08}, {"item": "KGLT01659", "desc": "KGL60T,316G1 SS,120,60HZ, NAT, EZD, CHS, Markings, Probe, TD2A", "list": 45422.48, "cost": 6872.08}]}, "KGL80": {"cat": "Kettles \u2014 Gas", "items": [{"item": "KGL1133", "desc": "KGL80,316G2 SS,120,60HZ, Correctional Pckg, Rim Bar, NAT", "list": 38965.4, "cost": 5713.33}, {"item": "KGL1100", "desc": "KGL80,316G2 SS,120,60HZ, NAT", "list": 34598.4, "cost": 5713.33}, {"item": "KGL1126", "desc": "KGL80,316G2 SS,120,60HZ, Markings, NAT", "list": 35401.4, "cost": 5713.33}, {"item": "KGL1108", "desc": "KGL80,316G2 SS,120,60HZ, Correctional Pckg, Rim Bar, Markings, NAT", "list": 39768.4, "cost": 5713.33}]}, "KGL80T": {"cat": "Kettles \u2014 Gas", "items": [{"item": "KGL80T316P", "desc": "KGL80T,316G2 SS,120,60HZ NAT,0 TO 1999FT", "list": 51662.82, "cost": 7119.97}, {"item": "KGLT01741", "desc": "KGL80T,316G2 SS,120,60HZ, NAT, CHS, Markings, TD3A", "list": 57221.82, "cost": 7119.97}, {"item": "KGLT01715", "desc": "KGL80T,316G2 SS,120,60HZ, NAT, CHS, Correctional Pckg, Rim Bar, TD2", "list": 57008.82, "cost": 7119.97}, {"item": "KGLT01743", "desc": "KGL80T,316G2 SS,120,60HZ, NAT, Correctional Pckg, TD2", "list": 52737.82, "cost": 7119.97}, {"item": "KGLT01728", "desc": "KGL80T,316G2 SS,120,60HZ, NAT, CHS, Markings, TD3", "list": 55898.82, "cost": 7119.97}, {"item": "KGLT01742", "desc": "KGL80T,316G2 SS,120,60HZ, NAT, easyDial, TD3", "list": 53910.82, "cost": 7119.97}, {"item": "KGLT01696", "desc": "KGL80T,316G2 SS,120,60HZ, NAT, CHS, Markings, TD2", "list": 52465.82, "cost": 7119.97}, {"item": "KGLT01619", "desc": "KGL80T,316G2 SS,120,60HZ, LP, CHS, TD2", "list": 51662.82, "cost": 7119.97}]}, "KGT12T": {"cat": "Kettles \u2014 Gas", "items": [{"item": "KGT12TP", "desc": "KGT12T,316 SS,NATURAL GA 0 TO 1999FT", "list": 19335.46, "cost": 3376.78}, {"item": "KGT12TPEZDPR", "desc": "KGT12T,12 gal/45 Liter, Naturl gas, 120v, easydial with probe.", "list": 21288.46, "cost": 3376.78}]}, "KGT12TGB": {"cat": "Kettles \u2014 Gas", "items": [{"item": "KGT12TGBP", "desc": "KGT12TGB 120 NAT. GAS 0-2000',GEAR TILT", "list": 21441.68, "cost": 3729.88}]}, "KGT6T": {"cat": "Kettles \u2014 Gas", "items": [{"item": "KGT6TP", "desc": "KGT6T,316 SS,NAT 0 TO 1999FT", "list": 16268.88, "cost": 3164.25}]}, "KDL100": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KDL00330", "desc": "KDL100,ASME50#,316G2 SS, Correctional Pckg, Rim Bar, Markings, SCK1", "list": 31245.0, "cost": 3563.81}]}, "KDL40T": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KDLT00713", "desc": "KDL40T,ASME50#,316G1 SS, CHS, SCK2, Markings, TD2", "list": 20671.64, "cost": 3371.79}, {"item": "KDL40TP", "desc": "KDL40T,ASME50#,316 SS, CHS, SCK2, TD2", "list": 19868.64, "cost": 3371.79}]}, "KDL60T": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KDL60TP", "desc": "KDL60T,ASME50#,316 SS, CHS, SCK2, TD2", "list": 22676.96, "cost": 3493.02}, {"item": "KDLT00722", "desc": "KDL60T,ASME50#,316G1 SS, CHS, SCK2, Markings, TD2", "list": 23479.96, "cost": 3493.02}]}, "KDL80": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KDL00286", "desc": "KDL80,ASME50#,316G2 SS, Correctional Pckg, Rim Bar", "list": 22779.2, "cost": 2984.42}]}, "KDT12T": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KDT12TLH316P", "desc": "KDT12T;316,LH VALVE/HNDL", "list": 9647.0, "cost": 1012.78}]}, "KDT6T": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KDT6TRH316P", "desc": "KDT6T;316,RH VALVE/HANDL", "list": 6786.0, "cost": 745.74}]}, "KEL100": {"cat": "Kettles \u2014 Electric", "items": [{"item": "Q13538", "desc": "KEL100,208-240,3 Phase,60HZ, Correctional Pckg, Markings", "list": 39568.0, "cost": 3933.2}, {"item": "KEL00704", "desc": "KEL100,480,3 Phase,60HZ, Correctional Pckg, Rim Bar, Markings", "list": 41476.0, "cost": 3933.2}]}, "KEL25": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KEL25P", "desc": "KEL25,STATIONARY 208-240,3 Phase,60HZ 304 SS,TD2 DRAW OFF,CHS", "list": 19683.14, "cost": 2962.93}]}, "KEL25T": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KELT01363", "desc": "KEL25T,208-240,1PH,60HZ, CHS, TD2", "list": 29724.14, "cost": 3925.48}]}, "KEL40": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KEL00699", "desc": "KEL40,480,3 Phase,60HZ", "list": 21611.62, "cost": 3250.42}]}, "KEL40T": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KEL40TP", "desc": "KEL40T,208-240,3 Phase,60HZ 316,CHS,TD2,STD WATTAGE", "list": 31911.58, "cost": 4254.99}, {"item": "KELT01283", "desc": "KEL40T,208-240,3 Phase,60HZ, CHS, Markings, TD2", "list": 32714.58, "cost": 4254.99}, {"item": "KELT01361", "desc": "KEL40T,480,3 Phase,60HZ, CHS, TD2", "list": 33247.58, "cost": 4254.99}, {"item": "KELT01359", "desc": "KEL40T,480,3 Phase,60HZ, CHS, Markings, TD2", "list": 34050.58, "cost": 4254.99}, {"item": "KELT01444", "desc": "KEL40T,208-240,1PH,60HZ, CHS", "list": 30255.58, "cost": 4254.99}, {"item": "KEL40TPEZDPR", "desc": "KEL40T, 40 Gal, Tilting, TD2, CHS40, 208/240, 3 Ph. easyDial with Probe", "list": 33864.58, "cost": 4254.99}]}, "KEL40TSH": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KELT01323", "desc": "KEL40TSH,208-240,3 Phase,60H, CHS, TD2", "list": 33036.62, "cost": 4508.19}, {"item": "KELT01348", "desc": "KEL40TSH,480,3 Phase,60HZ, CHS, TD2", "list": 34372.62, "cost": 4508.19}]}, "KEL60": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KEL60P", "desc": "KEL60,208-240,3 Phase,60HZ, CHS60,TD2", "list": 26156.56, "cost": 3417.05}]}, "KEL60T": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KEL60TP", "desc": "KEL60T,208-240,3 Phase,60HZ 304,CHS,TD2,STD WATTAGE", "list": 36053.38, "cost": 4594.63}, {"item": "KELT01386", "desc": "KEL60T,480,3 Phase,60HZ, CHS, TD2", "list": 37389.38, "cost": 4594.63}]}, "KEL80": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KEL00707", "desc": "KEL80,208-240,3 Phase,60HZ, Correction Pckg, Rim Bar", "list": 35980.0, "cost": 3617.76}, {"item": "KEL00736", "desc": "KEL80,208-240,1 Phase,60HZ, Correctional Pckg, Rim Bar", "list": 35980.0, "cost": 3617.76}]}, "KET12T": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KET12TP", "desc": "KET12T,316 SS,208-240,3P 60HZ,RH HANDLE TILT", "list": 10835.32, "cost": 1993.5}, {"item": "KET12T480/3P", "desc": "KET12T TABLE TOP 480/3 316", "list": 12172.32, "cost": 1993.5}]}, "KET20T": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KET20TP", "desc": "KET20T,316 SS,208-240,3P 60HZ,RH HANDLE TILT", "list": 17251.5, "cost": 2520.65}, {"item": "KET00957", "desc": "KET20T,316G1 SS,208-240,SLD", "list": 18856.5, "cost": 2520.65}, {"item": "KET01032", "desc": "KET20T,316G1 SS,480,3 Phase", "list": 18588.5, "cost": 2520.65}, {"item": "KET01008", "desc": "KET20T,316G1 SS,480,3 Phase, SLD", "list": 20193.5, "cost": 2520.65}]}, "KET3T": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KET3TP", "desc": "KET3T,316 SS,208-240,1PH 60HZ,", "list": 8019.96, "cost": 1559.47}]}, "KET6T": {"cat": "Kettles \u2014 Electric", "items": [{"item": "KET6TP", "desc": "KET6T,316 SS,208-240,3 Phase 60HZ,RH HANDLE TILT", "list": 8954.88, "cost": 1694.55}, {"item": "KET6THWP", "desc": "KET6T 6G TABL TOP, 316, High Wattage", "list": 8954.88, "cost": 1694.55}, {"item": "KET6T480/3P", "desc": "KET6T; TABLE TOP 316 480/3", "list": 10291.88, "cost": 1694.55}]}, "MKET20T": {"cat": "Kettles \u2014 Electric", "items": [{"item": "MKET0065", "desc": "MKET20T,316G1 SS,208-240,3 Phase", "list": 47017.36, "cost": 9129.09}]}, "TKET12T": {"cat": "Kettles \u2014 Electric", "items": [{"item": "TKET12TP", "desc": "TKET12T,316 SS,DOMESTIC 208-240,3 Phase,60HZ,STD. WA", "list": 25520.0, "cost": 3835.71}, {"item": "TKET00400", "desc": "TKET12T,316G1 SS,480", "list": 26857.0, "cost": 3835.71}]}, "TKET6T": {"cat": "Kettles \u2014 Electric", "items": [{"item": "TKET6TP", "desc": "TKET6T,316 SS,DOMESTIC 208-240,3 Phase,60HZ,STD. WA", "list": 20243.0, "cost": 3203.86}]}, "PDL3": {"cat": "Steamers \u2014 Generator/Boilers", "items": [{"item": "PDL3S", "desc": "PDL3 PRESSURE STMR;3 COM PT.; DIR. STM;15PSI REQD", "list": 33579.7, "cost": 9672.89}, {"item": "PDL00017", "desc": "PDL3,MECH,SST,STD, Correctional Package", "list": 35633.7, "cost": 9672.89}]}, "SD1050K66": {"cat": "Other", "items": [{"item": "SD1050K66316P", "desc": "SD-1050 C/W (2)KDT6T", "list": 24691.64, "cost": 3113.6}]}, "KGL100": {"cat": "Kettles \u2014 Gas", "items": [{"item": "KGL1207", "desc": "KGL100,316G2 SS,120,60HZ, Correctional Pckg, NAT", "list": 41907.1, "cost": 6139.14}, {"item": "KGL1115", "desc": "KGL100,316G2 SS,120,60HZ, Correctional Pckg, Rim Bar, Markings, TD3, NAT", "list": 49240.1, "cost": 6139.14}, {"item": "KGL1106", "desc": "KGL100,316G2 SS,120,60HZ, NAT", "list": 41907.1, "cost": 6139.14}, {"item": "KGL1128", "desc": "KGL100,316G2 SS,120,60HZ, TD3, NAT", "list": 44070.1, "cost": 6139.14}, {"item": "KGL1197", "desc": "KGL100,316G2 SS,120,60HZ, Correctional Pckg, Rim Bar, TD3, LP", "list": 48437.1, "cost": 6139.14}]}, "SET10": {"cat": "Braising Pans \u2014 Electric", "items": [{"item": "Q13597-1P", "desc": "SET10, Electric Braising Pan, 1 Phase", "list": 14218, "cost": 3005}]}};
+
+// Build model dropdown grouped by category
+const cats = {};
+for (const [model, data] of Object.entries(CATALOG)) {
+  const cat = data.cat;
+  if (!cats[cat]) cats[cat] = [];
+  cats[cat].push(model);
+}
+const selModel = document.getElementById('sel-model');
+const catOrder = ['Steamers — Countertop','Steamers — Generator/Boilers','Braising Pans — Electric','Braising Pans — Gas','Kettles — Gas','Kettles — Electric','Other'];
+for (const cat of catOrder) {
+  if (!cats[cat]) continue;
+  const og = document.createElement('optgroup');
+  og.label = cat;
+  for (const m of cats[cat]) {
+    const o = document.createElement('option');
+    o.value = m;
+    o.textContent = m;
+    og.appendChild(o);
+  }
+  selModel.appendChild(og);
+}
+
+const selItem = document.getElementById('sel-item');
+// Search bar logic
+const modelSearch = document.getElementById('model-search');
+const searchDropdown = document.getElementById('search-dropdown');
+
+function buildSearchIndex() {
+  const index = [];
+  for (const [model, data] of Object.entries(CATALOG)) {
+    index.push({model, label: model, cat: data.cat, type:'model'});
+    for (const it of data.items) {
+      index.push({model, label: it.item + ' — ' + it.desc, item: it.item, cat: data.cat, type:'item',
+        list: it.list, cost: it.cost, desc: it.desc});
+    }
+  }
+  return index;
+}
+const searchIndex = buildSearchIndex();
+
+modelSearch.addEventListener('focus', () => {
+  modelSearch.style.borderColor = 'var(--red)';
+  modelSearch.style.boxShadow = '0 0 0 3px rgba(200,16,46,.12)';
+});
+modelSearch.addEventListener('blur', () => {
+  modelSearch.style.borderColor = 'var(--border-mid)';
+  modelSearch.style.boxShadow = 'none';
+});
+modelSearch.addEventListener('input', () => {
+  const q = modelSearch.value.trim().toLowerCase();
+  if (!q) { searchDropdown.style.display = 'none'; return; }
+  const results = searchIndex.filter(r => r.label.toLowerCase().includes(q)).slice(0, 20);
+  if (!results.length) { searchDropdown.style.display = 'none'; return; }
+  searchDropdown.innerHTML = results.map((r,i) => `
+    <div class="sr" data-idx="${i}" style="padding:8px 12px;cursor:pointer;font-size:12px;border-bottom:0.5px solid var(--border);">
+      <div style="font-weight:500;color:var(--charcoal);">${r.type==='model'?'<span style=\'font-size:10px;color:var(--red);font-weight:600;text-transform:uppercase;letter-spacing:.05em;\'>MODEL</span> ':''}${r.label}</div>
+      <div style="font-size:10px;color:var(--muted);">${r.cat}</div>
+    </div>`).join('');
+  searchDropdown.style.display = 'block';
+  searchDropdown.querySelectorAll('.sr').forEach((el, i) => {
+    el.addEventListener('mouseenter', () => el.style.background = 'var(--offwhite)');
+    el.addEventListener('mouseleave', () => el.style.background = '');
+    el.addEventListener('click', () => {
+      const r = results[i];
+      modelSearch.value = r.label;
+      searchDropdown.style.display = 'none';
+      // Set model dropdown
+      selModel.value = r.model;
+      selModel.dispatchEvent(new Event('change'));
+      // If item-level result, also select the item
+      if (r.type === 'item') {
+        setTimeout(() => {
+          for (const opt of selItem.options) {
+            if (opt.value === r.item) { selItem.value = r.item; selItem.dispatchEvent(new Event('change')); break; }
+          }
+        }, 50);
+      }
+    });
+  });
+});
+
+document.addEventListener('click', (e) => {
+  if (!modelSearch.contains(e.target) && !searchDropdown.contains(e.target)) {
+    searchDropdown.style.display = 'none';
+  }
+});
+
+selModel.addEventListener('change', () => {
+  selItem.innerHTML = '<option value="">— select item —</option>';
+  document.getElementById('desc-box').textContent = 'Select an item above';
+  const m = selModel.value;
+  if (!m || !CATALOG[m]) return;
+  for (const it of CATALOG[m].items) {
+    const o = document.createElement('option');
+    o.value = it.item;
+    o.textContent = it.item + ' — ' + it.desc;
+    o.dataset.list = it.list;
+    o.dataset.cost = it.cost;
+    o.dataset.desc = it.desc;
+    selItem.appendChild(o);
+  }
+  if (CATALOG[m].items.length === 1) {
+    selItem.selectedIndex = 1;
+    selItem.dispatchEvent(new Event('change'));
+  }
+});
+
+selItem.addEventListener('change', () => {
+  const opt = selItem.options[selItem.selectedIndex];
+  if (!opt.dataset.list) return;
+  document.getElementById('list').value = Math.round(opt.dataset.list);
+  document.getElementById('cogs').value = Math.round(opt.dataset.cost);
+  // Populate hero
+  const hero = document.getElementById('model-hero');
+  hero.style.display = 'block';
+  document.getElementById('hero-model').textContent = selModel.value;
+  document.getElementById('hero-item').textContent = opt.value;
+  document.getElementById('hero-desc').textContent = opt.dataset.desc || '';
+  document.getElementById('hero-cat').textContent = CATALOG[selModel.value]?.cat || '';
+  calc();
+  const modelKey = selModel.value;
+  const netVal = (() => {
+    const list2 = +document.getElementById('list').value || 0;
+    const chain2 = getChain();
+    let net2 = list2;
+    for (const t of chain2) net2 *= (1 - t/100);
+    const rebate2 = +document.getElementById('rebate').value / 100;
+    return net2 * (1 - rebate2);
+  })();
+  renderCompTable(modelKey, Math.round(netVal));
+});
+
+// Discount pills
+let activeChain = [10,5,5];
+document.querySelectorAll('.pill').forEach(p => {
+  p.addEventListener('click', () => {
+    document.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    const ovRow = document.getElementById('override-row');
+    if (p.dataset.chain === 'override') {
+      ovRow.style.display = 'flex';
+      activeChain = null;
+    } else {
+      ovRow.style.display = 'none';
+      activeChain = p.dataset.chain.split(',').map(Number);
+    }
+    calc();
+  });
+});
+document.querySelectorAll('#override-row input').forEach(el => el.addEventListener('input', calc));
+
+function getChain() {
+  if (activeChain) return activeChain;
+  return ['ov1','ov2','ov3','ov4','ov5'].map(id => +(document.getElementById(id).value)||0).filter(v => v > 0);
+}
+
+function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+function fmtD(n) { return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+function pct(n) { return n.toFixed(1) + '%'; }
+function cmCls(p) { return p >= 35 ? 'good' : p >= 22 ? 'warn' : 'bad'; }
+
+function calc() {
+  const list = +document.getElementById('list').value || 0;
+  const fx = 1; // all amounts in USD
+  const cogs = +document.getElementById('cogs').value || 0;
+  const rebate = +document.getElementById('rebate').value / 100;
+  const comm   = +document.getElementById('comm').value / 100;
+  const warr   = +document.getElementById('warr').value / 100;
+  const chain  = getChain();
+
+  // MRICP: fixed policy at 87.8% of list (min in-cart price for web dealers)
+  const mricp = Math.round(list * 0.878);
+
+  // Waterfall: List → NET (discount chain) → After Rebate → Net to CLV (USD)
+  let net = list;
+  for (const t of chain) net *= (1 - t/100);
+  const effDisc = list > 0 ? (1 - net/list)*100 : 0;
+  const netRebCAD = net * (1 - rebate);
+  const netUSD = netRebCAD * fx;
+
+  // All $ and % off NET price (red cell); rebate only affects CM base
+  const netAfterRebate = net * (1 - rebate);
+  const commD = net * comm;
+  const warrD = net * warr;
+  const cogsPct  = net > 0 ? cogs / net * 100 : 0;
+  const commPct  = comm * 100;
+  const warrPct  = warr * 100;
+  const totalCost = cogs + commD + warrD;
+  const totalPct = net > 0 ? totalCost / net * 100 : 0;
+  const cm = netAfterRebate - totalCost;
+  const cmPct = net > 0 ? cm / net * 100 : 0;
+
+  // Waterfall
+  const wf = document.getElementById('wf');
+  const steps = [
+    {lbl:'List price', val:fmt(list), cur:''},
+    {lbl:'NET price', val:fmt(net), cur:pct(effDisc)+' off list', hl:true},
+    {lbl:'After rebate', val:fmt(netRebCAD), cur:pct(rebate*100)+' rebate'},
+
+  ];
+  wf.innerHTML = steps.map((s,i) => `
+    ${i>0?'<div class="wf-arr">›</div>':''}
+    <div class="wf-step ${s.hl?'hl':''}">
+      <div class="wf-lbl">${s.lbl}</div>
+      <span class="wf-val">${s.val}</span>
+      <span class="wf-cur">${s.cur}</span>
+    </div>`).join('');
+
+  // MRICP reference card
+  const mriceBelow = net < mricp;
+  document.getElementById('mricp-box').innerHTML = `
+    <div class="m-lbl">MRICP <span style="font-weight:400;font-size:9px;letter-spacing:.03em;">(min in-cart price policy)</span></div>
+    <div class="m-val" style="font-size:20px;">${fmt(mricp)}</div>
+    <div class="m-sub">87.8% of list &nbsp;|&nbsp; NET is ${mriceBelow?'<span style="color:var(--danger);font-weight:600;">BELOW MRICP ⚠</span>':'above MRICP ✓'}</div>`;
+
+  // Metrics
+  const cls = cmCls(cmPct);
+  document.getElementById('metrics').innerHTML = `
+    <div class="m"><div class="m-lbl">Std cost</div><div class="m-val">${fmt(cogs)}</div><div class="m-sub">${pct(cogsPct)} of NET price</div></div>
+    <div class="m"><div class="m-lbl">Commission</div><div class="m-val">${fmt(commD)}</div><div class="m-sub">${pct(comm*100)} of NET price</div></div>
+    <div class="m"><div class="m-lbl">Warranty</div><div class="m-val">${fmt(warrD)}</div><div class="m-sub">${pct(warr*100)} of NET price</div></div>
+    <div class="m"><div class="m-lbl">Total cost</div><div class="m-val">${fmt(totalCost)}</div><div class="m-sub">${pct(net > 0 ? totalCost/net*100 : 0)} of NET price</div></div>
+    <div class="m ${cls}"><div class="m-lbl">CM per unit</div><div class="m-val">${fmt(cm)}</div><div class="m-sub">${pct(cmPct)} of NET price</div></div>`;
+
+  // Volume table
+  const vols = [5,10,25,50,100,200,500];
+  document.getElementById('voltable').innerHTML = `
+    <thead><tr><th>Units/yr</th><th class="r">NET revenue</th><th class="r">Total cost</th><th class="r">CM $</th><th class="r">CM %</th></tr></thead>
+    <tbody>${vols.map(v=>`<tr>
+      <td class="u">${v}</td>
+      <td class="r">${fmt(netAfterRebate*v)}</td>
+      <td class="r">${fmt(totalCost*v)}</td>
+      <td class="r ${cmCls(cmPct)}">${fmt(cm*v)}</td>
+      <td class="r ${cmCls(cmPct)}">${pct(cmPct)}</td>
+    </tr>`).join('')}</tbody>`;
+
+  // Note
+  const chainStr = chain.map(c=>c+'%').join('/');
+  document.getElementById('note').innerHTML = `
+    <strong>Discount chain:</strong> ${chainStr} → effective ${pct(effDisc)} off list &nbsp;|&nbsp;
+    <strong>Net to Cleveland:</strong> ${fmt(netUSD)} USD/unit &nbsp;|&nbsp;
+    <strong>CM:</strong> ${pct(cmPct)} — ${cmPct>=35?'healthy':cmPct>=22?'viable on volume':'below target — review pricing'}`;
+  // refresh comp table with updated NET
+  const _m = selModel.value;
+  if (_m) renderCompTable(_m, Math.round(netRebCAD));
+}
+
+
+const CLV_COMP = {"21CET16": [{"mfr": "Southbend", "model": "R24-5", "list": 24753, "net": 9468, "disc": "61.7%"}, {"mfr": "Vulcan", "model": "C24EA5-PLUS", "list": 30753, "net": 11303, "disc": "63.2%"}, {"mfr": "Groen", "model": "HY-5E", "list": 25090, "net": 9680, "disc": "61.4%"}], "21CET8": [{"mfr": "Southbend", "model": "R24-3", "list": 19784, "net": 7567, "disc": "61.7%"}, {"mfr": "Vulcan", "model": "C24EA3-PLUS", "list": 22324, "net": 8205, "disc": "63.2%"}, {"mfr": "Groen", "model": "HY-3E", "list": 18570, "net": 7165, "disc": "61.4%"}], "21CGA5": [{"mfr": "Southbend", "model": "SX-5G3-SB", "list": 28228, "net": 10797, "disc": "61.7%"}, {"mfr": "Groen", "model": "HY-5G", "list": 29270, "net": 11293, "disc": "61.4%"}], "22CCT6": [{"mfr": "Southbend", "model": "EZ18-5", "list": 22373, "net": 8558, "disc": "61.7%"}, {"mfr": "Vulcan", "model": "C24EO5", "list": 31857, "net": 11709, "disc": "63.2%"}, {"mfr": "Accutemp", "model": "E62081D060", "list": 19755, "net": 8914, "disc": "54.9%"}, {"mfr": "Groen", "model": "XS-208-12-3", "list": 21360, "net": 8241, "disc": "61.4%"}], "22CCGT6": [{"mfr": "Accutemp", "model": "N61201D060", "list": 25150, "net": 11349, "disc": "54.9%"}], "22CET3.1": [{"mfr": "Vulcan", "model": "C24EO3AF", "list": 27128, "net": 9971, "disc": "63.2%"}, {"mfr": "Accutemp", "model": "S32081D060", "list": 18011, "net": 8127, "disc": "54.9%"}, {"mfr": "Southbend", "model": "CSE-4-SB", "list": 20526, "net": 7851, "disc": "61.7%"}, {"mfr": "Groen", "model": "GSSP-BLE-3E", "list": 22190, "net": 8561, "disc": "61.4%"}], "22CET6.1": [{"mfr": "Southbend", "model": "CSE-6-SB", "list": 25130, "net": 9612, "disc": "61.7%"}, {"mfr": "Vulcan", "model": "C24EO5AF", "list": 37218, "net": 13679, "disc": "63.2%"}, {"mfr": "Accutemp", "model": "E62083E100", "list": 22035, "net": 9943, "disc": "54.9%"}, {"mfr": "Groen", "model": "GSSP-BLE-5E", "list": 26290, "net": 10143, "disc": "61.4%"}], "22CGT3.1": [{"mfr": "Groen", "model": "GSSP-BL-3G", "list": 28300, "net": 10919, "disc": "61.4%"}], "22CGT6.1": [{"mfr": "Groen", "model": "GSSP-BL-5G", "list": 28680, "net": 11065, "disc": "61.4%"}, {"mfr": "Accutemp", "model": "N61201E060", "list": 26549, "net": 11980, "disc": "54.9%"}], "24CEA10.2": [{"mfr": "Southbend", "model": "ETP-10E-SB", "list": 63941, "net": 24457, "disc": "61.7%"}, {"mfr": "Groen", "model": "(2)HY-5EF", "list": 52380, "net": 20209, "disc": "61.4%"}, {"mfr": "Vulcan", "model": "C24ET10", "list": 70255, "net": 25822, "disc": "63.2%"}], "24CGA10": [{"mfr": "Vulcan", "model": "C24GA10", "list": 71577, "net": 26308, "disc": "63.2%"}], "24CGA10.2": [{"mfr": "Southbend", "model": "GSX-10HE-SB", "list": 57409, "net": 21959, "disc": "61.7%"}, {"mfr": "Groen", "model": "(2)HY-5GF", "list": 54300, "net": 20950, "disc": "61.4%"}, {"mfr": "Vulcan", "model": "C24GA6-PS", "list": 75040, "net": 27581, "disc": "63.2%"}], "24CGA10.2ES": [{"mfr": "Southbend", "model": "ETP-10G-SB", "list": 63941, "net": 24457, "disc": "61.7%"}], "KEL100T": [{"mfr": "Southbend", "model": "KELT-100", "list": 82263, "net": 31466, "disc": "61.7%"}], "KEL40T": [{"mfr": "Groen", "model": "DEE/4-40C", "list": 55930, "net": 21579, "disc": "61.4%"}, {"mfr": "Vulcan", "model": "K40ELT", "list": 84345, "net": 31001, "disc": "63.2%"}, {"mfr": "Southbend", "model": "KELT-40", "list": 52348, "net": 20023, "disc": "61.7%"}], "KEL60T": [{"mfr": "Groen", "model": "DEE/4-60C", "list": 59400, "net": 22918, "disc": "61.4%"}, {"mfr": "Vulcan", "model": "K60ELT", "list": 97885, "net": 35977, "disc": "63.2%"}, {"mfr": "Southbend", "model": "KELT-60", "list": 59872, "net": 22901, "disc": "61.7%"}], "KEL80T": [{"mfr": "Southbend", "model": "KELT-80", "list": 69088, "net": 26426, "disc": "61.7%"}], "KET12T": [{"mfr": "Vulcan", "model": "K12ETT", "list": 27233, "net": 10009, "disc": "63.2%"}, {"mfr": "Groen", "model": "TDB-48C", "list": 21540, "net": 8311, "disc": "61.4%"}, {"mfr": "Southbend", "model": "KECT-12", "list": 20083, "net": 7682, "disc": "61.7%"}], "KET20T": [{"mfr": "Southbend", "model": "KECT-20", "list": 42348, "net": 16198, "disc": "61.7%"}, {"mfr": "Groen", "model": "DEE/4-20C", "list": 50740, "net": 19576, "disc": "61.4%"}, {"mfr": "Vulcan", "model": "K20ETT", "list": 48620, "net": 17870, "disc": "63.2%"}], "KET6T": [{"mfr": "Southbend", "model": "KECT-06", "list": 16223, "net": 6205, "disc": "61.7%"}, {"mfr": "Vulcan", "model": "K6ETT", "list": 23236, "net": 8540, "disc": "63.2%"}, {"mfr": "Groen", "model": "TDB-24C", "list": 18490, "net": 7134, "disc": "61.4%"}], "KGL100": [{"mfr": "Groen", "model": "AH/1E-100", "list": 67080, "net": 25881, "disc": "61.4%"}, {"mfr": "Southbend", "model": "KSLG-100", "list": 77677, "net": 29711, "disc": "61.7%"}], "KGL25T": [], "KGL40": [{"mfr": "Groen", "model": "AH/1E-40", "list": 46680, "net": 18010, "disc": "61.4%"}, {"mfr": "Vulcan", "model": "K40GL", "list": 69949, "net": 25709, "disc": "63.2%"}, {"mfr": "Southbend", "model": "KSLG-40", "list": 46152, "net": 17653, "disc": "61.7%"}], "KGL40T": [{"mfr": "Southbend", "model": "KTLG-40", "list": 69673, "net": 26650, "disc": "61.7%"}, {"mfr": "Groen", "model": "DH-40C", "list": 67360, "net": 25989, "disc": "61.4%"}, {"mfr": "Vulcan", "model": "K40GLT", "list": 100464, "net": 36925, "disc": "63.2%"}], "KGL60": [{"mfr": "Groen", "model": "AH/1E-60", "list": 51580, "net": 19901, "disc": "61.4%"}, {"mfr": "Southbend", "model": "KSLG-60", "list": 57553, "net": 22014, "disc": "61.7%"}], "KGL60T": [{"mfr": "Southbend", "model": "KTLG-60", "list": 71925, "net": 27511, "disc": "61.7%"}, {"mfr": "Groen", "model": "DH-60C", "list": 80230, "net": 30954, "disc": "61.4%"}, {"mfr": "Vulcan", "model": "K60GLT", "list": 126853, "net": 46624, "disc": "63.2%"}], "KGL80": [{"mfr": "Groen", "model": "AH/1E-80", "list": 62070, "net": 23948, "disc": "61.4%"}, {"mfr": "Vulcan", "model": "GL80E", "list": 101485, "net": 37300, "disc": "63.2%"}, {"mfr": "Southbend", "model": "KSLG-80", "list": 64129, "net": 24529, "disc": "61.7%"}], "KGL80T": [{"mfr": "Groen", "model": "DH-80C", "list": 93150, "net": 35939, "disc": "61.4%"}], "KGT12T": [{"mfr": "Southbend", "model": "KGCT-12", "list": 39744, "net": 15202, "disc": "61.7%"}, {"mfr": "Groen", "model": "TDH-48C", "list": 37650, "net": 14526, "disc": "61.4%"}], "SEL30T1": [], "SEL30TR": [{"mfr": "Groen", "model": "BPM-30EC", "list": 39200, "net": 15124, "disc": "61.4%"}, {"mfr": "Southbend", "model": "BELM-30", "list": 38235, "net": 14625, "disc": "61.7%"}, {"mfr": "Vulcan", "model": "VE30", "list": 60160, "net": 22112, "disc": "63.2%"}], "SEL40T1": [], "SEL40TR": [{"mfr": "Groen", "model": "BPM-40EC", "list": 42830, "net": 16525, "disc": "61.4%"}, {"mfr": "Southbend", "model": "BELM-40", "list": 41675, "net": 15941, "disc": "61.7%"}, {"mfr": "Vulcan", "model": "VE40", "list": 66580, "net": 24471, "disc": "63.2%"}], "SET10": [{"mfr": "Southbend", "model": "BECT-12", "list": 26354, "net": 10080, "disc": "61.7%"}, {"mfr": "Groen", "model": "TD/FPC", "list": 28440, "net": 10973, "disc": "61.4%"}], "SGL30T1": [{"mfr": "Southbend", "model": "SKG-30-SB", "list": 54301, "net": 20770, "disc": "61.7%"}], "SGL30TR": [{"mfr": "Southbend", "model": "BGLM-30", "list": 50376, "net": 19269, "disc": "61.7%"}, {"mfr": "Groen", "model": "BPM-30GC", "list": 52760, "net": 20356, "disc": "61.4%"}, {"mfr": "Vulcan", "model": "VG30", "list": 73984, "net": 27193, "disc": "63.2%"}], "SGL40T1": [{"mfr": "Southbend", "model": "SKG-40-SB", "list": 59482, "net": 22752, "disc": "61.7%"}], "SGL40TR": [{"mfr": "Southbend", "model": "BGLM-40", "list": 54246, "net": 20749, "disc": "61.7%"}, {"mfr": "Groen", "model": "BPM-40GC", "list": 56530, "net": 21810, "disc": "61.4%"}, {"mfr": "Vulcan", "model": "VG40", "list": 79035, "net": 29049, "disc": "63.2%"}], "SET10 EZH": [{"mfr": "Southbend", "model": "BECT-12", "list": 26354, "net": 10080, "disc": "61.7%"}, {"mfr": "Groen", "model": "TD/FPC", "list": 28440, "net": 10973, "disc": "61.4%"}]};
+
+function renderCompTable(clvModel, clvNet) {
+  const comps = CLV_COMP[clvModel];
+  const section = document.getElementById('comp-section');
+  const table = document.getElementById('comp-table');
+  if (!comps || !comps.length) {
+    section.style.display = 'none';
+    return;
+  }
+  section.style.display = 'block';
+  const mfrColors = {
+    'Vulcan': '#1a5fa8', 'Groen': '#2e7d32', 'Southbend': '#b45309', 'Accutemp': '#6b21a8'
+  };
+  table.innerHTML = `
+    <thead><tr>
+      <th>Manufacturer</th>
+      <th>Model</th>
+      <th class="r">List price</th>
+      <th class="r">Std net price</th>
+      <th class="r">vs Cleveland NET</th>
+    </tr></thead>
+    <tbody>
+      <tr style="background:var(--red-light);">
+        <td style="font-weight:600;color:var(--red);">Cleveland</td>
+        <td style="font-weight:600;color:var(--charcoal);">${clvModel}</td>
+        <td class="r">—</td>
+        <td class="r" style="font-weight:600;color:var(--charcoal);">${fmt(clvNet)}</td>
+        <td class="r">—</td>
+      </tr>
+      ${comps.map(c => {
+        const diff = clvNet - c.net;
+        const diffPct = c.net > 0 ? (diff / c.net * 100) : 0;
+        const cheaper = diff < 0;
+        const cls = cheaper ? 'bad' : 'good';
+        const arrow = cheaper ? '▲' : '▼';
+        const color = mfrColors[c.mfr] || 'var(--charcoal)';
+        return `<tr>
+          <td style="font-weight:500;color:${color};">${c.mfr}</td>
+          <td style="color:var(--charcoal);">${c.model}</td>
+          <td class="r">${fmt(c.list)}</td>
+          <td class="r">${fmt(c.net)}</td>
+          <td class="r ${cls}">${arrow} ${Math.abs(Math.round(diffPct))}%</td>
+        </tr>`;
+      }).join('')}
+    </tbody>`;
+}
+
+
+const COGS_DATA = {"rows": [{"model": "21CET16", "cat": "Steamers \u2014 Countertop", "list": 12364, "cost": 2612, "cost_pct": 21.1, "units": 120, "sales": 1172972}, {"model": "21CET8", "cat": "Steamers \u2014 Countertop", "list": 9683, "cost": 2198, "cost_pct": 22.7, "units": 239, "sales": 1753120}, {"model": "21CGA5", "cat": "Steamers \u2014 Countertop", "list": 15229, "cost": 3003, "cost_pct": 19.7, "units": 92, "sales": 1149977}, {"model": "22CCGT6", "cat": "Steamers \u2014 Countertop", "list": 14079, "cost": 3435, "cost_pct": 24.4, "units": 0, "sales": 0}, {"model": "22CCT6", "cat": "Steamers \u2014 Countertop", "list": 11579, "cost": 2953, "cost_pct": 25.5, "units": 194, "sales": 1685710}, {"model": "22CET3.1", "cat": "Steamers \u2014 Countertop", "list": 11074, "cost": 2685, "cost_pct": 24.2, "units": 198, "sales": 1596259}, {"model": "22CET6.1", "cat": "Steamers \u2014 Countertop", "list": 13558, "cost": 2852, "cost_pct": 21.0, "units": 346, "sales": 3693664}, {"model": "22CET6.2", "cat": "Steamers \u2014 Countertop", "list": 14558, "cost": 3175, "cost_pct": 21.8, "units": 0, "sales": 0}, {"model": "22CGT3.1", "cat": "Steamers \u2014 Countertop", "list": 13391, "cost": 3328, "cost_pct": 24.9, "units": 65, "sales": 685919}, {"model": "22CGT6.1", "cat": "Steamers \u2014 Countertop", "list": 16321, "cost": 3435, "cost_pct": 21.0, "units": 309, "sales": 4043895}, {"model": "24CDP10", "cat": "Steamers \u2014 Generator/Boilers", "list": 26905, "cost": 4976, "cost_pct": 18.5, "units": 18, "sales": 393143}, {"model": "24CEA10.2", "cat": "Steamers \u2014 Generator/Boilers", "list": 28392, "cost": 6158, "cost_pct": 21.7, "units": 170, "sales": 3595764}, {"model": "24CEM24", "cat": "Steamers \u2014 Generator/Boilers", "list": 36711, "cost": 5830, "cost_pct": 15.9, "units": 17, "sales": 478473}, {"model": "24CGA10", "cat": "Steamers \u2014 Generator/Boilers", "list": 27190, "cost": 5415, "cost_pct": 19.9, "units": 312, "sales": 6307043}, {"model": "24CGA10.2", "cat": "Steamers \u2014 Generator/Boilers", "list": 29982, "cost": 6168, "cost_pct": 20.6, "units": 494, "sales": 10561881}, {"model": "24CGA10.2ES", "cat": "Steamers \u2014 Generator/Boilers", "list": 33569, "cost": 6623, "cost_pct": 19.7, "units": 69, "sales": 1701824}, {"model": "24CGA6.2S", "cat": "Steamers \u2014 Generator/Boilers", "list": 29470, "cost": 6260, "cost_pct": 21.2, "units": 15, "sales": 338237}, {"model": "24CGM200", "cat": "Steamers \u2014 Generator/Boilers", "list": 38209, "cost": 7199, "cost_pct": 18.8, "units": 42, "sales": 1157041}, {"model": "24CGP10", "cat": "Steamers \u2014 Generator/Boilers", "list": 43033, "cost": 8241, "cost_pct": 19.2, "units": 45, "sales": 1408826}, {"model": "24CSM", "cat": "Steamers \u2014 Generator/Boilers", "list": 41005, "cost": 6766, "cost_pct": 16.5, "units": 6, "sales": 173365}, {"model": "36CDM16", "cat": "Steamers \u2014 Generator/Boilers", "list": 34482, "cost": 8340, "cost_pct": 24.2, "units": 3, "sales": 79532}, {"model": "36CGM16300", "cat": "Steamers \u2014 Generator/Boilers", "list": 51462, "cost": 11442, "cost_pct": 22.2, "units": 39, "sales": 1317790}, {"model": "36CGM300", "cat": "Steamers \u2014 Generator/Boilers", "list": 43236, "cost": 7803, "cost_pct": 18.0, "units": 15, "sales": 485908}, {"model": "KDL100", "cat": "Kettles \u2014 Electric", "list": 24869, "cost": 3564, "cost_pct": 14.3, "units": 8, "sales": 157174}, {"model": "KDL40T", "cat": "Kettles \u2014 Electric", "list": 14993, "cost": 3372, "cost_pct": 22.5, "units": 37, "sales": 513261}, {"model": "KDL60T", "cat": "Kettles \u2014 Electric", "list": 17719, "cost": 3493, "cost_pct": 19.7, "units": 22, "sales": 356610}, {"model": "KDL80", "cat": "Kettles \u2014 Electric", "list": 18412, "cost": 2984, "cost_pct": 16.2, "units": 15, "sales": 189119}, {"model": "KDT12T", "cat": "Kettles \u2014 Electric", "list": 9647, "cost": 1013, "cost_pct": 10.5, "units": 8, "sales": 65450}, {"model": "KDT6T", "cat": "Kettles \u2014 Electric", "list": 6786, "cost": 746, "cost_pct": 11.0, "units": 18, "sales": 90956}, {"model": "KEL100", "cat": "Kettles \u2014 Electric", "list": 36306, "cost": 3933, "cost_pct": 10.8, "units": 8, "sales": 246979}, {"model": "KEL25", "cat": "Kettles \u2014 Electric", "list": 19683, "cost": 2963, "cost_pct": 15.1, "units": 9, "sales": 139601}, {"model": "KEL25T", "cat": "Kettles \u2014 Electric", "list": 26414, "cost": 3925, "cost_pct": 14.9, "units": 22, "sales": 485401}, {"model": "KEL40", "cat": "Kettles \u2014 Electric", "list": 20275, "cost": 3250, "cost_pct": 16.0, "units": 20, "sales": 315120}, {"model": "KEL40T", "cat": "Kettles \u2014 Electric", "list": 28242, "cost": 4255, "cost_pct": 15.1, "units": 58, "sales": 1376665}, {"model": "KEL40TSH", "cat": "Kettles \u2014 Electric", "list": 29285, "cost": 4508, "cost_pct": 15.4, "units": 11, "sales": 234170}, {"model": "KEL60", "cat": "Kettles \u2014 Electric", "list": 26157, "cost": 3417, "cost_pct": 13.1, "units": 16, "sales": 365672}, {"model": "KEL60T", "cat": "Kettles \u2014 Electric", "list": 32301, "cost": 4595, "cost_pct": 14.2, "units": 37, "sales": 1042954}, {"model": "KEL80", "cat": "Kettles \u2014 Electric", "list": 31613, "cost": 3618, "cost_pct": 11.4, "units": 20, "sales": 509041}, {"model": "KET12T", "cat": "Kettles \u2014 Electric", "list": 10835, "cost": 1993, "cost_pct": 18.4, "units": 334, "sales": 2300230}, {"model": "KET20T", "cat": "Kettles \u2014 Electric", "list": 17252, "cost": 2521, "cost_pct": 14.6, "units": 92, "sales": 1214167}, {"model": "KET3T", "cat": "Kettles \u2014 Electric", "list": 8020, "cost": 1559, "cost_pct": 19.4, "units": 10, "sales": 53139}, {"model": "KET6T", "cat": "Kettles \u2014 Electric", "list": 8955, "cost": 1695, "cost_pct": 18.9, "units": 69, "sales": 382743}, {"model": "KGL100", "cat": "Kettles \u2014 Gas", "list": 41907, "cost": 6139, "cost_pct": 14.6, "units": 29, "sales": 917433}, {"model": "KGL25", "cat": "Kettles \u2014 Gas", "list": 22170, "cost": 4534, "cost_pct": 20.4, "units": 17, "sales": 272758}, {"model": "KGL25T", "cat": "Kettles \u2014 Gas", "list": 34136, "cost": 5612, "cost_pct": 16.4, "units": 55, "sales": 1550773}, {"model": "KGL40", "cat": "Kettles \u2014 Gas", "list": 24899, "cost": 5423, "cost_pct": 21.8, "units": 79, "sales": 1452741}, {"model": "KGL40T", "cat": "Kettles \u2014 Gas", "list": 37589, "cost": 6564, "cost_pct": 17.5, "units": 95, "sales": 2822081}, {"model": "KGL40TSH", "cat": "Kettles \u2014 Gas", "list": 42478, "cost": 7229, "cost_pct": 17.0, "units": 8, "sales": 268997}, {"model": "KGL60", "cat": "Kettles \u2014 Gas", "list": 31050, "cost": 5598, "cost_pct": 18.0, "units": 38, "sales": 854911}, {"model": "KGL60SH", "cat": "Kettles \u2014 Gas", "list": 33700, "cost": 5990, "cost_pct": 17.8, "units": 7, "sales": 180079}, {"model": "KGL60T", "cat": "Kettles \u2014 Gas", "list": 38804, "cost": 6872, "cost_pct": 17.7, "units": 74, "sales": 2243713}, {"model": "KGL80", "cat": "Kettles \u2014 Gas", "list": 34598, "cost": 5713, "cost_pct": 16.5, "units": 69, "sales": 1684252}, {"model": "KGL80T", "cat": "Kettles \u2014 Gas", "list": 47644, "cost": 7120, "cost_pct": 14.9, "units": 33, "sales": 1255424}, {"model": "KGT12T", "cat": "Kettles \u2014 Gas", "list": 19335, "cost": 3377, "cost_pct": 17.5, "units": 231, "sales": 2108293}, {"model": "KGT12TGB", "cat": "Kettles \u2014 Gas", "list": 21442, "cost": 3730, "cost_pct": 17.4, "units": 4, "sales": 65600}, {"model": "KGT6T", "cat": "Kettles \u2014 Gas", "list": 16269, "cost": 3164, "cost_pct": 19.4, "units": 24, "sales": 272645}, {"model": "MKET20T", "cat": "Kettles \u2014 Electric", "list": 47017, "cost": 9129, "cost_pct": 19.4, "units": 6, "sales": 228441}, {"model": "PDL3", "cat": "Steamers \u2014 Generator/Boilers", "list": 33580, "cost": 9673, "cost_pct": 28.8, "units": 11, "sales": 267738}, {"model": "SD1050K66", "cat": "Other", "list": 24692, "cost": 3114, "cost_pct": 12.6, "units": 3, "sales": 58104}, {"model": "SEL30T1", "cat": "Braising Pans \u2014 Electric", "list": 20628, "cost": 4241, "cost_pct": 20.6, "units": 75, "sales": 1190066}, {"model": "SEL30TR", "cat": "Braising Pans \u2014 Electric", "list": 19984, "cost": 4287, "cost_pct": 21.5, "units": 75, "sales": 1146418}, {"model": "SEL40T1", "cat": "Braising Pans \u2014 Electric", "list": 22484, "cost": 4817, "cost_pct": 21.4, "units": 98, "sales": 1705548}, {"model": "SEL40TR", "cat": "Braising Pans \u2014 Electric", "list": 22165, "cost": 5286, "cost_pct": 23.8, "units": 77, "sales": 1271821}, {"model": "SET10 EZH", "cat": "Braising Pans \u2014 Electric", "list": 15000, "cost": 3180, "cost_pct": 21.2, "units": 0, "sales": 0}, {"model": "SET15", "cat": "Braising Pans \u2014 Electric", "list": 14464, "cost": 1956, "cost_pct": 13.5, "units": 45, "sales": 493857}, {"model": "SGL30T1", "cat": "Braising Pans \u2014 Gas", "list": 27178, "cost": 4728, "cost_pct": 17.4, "units": 220, "sales": 4430349}, {"model": "SGL30T1 EZH", "cat": "Braising Pans \u2014 Gas", "list": 28678, "cost": 5906, "cost_pct": 20.6, "units": 0, "sales": 0}, {"model": "SGL30TR", "cat": "Braising Pans \u2014 Gas", "list": 25560, "cost": 3944, "cost_pct": 15.4, "units": 289, "sales": 4689308}, {"model": "SGL40T1", "cat": "Braising Pans \u2014 Gas", "list": 29266, "cost": 5198, "cost_pct": 17.8, "units": 412, "sales": 8708789}, {"model": "SGL40T1 EZH", "cat": "Braising Pans \u2014 Gas", "list": 30766, "cost": 6855, "cost_pct": 22.3, "units": 0, "sales": 0}, {"model": "SGL40TR", "cat": "Braising Pans \u2014 Gas", "list": 27653, "cost": 4666, "cost_pct": 16.9, "units": 236, "sales": 4758558}, {"model": "TKET12T", "cat": "Kettles \u2014 Electric", "list": 25520, "cost": 3836, "cost_pct": 15.0, "units": 22, "sales": 437689}, {"model": "TKET6T", "cat": "Kettles \u2014 Electric", "list": 20243, "cost": 3204, "cost_pct": 15.8, "units": 14, "sales": 220010}], "wtd_avg": 19.4, "total_units": 5968, "total_sales": 99375194};
+
+function switchTab(tab) {
+  document.getElementById('tab-pricing').style.display = tab === 'pricing' ? 'block' : 'none';
+  document.getElementById('tab-cogs').style.display = tab === 'cogs' ? 'block' : 'none';
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    const active = b.dataset.tab === tab;
+    b.style.borderBottomColor = active ? 'var(--red)' : 'transparent';
+    b.style.color = active ? 'var(--red)' : 'var(--muted)';
+  });
+  if (tab === 'cogs') { renderLeaderboard(); renderCogsTable(); renderTpTable(); }
+}
+
+function renderTpTable() {
+  const wtd = COGS_DATA.wtd_avg / 100;
+  const markups = [0.40, 0.50, 0.75, 1.00, 1.25, 1.50];
+  const t = document.getElementById('tp-table');
+  t.innerHTML = `
+    <thead><tr>
+      <th>Cost markup %</th>
+      <th class="r">Transfer price multiplier</th>
+      <th class="r">% off list (dealer disc)</th>
+      <th class="r">Example: $10,000 list</th>
+    </tr></thead>
+    <tbody>${markups.map(m => {
+      const mult = wtd * (1 + m);
+      const offList = (1 - mult) * 100;
+      return `<tr>
+        <td class="u">${Math.round(m*100)}%</td>
+        <td class="r">${(mult*100).toFixed(1)}% of list</td>
+        <td class="r">${offList.toFixed(1)}% off list</td>
+        <td class="r">$${Math.round(10000 * mult).toLocaleString()}</td>
+      </tr>`;
+    }).join('')}</tbody>`;
+}
+
+function cogsColor(pct) {
+  // Heat color: green (low) -> yellow (mid) -> red (high), range 9-30%
+  const min = 9, max = 30, mid = 19.4;
+  if (pct <= mid) {
+    const t = (pct - min) / (mid - min);
+    const r = Math.round(45 + t * (154 - 45));
+    const g = Math.round(122 + t * (103 - 122));
+    return `rgba(${r},${g},53,0.15)`;
+  } else {
+    const t = (pct - mid) / (max - mid);
+    const r = Math.round(154 + t * (192 - 154));
+    const g = Math.round(103 + t * (57 - 103));
+    return `rgba(${r},${g},43,0.15)`;
+  }
+}
+
+function renderLeaderboard() {
+  const totalWtdCost = COGS_DATA.rows.reduce((s, r) => s + (r.units * r.cost), 0);
+  const top10 = [...COGS_DATA.rows]
+    .filter(r => r.units > 0)
+    .sort((a,b) => (b.units*b.cost) - (a.units*a.cost))
+    .slice(0, 10);
+  const lb = document.getElementById('leaderboard');
+  lb.innerHTML = top10.map((r, i) => {
+    const wtdCost = r.units * r.cost;
+    const share = totalWtdCost > 0 ? wtdCost / totalWtdCost * 100 : 0;
+    const bg = cogsColor(r.cost_pct);
+    return `<div style="background:${bg};border:1px solid var(--border);border-radius:8px;padding:10px 12px;">
+      <div style="font-size:10px;color:var(--muted);margin-bottom:2px;">#${i+1} &nbsp;${r.cat.split(' — ')[0]}</div>
+      <div style="font-size:15px;font-weight:600;color:var(--charcoal);font-family:'EB Garamond',serif;">${r.model}</div>
+      <div style="font-size:12px;color:var(--charcoal);margin-top:4px;">${r.cost_pct.toFixed(1)}% COGS &nbsp;·&nbsp; ${share.toFixed(1)}% of pool</div>
+      <div style="font-size:11px;color:var(--muted);">${r.units} units &nbsp;·&nbsp; $${Math.round(wtdCost/1000).toLocaleString()}K wtd cost</div>
+    </div>`;
+  }).join('');
+}
+
+function renderCogsTable() {
+  const filter = document.getElementById('cogs-filter').value;
+  const sort = document.getElementById('cogs-sort').value;
+  let rows = COGS_DATA.rows.filter(r => filter === 'all' || r.cat === filter);
+  if (sort === 'cogs_asc') rows.sort((a,b) => a.cost_pct - b.cost_pct);
+  else if (sort === 'cogs_desc') rows.sort((a,b) => b.cost_pct - a.cost_pct);
+  else if (sort === 'vol_desc') rows.sort((a,b) => b.units - a.units);
+  else if (sort === 'wtd_desc') rows.sort((a,b) => (b.units*b.cost) - (a.units*a.cost));
+  else if (sort === 'wtd_pct_desc') rows.sort((a,b) => (b.units*b.cost) - (a.units*a.cost));
+  else rows.sort((a,b) => a.model.localeCompare(b.model));
+
+  const totalWtdCost = COGS_DATA.rows.reduce((s, r) => s + (r.units * r.cost), 0);
+  const maxWtdCost = Math.max(...COGS_DATA.rows.map(r => r.units * r.cost));
+
+  const t = document.getElementById('cogs-table');
+  t.innerHTML = `
+    <thead><tr>
+      <th>Model</th>
+      <th>Category</th>
+      <th class="r">List price</th>
+      <th class="r">Std cost</th>
+      <th class="r">COGS %</th>
+      <th class="r">FY25 units</th>
+      <th class="r">FY25 sales</th>
+      <th class="r">Wtd cost $</th>
+      <th class="r">Wtd cost %</th>
+    </tr></thead>
+    <tbody>${rows.map(r => {
+      const wtdCost = r.units * r.cost;
+      const wtdShare = totalWtdCost > 0 ? wtdCost / totalWtdCost * 100 : 0;
+      const barWidth = maxWtdCost > 0 ? wtdCost / maxWtdCost * 100 : 0;
+      const bg = cogsColor(r.cost_pct);
+      return `<tr>
+        <td class="u">${r.model}</td>
+        <td style="color:var(--muted);font-size:11px;">${r.cat}</td>
+        <td class="r">$${r.list.toLocaleString()}</td>
+        <td class="r">$${r.cost.toLocaleString()}</td>
+        <td class="r">
+          <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;">
+            <div style="width:50px;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+              <div style="width:${Math.min((r.cost_pct/30)*100,100)}%;height:100%;background:${r.cost_pct < 15 ? '#2d7a35' : r.cost_pct > 25 ? '#c0392b' : '#b45309'};border-radius:3px;"></div>
+            </div>
+            <span style="background:${bg};padding:2px 6px;border-radius:4px;font-size:12px;">${r.cost_pct.toFixed(1)}%</span>
+          </div>
+        </td>
+        <td class="r">${r.units > 0 ? r.units.toLocaleString() : '—'}</td>
+        <td class="r">${r.sales > 0 ? '$' + Math.round(r.sales).toLocaleString() : '—'}</td>
+        <td class="r">
+          ${r.units > 0 ? `<div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;">
+            <div style="width:50px;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+              <div style="width:${barWidth.toFixed(1)}%;height:100%;background:var(--red);border-radius:3px;"></div>
+            </div>
+            $${Math.round(wtdCost).toLocaleString()}
+          </div>` : '—'}
+        </td>
+        <td class="r">${r.units > 0 ? wtdShare.toFixed(1) + '%' : '—'}</td>
+      </tr>`;
+    }).join('')}</tbody>`;
+}
+
+document.querySelectorAll('#list,#fx,#cogs,#rebate,#comm,#warr').forEach(el=>el.addEventListener('input',calc));
+calc();
+</script>
+
+</div>
+
+<script>
+(function(){
+  var inputs = [document.getElementById('p1'),document.getElementById('p2'),document.getElementById('p3'),document.getElementById('p4')];
+  inputs.forEach(function(inp,i){
+    inp.addEventListener('input',function(){
+      if(inp.value.length===1 && i<3) inputs[i+1].focus();
+      if(i===3 && inp.value.length===1) checkPin();
+    });
+    inp.addEventListener('keydown',function(e){
+      if(e.key==='Backspace' && inp.value==='' && i>0) inputs[i-1].focus();
+    });
+  });
+})();
+function checkPin(){
+  var pin = document.getElementById('p1').value+document.getElementById('p2').value+document.getElementById('p3').value+document.getElementById('p4').value;
+  if(pin==='8251'){
+    document.getElementById('lockScreen').style.display='none';
+    document.getElementById('appContent').style.display='block';
+  } else {
+    document.getElementById('pinError').textContent='Incorrect PIN. Try again.';
+    ['p1','p2','p3','p4'].forEach(function(id){document.getElementById(id).value='';});
+    document.getElementById('p1').focus();
+  }
+}
+</script>
+</body>
+</html>
