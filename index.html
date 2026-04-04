@@ -91,7 +91,7 @@ body { font-family:'Poppins',sans-serif; background:#f4f5f7; color:#333F48; min-
   <span class="section-title">Dashboards</span>
 
   <div class="dashboard-grid">
-    <a class="dash-card" href="ivr.html">
+    <a class="dash-card" href="https://garyliclv.github.io/techservice_calls/">
       <div class="icon" style="background:#fde8e8;color:#C8102E;">&#128222;</div>
       <span class="arrow">&#8594;</span>
       <h3>IVR Call Dashboard</h3>
@@ -102,14 +102,14 @@ body { font-family:'Poppins',sans-serif; background:#f4f5f7; color:#333F48; min-
       </div>
     </a>
 
-    <a class="dash-card" href="https://app.powerbi.com/groups/8494de19-df71-4094-a854-a4a994eb1b70/reports/351a87c7-0683-4df0-99f4-2da1b8f9eafe/4b1d3176675c85298997?experience=power-bi" target="_blank">
+    <a class="dash-card" href="#" onclick="event.preventDefault();showPinModal('https://app.powerbi.com/groups/8494de19-df71-4094-a854-a4a994eb1b70/reports/351a87c7-0683-4df0-99f4-2da1b8f9eafe/4b1d3176675c85298997?experience=power-bi');">
       <div class="icon" style="background:#fff3e0;color:#f59e0b;">&#128202;</div>
       <span class="arrow">&#8594;</span>
       <h3>Competitive Pricing Analysis</h3>
       <p>Power BI report with competitive pricing intelligence and market positioning. Best opened in Edge on VPN.</p>
       <div class="meta">
         <span class="status-badge status-live">Live</span>
-        &#183; Power BI &#183; VPN + Edge recommended
+        &#183; PIN + VPN + Edge
       </div>
     </a>
 
@@ -159,7 +159,7 @@ body { font-family:'Poppins',sans-serif; background:#f4f5f7; color:#333F48; min-
       </div>
     </a>
 
-    <a class="dash-card" href="ivr.html">
+    <a class="dash-card" href="https://garyliclv.github.io/techservice_calls/">
       <div class="icon" style="background:#dcfce7;color:#16a34a;">&#128172;</div>
       <span class="arrow">&#8594;</span>
       <h3>Call Transcription Insights</h3>
@@ -181,5 +181,63 @@ body { font-family:'Poppins',sans-serif; background:#f4f5f7; color:#333F48; min-
   Cleveland Range&#174; &#8212; A Welbilt Brand &#183; Biz Ops &#183; Updated April 2026
 </div>
 
+
+<div id="pinOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;">
+  <div style="background:#fff;border-radius:16px;padding:40px 36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-width:360px;width:90%;">
+    <h2 style="font-family:'EB Garamond',serif;font-size:22px;color:#333F48;margin-bottom:6px;">Enter PIN</h2>
+    <p style="font-size:12px;color:#888;margin-bottom:20px;">This content is PIN protected</p>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;">
+      <input type="password" maxlength="1" id="mp1" inputmode="numeric" style="width:46px;height:52px;text-align:center;font-size:20px;font-weight:600;border:2px solid #d1d5db;border-radius:10px;font-family:'Poppins',sans-serif;color:#333F48;outline:none;">
+      <input type="password" maxlength="1" id="mp2" inputmode="numeric" style="width:46px;height:52px;text-align:center;font-size:20px;font-weight:600;border:2px solid #d1d5db;border-radius:10px;font-family:'Poppins',sans-serif;color:#333F48;outline:none;">
+      <input type="password" maxlength="1" id="mp3" inputmode="numeric" style="width:46px;height:52px;text-align:center;font-size:20px;font-weight:600;border:2px solid #d1d5db;border-radius:10px;font-family:'Poppins',sans-serif;color:#333F48;outline:none;">
+      <input type="password" maxlength="1" id="mp4" inputmode="numeric" style="width:46px;height:52px;text-align:center;font-size:20px;font-weight:600;border:2px solid #d1d5db;border-radius:10px;font-family:'Poppins',sans-serif;color:#333F48;outline:none;">
+    </div>
+    <div id="pinModalError" style="color:#C8102E;font-size:12px;min-height:18px;margin-bottom:10px;"></div>
+    <div style="display:flex;gap:8px;justify-content:center;">
+      <button onclick="checkModalPin()" style="background:#C8102E;color:#fff;border:none;padding:10px 32px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;">Unlock</button>
+      <button onclick="closePinModal()" style="background:#e5e7eb;color:#333;border:none;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Poppins',sans-serif;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var pendingUrl = '';
+function showPinModal(url) {
+  pendingUrl = url;
+  document.getElementById('pinOverlay').style.display = 'flex';
+  document.getElementById('pinModalError').textContent = '';
+  ['mp1','mp2','mp3','mp4'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('mp1').focus();
+}
+function closePinModal() {
+  document.getElementById('pinOverlay').style.display = 'none';
+  pendingUrl = '';
+}
+function checkModalPin() {
+  var pin = document.getElementById('mp1').value+document.getElementById('mp2').value+document.getElementById('mp3').value+document.getElementById('mp4').value;
+  if (pin === '8251') {
+    document.getElementById('pinOverlay').style.display = 'none';
+    window.open(pendingUrl, '_blank');
+    pendingUrl = '';
+  } else {
+    document.getElementById('pinModalError').textContent = 'Incorrect PIN. Try again.';
+    ['mp1','mp2','mp3','mp4'].forEach(function(id){document.getElementById(id).value='';});
+    document.getElementById('mp1').focus();
+  }
+}
+(function(){
+  var inputs = [document.getElementById('mp1'),document.getElementById('mp2'),document.getElementById('mp3'),document.getElementById('mp4')];
+  inputs.forEach(function(inp,i){
+    inp.addEventListener('input',function(){
+      if(inp.value.length===1 && i<3) inputs[i+1].focus();
+      if(i===3 && inp.value.length===1) checkModalPin();
+    });
+    inp.addEventListener('keydown',function(e){
+      if(e.key==='Backspace' && inp.value==='' && i>0) inputs[i-1].focus();
+      if(e.key==='Escape') closePinModal();
+    });
+  });
+})();
+</script>
 </body>
 </html>
