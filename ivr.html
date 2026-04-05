@@ -99,14 +99,35 @@ tr:hover td { background:#f9fafb; }
 <div class="kpi-row" id="kpiRow"></div>
 <div class="insight-row" id="insightRow"></div>
 
-<!-- Overview -->
+<!-- Overview - Executive Dashboard -->
 <div class="tab-panel active" id="panel-overview">
+
+<!-- Row 1: Dual wide charts - Volume + Duration trends -->
 <div class="chart-grid">
-<div class="chart-card wide"><h3>Daily Call Volume</h3><canvas id="chartDailyVolume"></canvas></div>
-<div class="chart-card"><h3>Calls by Hour</h3><canvas id="chartByHour"></canvas></div>
-<div class="chart-card"><h3>Call Volume by Agent</h3><canvas id="chartAgentDoughnut"></canvas></div>
+<div class="chart-card wide"><h3>Daily Call Volume (by Agent)</h3><canvas id="chartDailyVolume"></canvas></div>
+<div class="chart-card wide"><h3>Daily Call Duration — Total Hours (by Agent)</h3><canvas id="chartDailyDuration"></canvas></div>
+</div>
+
+<!-- Row 2: Agent workload + Product lines -->
+<div class="chart-grid">
+<div class="chart-card"><h3>Agent Workload — Call Volume</h3><canvas id="chartAgentDoughnut"></canvas></div>
+<div class="chart-card"><h3>Agent Workload — Total Hours</h3><canvas id="chartAgentHoursDoughnut"></canvas></div>
+<div class="chart-card"><h3>Calls by Product Line</h3><canvas id="chartOverviewProducts"></canvas></div>
+<div class="chart-card"><h3>Top Components Mentioned</h3><canvas id="chartOverviewComponents"></canvas></div>
+</div>
+
+<!-- Row 3: Operational patterns -->
+<div class="chart-grid">
+<div class="chart-card"><h3>Calls by Hour of Day</h3><canvas id="chartByHour"></canvas></div>
 <div class="chart-card"><h3>Calls by Day of Week</h3><canvas id="chartByDOW"></canvas></div>
-</div></div>
+<div class="chart-card"><h3>Call Reasons — Where Your Team Spends Time</h3><canvas id="chartOverviewReasons"></canvas></div>
+<div class="chart-card"><h3>Avg Call Duration by Agent (minutes)</h3><canvas id="chartOverviewAgentAvgDur"></canvas></div>
+</div>
+
+<!-- Row 4: Executive Action Items -->
+<div id="execInsights" style="margin-top:8px;"></div>
+
+</div>
 
 <!-- Agent Performance -->
 <div class="tab-panel" id="panel-agents">
@@ -428,7 +449,7 @@ function renderKPIs(data) {
 }
 
 function renderOverview(data) {
-  // Daily volume stacked by agent
+  // ---- Daily Call Volume (stacked by agent) ----
   var dateAgent = {};
   var allDates = [...new Set(data.map(function(r){return r.date;}))].sort(function(a,b){return new Date(a)-new Date(b);});
   AGENTS.forEach(function(a) {
@@ -439,12 +460,113 @@ function renderOverview(data) {
     if (dateAgent[r.agent]) dateAgent[r.agent][r.date] = (dateAgent[r.agent][r.date]||0)+1;
   });
   var shortDates = allDates.map(function(d){ var p=d.split('/'); return p[0].padStart(2,'0')+'/'+p[1].padStart(2,'0'); });
-  var datasets = AGENTS.filter(function(a){ return data.some(function(r){return r.agent===a;}); }).map(function(a) {
+  var volDatasets = AGENTS.filter(function(a){ return data.some(function(r){return r.agent===a;}); }).map(function(a) {
     return { label: abbr(a), data: allDates.map(function(d){return dateAgent[a][d]||0;}), backgroundColor: AGENT_COLORS[a], borderRadius:4 };
   });
-  makeStackedBar('chartDailyVolume', shortDates, datasets);
+  makeStackedBar('chartDailyVolume', shortDates, volDatasets);
 
-  // By hour
+  // ---- Daily Call Duration in HOURS (stacked by agent) ----
+  var dateDur = {};
+  AGENTS.forEach(function(a) {
+    dateDur[a] = {};
+    allDates.forEach(function(d){ dateDur[a][d]=0; });
+  });
+  data.forEach(function(r) {
+    if (dateDur[r.agent]) dateDur[r.agent][r.date] = (dateDur[r.agent][r.date]||0) + r.duration/3600;
+  });
+  var durDatasets = AGENTS.filter(function(a){ return data.some(function(r){return r.agent===a;}); }).map(function(a) {
+    return { label: abbr(a), data: allDates.map(function(d){return parseFloat((dateDur[a][d]||0).toFixed(2));}), backgroundColor: AGENT_COLORS[a], borderRadius:4 };
+  });
+  // Custom stacked bar for duration with hour labels
+  destroyChart('chartDailyDuration');
+  var ctx = document.getElementById('chartDailyDuration');
+  if (ctx) {
+    charts['chartDailyDuration'] = new Chart(ctx, {
+      type: 'bar',
+      data: { labels: shortDates, datasets: durDatasets },
+      options: {
+        maintainAspectRatio: false,
+        layout: { padding: { top: 25 } },
+        plugins: {
+          legend: { position:'top' },
+          datalabels: {
+            display: function(ctx) { return ctx.datasetIndex === ctx.chart.data.datasets.length - 1; },
+            anchor: 'end', align: 'top',
+            font: { weight:'bold', size:10 }, color:'#333F48',
+            formatter: function(value, ctx) {
+              var total = 0;
+              ctx.chart.data.datasets.forEach(function(ds) { total += ds.data[ctx.dataIndex] || 0; });
+              return total.toFixed(1)+'h';
+            }
+          }
+        },
+        scales: {
+          x: { stacked: true },
+          y: { stacked: true, beginAtZero: true, grace: '15%', title: { display:true, text:'Hours' } }
+        }
+      }
+    });
+  }
+
+  // ---- Agent Volume Doughnut ----
+  var agentCounts = countBy(data,'agent');
+  var agentLabels = AGENTS.filter(function(a){return agentCounts[a];});
+  var agentData = agentLabels.map(function(a){return agentCounts[a];});
+  var agentColors = agentLabels.map(function(a){return AGENT_COLORS[a];});
+  makeDoughnut('chartAgentDoughnut', agentLabels.map(abbr), agentData, agentColors);
+
+  // ---- Agent Hours Doughnut ----
+  var agentHours = {};
+  data.forEach(function(r) { agentHours[r.agent] = (agentHours[r.agent]||0) + r.duration/3600; });
+  var hoursLabels = AGENTS.filter(function(a){return agentHours[a];});
+  var hoursData = hoursLabels.map(function(a){return parseFloat(agentHours[a].toFixed(1));});
+  destroyChart('chartAgentHoursDoughnut');
+  var ctx2 = document.getElementById('chartAgentHoursDoughnut');
+  if (ctx2) {
+    charts['chartAgentHoursDoughnut'] = new Chart(ctx2, {
+      type: 'doughnut',
+      data: { labels: hoursLabels.map(abbr), datasets: [{ data: hoursData, backgroundColor: hoursLabels.map(function(a){return AGENT_COLORS[a];}) }] },
+      options: {
+        maintainAspectRatio: false, layout: { padding: 10 },
+        plugins: {
+          legend: { display: false },
+          datalabels: {
+            color: '#333F48', font: { weight:'bold', size:11 },
+            backgroundColor: 'rgba(255,255,255,0.85)', borderRadius: 4,
+            padding: { top:2, bottom:2, left:6, right:6 },
+            formatter: function(value, ctx) {
+              var total = ctx.chart.data.datasets[0].data.reduce(function(a,b){return a+b;},0);
+              return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value + 'h (' + (value/total*100).toFixed(0) + '%)';
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // ---- Product Lines (live NLP) ----
+  var withText = data.filter(function(r){return r.transcription && r.transcription.trim();});
+  var prodCounts = {};
+  withText.forEach(function(r) {
+    classifyText(r.transcription, PRODUCT_KEYWORDS).forEach(function(p) { prodCounts[p]=(prodCounts[p]||0)+1; });
+  });
+  var pSorted = sortedEntries(prodCounts);
+  var prodColors = ['#C8102E','#2563eb','#16a34a','#d97706','#7c3aed','#059669'];
+  if (pSorted.length > 0) {
+    makeDoughnut('chartOverviewProducts', pSorted.map(function(e){return e[0];}), pSorted.map(function(e){return e[1];}), prodColors.slice(0, pSorted.length));
+  }
+
+  // ---- Top Components (live NLP) ----
+  var compCounts = {};
+  withText.forEach(function(r) {
+    classifyText(r.transcription, COMPONENT_KEYWORDS).forEach(function(c) { compCounts[c]=(compCounts[c]||0)+1; });
+  });
+  var cSorted = sortedEntries(compCounts).slice(0,8);
+  if (cSorted.length > 0) {
+    makeHorizBar('chartOverviewComponents', cSorted.map(function(e){return e[0];}), cSorted.map(function(e){return e[1];}), '#333F48');
+  }
+
+  // ---- Calls by Hour ----
   var hourMap = {};
   data.forEach(function(r) {
     var m = r.time.match(/(\d+):/);
@@ -462,28 +584,96 @@ function renderOverview(data) {
   var hourLabels = hours.map(function(h){ return h===0?'12 AM':h<12?h+' AM':h===12?'12 PM':(h-12)+' PM'; });
   var hourData = hours.map(function(h){return hourMap[h];});
   var hourColors = hours.map(function(h){
-    var hue = (h-5)/(14-5);
-    if (hue<0) hue=0; if(hue>1) hue=1;
+    var hue = (h-5)/(14-5); if (hue<0) hue=0; if(hue>1) hue=1;
     return 'hsl('+(120-hue*120)+',55%,55%)';
   });
   makeBarChart('chartByHour', hourLabels, hourData, hourColors);
 
-  // Agent doughnut
-  var agentCounts = countBy(data,'agent');
-  var agentLabels = AGENTS.filter(function(a){return agentCounts[a];});
-  var agentData = agentLabels.map(function(a){return agentCounts[a];});
-  var agentColors = agentLabels.map(function(a){return AGENT_COLORS[a];});
-  var dLabels = agentLabels.map(function(a){return abbr(a);});
-  makeDoughnut('chartAgentDoughnut', dLabels, agentData, agentColors);
-
-  // Day of week
+  // ---- Day of Week ----
   var dowCounts = {};
   DAYS.forEach(function(d){dowCounts[d]=0;});
   data.forEach(function(r){ var dt=new Date(r.date); dowCounts[DAYS[dt.getDay()]]++; });
   var dowData = DAYS.map(function(d){return dowCounts[d];});
   var dowColors = DAYS.map(function(d,i){ return i===0||i===6?'#9ca3af':'#C8102E'; });
   makeBarChart('chartByDOW', DAYS.map(function(d){return d.substring(0,3);}), dowData, dowColors);
+
+  // ---- Call Reasons (live NLP) ----
+  var reasonCounts = {};
+  withText.forEach(function(r) {
+    classifyText(r.transcription, REASON_KEYWORDS).forEach(function(x) { reasonCounts[x]=(reasonCounts[x]||0)+1; });
+  });
+  var rSorted = sortedEntries(reasonCounts);
+  if (rSorted.length > 0) {
+    makeHorizBar('chartOverviewReasons', rSorted.map(function(e){return e[0];}), rSorted.map(function(e){return e[1];}), '#C8102E');
+  }
+
+  // ---- Avg Duration by Agent bar ----
+  var agentDurSum = {}, agentDurCnt = {};
+  data.forEach(function(r) {
+    agentDurSum[r.agent] = (agentDurSum[r.agent]||0) + r.duration;
+    agentDurCnt[r.agent] = (agentDurCnt[r.agent]||0) + 1;
+  });
+  var durAgents = AGENTS.filter(function(a){return agentDurCnt[a];});
+  var avgDurData = durAgents.map(function(a){ return parseFloat((agentDurSum[a]/60/agentDurCnt[a]).toFixed(1)); });
+  makeBarChart('chartOverviewAgentAvgDur', durAgents.map(abbr), avgDurData, durAgents.map(function(a){return AGENT_COLORS[a];}));
+
+  // ---- Executive Action Items ----
+  var totalCalls = data.length;
+  var phoneCounts = {};
+  data.forEach(function(r){ phoneCounts[r.phone]=(phoneCounts[r.phone]||0)+1; });
+  var repeatCount = Object.values(phoneCounts).filter(function(c){return c>=2;}).length;
+  var uniqueCallers = Object.keys(phoneCounts).length;
+  var repeatPct = uniqueCallers > 0 ? (repeatCount/uniqueCallers*100).toFixed(1) : 0;
+  var highFreq = Object.values(phoneCounts).filter(function(c){return c>=4;}).length;
+
+  // Agent imbalance
+  var agentVolSorted = sortedEntries(agentCounts);
+  var topAgentPct = totalCalls > 0 ? (agentVolSorted[0][1]/totalCalls*100).toFixed(0) : 0;
+  var topAgentName = agentVolSorted.length > 0 ? agentVolSorted[0][0] : '';
+
+  // Top product
+  var topProduct = pSorted.length > 0 ? pSorted[0][0] : 'N/A';
+  var topProductCount = pSorted.length > 0 ? pSorted[0][1] : 0;
+
+  // Top reason
+  var topReason = rSorted.length > 0 ? rSorted[0][0] : 'N/A';
+  var topReasonCount = rSorted.length > 0 ? rSorted[0][1] : 0;
+  var topReasonPct = withText.length > 0 ? (topReasonCount/withText.length*100).toFixed(0) : 0;
+
+  // Service vs Parts hours
+  var partsHrs = 0, svcHrs = 0;
+  data.forEach(function(r){ if(r.dept==='Parts') partsHrs+=r.duration/3600; else svcHrs+=r.duration/3600; });
+
+  var html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;">';
+
+  // Workload alert
+  if (parseFloat(topAgentPct) > 30) {
+    html += '<div style="background:#fff;border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-left:4px solid #dc2626;">' +
+      '<div style="font-family:EB Garamond,serif;font-size:16px;font-weight:700;color:#dc2626;margin-bottom:6px;">&#9888; Workload Imbalance</div>' +
+      '<div style="font-size:13px;color:#555;">' + topAgentName + ' handles <strong>' + topAgentPct + '%</strong> of all calls. If this agent is unavailable, over a third of capacity is lost. Consider rebalancing call routing.</div></div>';
+  }
+
+  // Repeat caller alert
+  if (parseFloat(repeatPct) > 20) {
+    html += '<div style="background:#fff;border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-left:4px solid #d97706;">' +
+      '<div style="font-family:EB Garamond,serif;font-size:16px;font-weight:700;color:#d97706;margin-bottom:6px;">&#128257; First-Call Resolution</div>' +
+      '<div style="font-size:13px;color:#555;"><strong>' + repeatPct + '%</strong> of callers called back 2+ times (' + repeatCount + ' callers). <strong>' + highFreq + '</strong> called 4+ times. High repeat rates indicate unresolved issues — consider proactive outreach for frequent callers.</div></div>';
+  }
+
+  // Top issue
+  html += '<div style="background:#fff;border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-left:4px solid #C8102E;">' +
+    '<div style="font-family:EB Garamond,serif;font-size:16px;font-weight:700;color:#C8102E;margin-bottom:6px;">&#128293; #1 Call Driver</div>' +
+    '<div style="font-size:13px;color:#555;"><strong>' + topReason + '</strong> accounts for ' + topReasonPct + '% of calls (' + topReasonCount + ' mentions). <strong>' + topProduct + '</strong> is the most-discussed product line (' + topProductCount + ' mentions). Targeted troubleshooting guides for ' + topProduct + ' could reduce call volume.</div></div>';
+
+  // Time investment
+  html += '<div style="background:#fff;border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-left:4px solid #2563eb;">' +
+    '<div style="font-family:EB Garamond,serif;font-size:16px;font-weight:700;color:#2563eb;margin-bottom:6px;">&#9201; Time Investment</div>' +
+    '<div style="font-size:13px;color:#555;">Your team spent <strong>' + (partsHrs+svcHrs).toFixed(1) + ' hours</strong> on the phone this period. Service: <strong>' + svcHrs.toFixed(1) + 'h</strong> (' + (svcHrs/(partsHrs+svcHrs)*100).toFixed(0) + '%) vs Parts: <strong>' + partsHrs.toFixed(1) + 'h</strong> (' + (partsHrs/(partsHrs+svcHrs)*100).toFixed(0) + '%). Service calls average longer — focus efficiency efforts there first.</div></div>';
+
+  html += '</div>';
+  document.getElementById('execInsights').innerHTML = html;
 }
+
 
 function renderAgents(data) {
   var agentCounts = countBy(data,'agent');
