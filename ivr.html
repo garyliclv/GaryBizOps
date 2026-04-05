@@ -566,65 +566,160 @@ function renderGeo(data) {
   }).join('');
 }
 
+
+// ---- LIVE NLP ANALYSIS ENGINE ----
+var REASON_KEYWORDS = {
+  'Part Number Request': [/\bpart\s*(?:number|#|num)\b/i, /\bwhat\s*(?:is|s)\s*the\s*part\b/i, /\bneed\s*(?:a|the)?\s*part\b/i, /\bpart\s*for\b/i, /\border(?:ing)?\s*(?:a\s*)?part\b/i],
+  'Troubleshooting': [/\bnot\s*work/i, /\bwon'?t\s*(?:start|heat|turn|work|light|ignite)/i, /\berror\b/i, /\bfault\b/i, /\btroubl/i, /\bdiagnos/i, /\bmalfunction/i, /\bproblem\b/i, /\bissue\b/i, /\bbroken\b/i, /\bfail/i],
+  'Warranty Claim': [/\bwarranty\b/i],
+  'Installation Support': [/\binstall/i, /\bset\s*up\b/i, /\bsetup\b/i, /\bhook\s*up\b/i, /\bwir(?:e|ing)\b/i, /\bplumb/i, /\bgas\s*connect/i, /\bvent(?:ing|ilat)/i],
+  'Pricing / Quote': [/\bpric(?:e|ing)\b/i, /\bquote\b/i, /\bcost\b/i, /\bhow\s*much\b/i, /\bdiscount\b/i],
+  'Service Scheduling': [/\bschedul/i, /\bservice\s*(?:call|visit|tech|request)\b/i, /\bdispatch\b/i, /\bsend\s*(?:a\s*)?tech\b/i],
+  'Technical Specs': [/\bspec(?:s|ification)?\b/i, /\bvoltage\b/i, /\bamp(?:s|erage)?\b/i, /\bBTU\b/i, /\bdimension\b/i, /\bmanual\b/i, /\bschematic\b/i, /\bwiring\s*diagram\b/i],
+  'Return / Exchange': [/\breturn\b/i, /\bexchange\b/i, /\bRMA\b/i, /\bsend\s*(?:it\s*)?back\b/i, /\bwrong\s*part\b/i],
+  'Shipping / Delivery': [/\bship(?:ping|ped|ment)?\b/i, /\bdeliver/i, /\btrack(?:ing)?\b/i, /\bETA\b/i, /\blead\s*time\b/i, /\bavailab/i],
+  'General Inquiry': [/\binquir/i, /\bquestion\b/i, /\binformation\b/i, /\bwonder(?:ing)?\b/i, /\bcurious\b/i]
+};
+
+var PRODUCT_KEYWORDS = {
+  'Kettles': [/\bkettle/i, /\bKET\b/, /\bKDL\b/, /\bKEL\b/, /\bKGL\b/],
+  'Tilt Skillets': [/\btilt\s*skillet/i, /\bskillet\b/i, /\bSEL\b/, /\bSGL\b/, /\bSET\b/],
+  'Steamers': [/\bsteam(?:er|ing|craft)?\b/i, /\b21CET\b/i, /\b24CET\b/i, /\b22CET\b/i, /\bCET\b/, /\bSteamCraft\b/i, /\b1SCE\b/, /\b2SCE\b/],
+  'CookChill': [/\bcook\s*chill\b/i, /\bmixer\b/i, /\bmixing\s*kettle\b/i, /\bpump\b/i, /\bchiller\b/i, /\bKDM\b/, /\bKPM\b/],
+  'Combi Ovens': [/\bcombi\b/i, /\boven\b/i, /\bconvotherm\b/i, /\bOES\b/, /\bOGS\b/]
+};
+
+var COMPONENT_KEYWORDS = {
+  'Heating Element': [/\belement\b/i, /\bheater\b/i, /\bheating\b/i, /\bcalrod\b/i, /\bimmersion\b/i],
+  'Thermostat': [/\bthermostat\b/i, /\btemp(?:erature)?\s*control\b/i, /\bhi[\s-]?limit\b/i],
+  'Valve': [/\bvalve\b/i, /\bsolenoid\b/i, /\bgas\s*valve\b/i, /\bsteam\s*valve\b/i, /\bdrain\s*valve\b/i],
+  'Gasket / Seal': [/\bgasket\b/i, /\bseal\b/i, /\bo[\s-]?ring\b/i],
+  'Control Board': [/\bboard\b/i, /\bcontrol(?:ler)?\b/i, /\bPCB\b/i, /\bcontrol\s*panel\b/i, /\bIGC\b/],
+  'Motor': [/\bmotor\b/i, /\bblower\b/i, /\bfan\b/i, /\bagitator\b/i],
+  'Probe / Sensor': [/\bprobe\b/i, /\bsensor\b/i, /\bthermistor\b/i, /\bthermocouple\b/i],
+  'Ignition': [/\bignit(?:er|ion|or)\b/i, /\bspark\b/i, /\bpilot\b/i, /\bflame\b/i],
+  'Door / Latch': [/\bdoor\b/i, /\blatch\b/i, /\bhinge\b/i, /\bhandle\b/i],
+  'Faucet / Plumbing': [/\bfaucet\b/i, /\bfill\b/i, /\bdrain\b/i, /\bwater\b/i, /\bplumb\b/i, /\boverflow\b/i, /\bstrainer\b/i]
+};
+
+var UTILITY_KEYWORDS = {
+  'Gas': [/\bgas\b/i, /\bnatural\s*gas\b/i, /\bpropane\b/i, /\bLP\b/, /\bBTU\b/i, /\bburner\b/i, /\bpilot\b/i, /\bignit/i],
+  'Electric': [/\belectric\b/i, /\bvolt(?:age|s)?\b/i, /\b(?:208|240|480)\s*(?:volt|v)\b/i, /\bamp\b/i, /\bwir(?:e|ing)\b/i, /\bphase\b/i, /\bcircuit\b/i, /\bbreaker\b/i],
+  'Steam': [/\bsteam\b/i, /\bboiler\b/i, /\bPSI\b/i],
+  'Water': [/\bwater\b/i, /\bplumb\b/i, /\bdrain\b/i, /\bfill\b/i, /\bfaucet\b/i]
+};
+
+function classifyText(text, keywordMap) {
+  var results = [];
+  for (var cat in keywordMap) {
+    var patterns = keywordMap[cat];
+    for (var i = 0; i < patterns.length; i++) {
+      if (patterns[i].test(text)) { results.push(cat); break; }
+    }
+  }
+  return results;
+}
+
+function analyzeLive(data) {
+  var withText = data.filter(function(r) { return r.transcription && r.transcription.trim().length > 0; });
+  var reasons = {}, products = {}, components = {}, utilities = {};
+  var compByProd = {}, reasonsByAgent = {}, productsByAgent = {};
+
+  withText.forEach(function(r) {
+    var text = r.transcription;
+    var rr = classifyText(text, REASON_KEYWORDS);
+    var pp = classifyText(text, PRODUCT_KEYWORDS);
+    var cc = classifyText(text, COMPONENT_KEYWORDS);
+    var uu = classifyText(text, UTILITY_KEYWORDS);
+
+    rr.forEach(function(x) { reasons[x] = (reasons[x]||0)+1; });
+    pp.forEach(function(x) { products[x] = (products[x]||0)+1; });
+    cc.forEach(function(x) { components[x] = (components[x]||0)+1; });
+    uu.forEach(function(x) { utilities[x] = (utilities[x]||0)+1; });
+
+    pp.forEach(function(prod) {
+      if (!compByProd[prod]) compByProd[prod] = {};
+      cc.forEach(function(comp) { compByProd[prod][comp] = (compByProd[prod][comp]||0)+1; });
+    });
+
+    if (!reasonsByAgent[r.agent]) reasonsByAgent[r.agent] = {};
+    rr.forEach(function(x) { reasonsByAgent[r.agent][x] = (reasonsByAgent[r.agent][x]||0)+1; });
+
+    if (!productsByAgent[r.agent]) productsByAgent[r.agent] = {};
+    pp.forEach(function(x) { productsByAgent[r.agent][x] = (productsByAgent[r.agent][x]||0)+1; });
+  });
+
+  return { total: withText.length, reasons: reasons, products: products, components: components, utilities: utilities, compByProd: compByProd, reasonsByAgent: reasonsByAgent, productsByAgent: productsByAgent };
+}
+
+
+
 function renderInsightsTab(dept) {
-  var deptKey = dept === 'parts' ? 'Parts' : 'Service';
   var prefix = dept === 'parts' ? 'chartParts' : 'chartService';
 
+  // Get filtered data for this department
+  var data = getFiltered();
+  var deptKey = dept === 'parts' ? 'Parts' : 'Service';
+  var deptData = data.filter(function(r) { return r.dept === deptKey; });
+
+  // Run live NLP analysis on filtered data
+  var analysis = analyzeLive(deptData);
+
+  if (analysis.total === 0) {
+    // Show message if no transcriptions
+    [prefix+'Reasons', prefix+'Products', prefix+'Components', prefix+'Utilities', prefix+'CompByProd', prefix+'ReasonsByAgent', prefix+'ProductsByAgent'].forEach(function(id) { destroyChart(id); });
+    return;
+  }
+
   // Call Reasons
-  var reasons = INSIGHTS.reasons_by_dept[deptKey] || {};
-  var rSorted = sortedEntries(reasons);
+  var rSorted = sortedEntries(analysis.reasons);
   makeHorizBar(prefix+'Reasons', rSorted.map(function(e){return e[0];}), rSorted.map(function(e){return e[1];}), '#C8102E');
 
   // Product Lines
-  var products = INSIGHTS.product_by_dept[deptKey] || {};
-  var pSorted = sortedEntries(products);
+  var pSorted = sortedEntries(analysis.products);
   var prodColors = ['#C8102E','#2563eb','#16a34a','#d97706','#7c3aed','#059669'];
   makeDoughnut(prefix+'Products', pSorted.map(function(e){return e[0];}), pSorted.map(function(e){return e[1];}), prodColors.slice(0, pSorted.length));
 
-  // Components - derive from components_by_product filtered by products in this dept
-  var compCounts = {};
-  var deptProducts = Object.keys(products);
-  deptProducts.forEach(function(prod) {
-    var comps = INSIGHTS.components_by_product[prod] || {};
-    Object.entries(comps).forEach(function(e) { compCounts[e[0]] = (compCounts[e[0]]||0) + e[1]; });
-  });
-  var cSorted = sortedEntries(compCounts);
+  // Components
+  var cSorted = sortedEntries(analysis.components);
   makeHorizBar(prefix+'Components', cSorted.map(function(e){return e[0];}), cSorted.map(function(e){return e[1];}), '#333F48');
 
-  // Utilities - use global (not split by dept in insights, so show overall)
-  var utils = INSIGHTS.utilities || {};
-  var uSorted = sortedEntries(utils);
+  // Utilities
+  var uSorted = sortedEntries(analysis.utilities);
   var utilColors = ['#C8102E','#d97706','#2563eb','#16a34a'];
-  makeDoughnut(prefix+'Utilities', uSorted.map(function(e){return e[0];}), uSorted.map(function(e){return e[1];}), utilColors);
+  makeDoughnut(prefix+'Utilities', uSorted.map(function(e){return e[0];}), uSorted.map(function(e){return e[1];}), utilColors.slice(0, uSorted.length));
 
   // Components by Product Line (grouped bar)
-  var allComps = [...new Set(Object.values(INSIGHTS.components_by_product).flatMap(function(v){return Object.keys(v);}))];
+  var allComps = [...new Set(Object.values(analysis.compByProd).flatMap(function(v){return Object.keys(v);}))];
+  var deptProducts = Object.keys(analysis.products);
   var compDatasets = deptProducts.map(function(prod, i) {
-    var comps = INSIGHTS.components_by_product[prod] || {};
+    var comps = analysis.compByProd[prod] || {};
     return { label: prod, data: allComps.map(function(c){return comps[c]||0;}), backgroundColor: prodColors[i % prodColors.length], borderRadius: 4 };
   });
   makeGroupedBar(prefix+'CompByProd', allComps, compDatasets);
 
   // Reasons by Agent (grouped bar)
-  var allReasons = Object.keys(reasons);
+  var allReasons = Object.keys(analysis.reasons);
   var reasonDatasets = AGENTS.filter(function(a) {
-    return INSIGHTS.reasons_by_agent[a];
+    return analysis.reasonsByAgent[a];
   }).map(function(a) {
-    var agentReasons = INSIGHTS.reasons_by_agent[a] || {};
-    return { label: abbr(a), data: allReasons.map(function(r){return agentReasons[r]||0;}), backgroundColor: AGENT_COLORS[a], borderRadius: 4 };
+    var ar = analysis.reasonsByAgent[a] || {};
+    return { label: abbr(a), data: allReasons.map(function(r){return ar[r]||0;}), backgroundColor: AGENT_COLORS[a], borderRadius: 4 };
   });
   makeGroupedBar(prefix+'ReasonsByAgent', allReasons, reasonDatasets);
 
   // Product Lines by Agent (grouped bar)
-  var allProducts = Object.keys(products);
+  var allProducts = Object.keys(analysis.products);
   var prodDatasets = AGENTS.filter(function(a) {
-    return INSIGHTS.product_by_agent[a];
+    return analysis.productsByAgent[a];
   }).map(function(a) {
-    var agentProds = INSIGHTS.product_by_agent[a] || {};
-    return { label: abbr(a), data: allProducts.map(function(p){return agentProds[p]||0;}), backgroundColor: AGENT_COLORS[a], borderRadius: 4 };
+    var ap = analysis.productsByAgent[a] || {};
+    return { label: abbr(a), data: allProducts.map(function(p){return ap[p]||0;}), backgroundColor: AGENT_COLORS[a], borderRadius: 4 };
   });
   makeGroupedBar(prefix+'ProductsByAgent', allProducts, prodDatasets);
 }
+
+
 
 function renderRaw(data) {
   var tbody = document.getElementById('rawTable').querySelector('tbody');
